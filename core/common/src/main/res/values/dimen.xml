@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="small">4dp</dimen>
+    <dimen name="normal">8dp</dimen>
+    <dimen name="medium">16dp</dimen>
+    <dimen name="big">24dp</dimen>
+    <dimen name="large">32dp</dimen>
+    <dimen name="fab_padding_bottom">96dp</dimen>
+    <dimen name="button_height">56dp</dimen>
+</resources>

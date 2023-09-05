@@ -1,0 +1,37 @@
+<resources>
+    <string name="app_name">Compara Preços</string>
+
+<!--    Label com uma palavra-->
+    <string name="label_titulo">Título</string>
+    <string name="label_comparar">Comparar</string>
+    <string name="label_agurade">Aguarde</string>
+    <string name="label_produtos">Produtos</string>
+    <string name="label_valor">Valor</string>
+<!--    Label com uma palavra-->
+
+<!--    Label com duas palavras-->
+    <string name="label_lista_compras">Lista de Compras</string>
+    <string name="label_nova_lista">Nova lista</string>
+    <string name="label_criar_compra">Criar compra</string>
+    <string name="label_campo_obrigatorio">Campo obrigatório!</string>
+    <string name="label_abrir_lista">Abrir lista</string>
+    <string name="label_editar_lista">Editar lista</string>
+    <string name="label_deletar_lista">Deletar lista</string>
+<!--    Label com duas palavras-->
+
+
+<!--    Label com tres palavras-->
+    <string name="label_criando_compra">Criando nova compra</string>
+    <string name="label_abrir_lista_comparando">Abrir lista comparando</string>
+    <string name="label_lista_comparada_com">Lista comparada com</string>
+<!--    Label com tres palavras-->
+
+<!--    Label com frases-->
+    <string name="label_desc_nova_compra">Vamos criar sua nova lista de compras. Se você tiver outras listas, você pode compara-las.</string>
+    <string name="label_desc_selecionar_lista">Selecione a lista que deseja comparar:</string>
+    <string name="label_desc_lista_compra_vazia">Você não criou nenhuma lista de compra. Vamos começar agora? Clique no botão +.</string>
+    <string name="label_desc_lista_compra_criada">Lista de compra criada.</string>
+    <string name="label_desc_lista_compra_excluida">Lista de compra excluída.</string>
+<!--    Label com frases-->
+
+</resources>

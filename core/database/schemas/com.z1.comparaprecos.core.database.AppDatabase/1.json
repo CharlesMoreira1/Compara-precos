@@ -1,0 +1,58 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 1,
+    "identityHash": "7714a142645a37936d0b64b395ba7ad0",
+    "entities": [
+      {
+        "tableName": "tb_lista_compra",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `titulo` TEXT NOT NULL, `is_comparar` INTEGER NOT NULL, `id_lista_to_comparar` INTEGER NOT NULL, `data_criacao` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "titulo",
+            "columnName": "titulo",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isComparar",
+            "columnName": "is_comparar",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "idListaToComparar",
+            "columnName": "id_lista_to_comparar",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dataCriacao",
+            "columnName": "data_criacao",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      }
+    ],
+    "views": [],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '7714a142645a37936d0b64b395ba7ad0')"
+    ]
+  }
+}
