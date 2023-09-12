@@ -97,6 +97,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.z1.comparaprecos.common.ui.OnBackPressed
 import com.z1.comparaprecos.common.ui.components.CustomBottomSheet
 import com.z1.comparaprecos.common.ui.components.CustomBottomSheetDialog
+import com.z1.comparaprecos.common.ui.components.CustomBottomSheetDialogContent
 import com.z1.comparaprecos.common.ui.components.CustomButton
 import com.z1.comparaprecos.common.ui.components.CustomCard
 import com.z1.comparaprecos.common.ui.components.CustomDivider
@@ -107,12 +108,14 @@ import com.z1.comparaprecos.common.ui.components.CustomSnackBar
 import com.z1.comparaprecos.common.ui.components.ETipoSnackbar
 import com.z1.comparaprecos.common.ui.components.Mensagem
 import com.z1.comparaprecos.common.ui.extensions.thenIf
+import com.z1.comparaprecos.common.ui.extensions.toMoedaLocal
 import com.z1.comparaprecos.common.ui.theme.ComparaPrecosTheme
 import com.z1.comparaprecos.common.ui.theme.MediumSeaGreen
 import com.z1.comparaprecos.core.common.R
 import com.z1.comparaprecos.core.common.R.dimen
 import com.z1.comparaprecos.core.common.R.string
 import com.z1.comparaprecos.core.model.ListaCompra
+import com.z1.comparaprecos.core.model.ListaCompraWithProdutos
 import com.z1.comparaprecos.feature.listacompra.presentation.viewmodel.ListaCompraViewModel
 import kotlinx.coroutines.launch
 import java.time.Instant
@@ -155,12 +158,18 @@ fun ListaCompraScreen(
             ETypeErrors.TITULO_VAZIO -> Unit
             else -> {
                 CustomBottomSheetDialog(
-                    modifier = modifier,
                     onDismissRequest = {
                         viewModel.updateError()
                     }
                 ) {
-                    Text(text = uiState.isError.second)
+                    CustomBottomSheetDialogContent(
+                        titulo = "Atenção",
+                        mensagem = uiState.isError.second,
+                        onAcaoPositivaClick = { viewModel.updateError() },
+                        textoBotaoPositivo = "Entendi",
+                        onAcaoNegativaClick = { viewModel.updateError() },
+                        textoBotaoNegativo = "Cancelar"
+                    )
                 }
             }
         }
@@ -177,7 +186,7 @@ fun ListaCompraScreen(
             }
 
             EStatusListaCompra.EXCLUIDA -> {
-                viewModel.addMensagem(Mensagem(string.label_desc_lista_compra_excluida, ETipoSnackbar.ERRO))
+                viewModel.addMensagem(Mensagem(string.label_desc_lista_compra_excluida, ETipoSnackbar.SUCESSO))
             }
 
             else -> Unit
@@ -243,7 +252,7 @@ fun ListaCompraScreen(
                 }
             )
 
-            uiState.listaListaCompraSelecionada?.let {
+            uiState.listaCompraSelecionada?.let {
                 CardCompraOpcoes(
                     listaCompraSelecionada = it,
                     uiState = uiState,
@@ -254,7 +263,7 @@ fun ListaCompraScreen(
                         when (icone) {
                             //Abrir lista
                             Icons.Rounded.ArrowForward -> {
-                                goToNovaListaCompra(compraSelecionada.id)
+                                goToNovaListaCompra(compraSelecionada.detalhes.id)
                             }
 
                             //Abrir lista comparando
@@ -269,7 +278,7 @@ fun ListaCompraScreen(
 
                             // Deletar lista
                             Icons.Rounded.Delete -> {
-                                viewModel.deletarListaCompra(compraSelecionada.id)
+                                viewModel.deletarListaCompra(compraSelecionada.detalhes.id)
                             }
                         }
                     }
@@ -293,7 +302,7 @@ fun ListaCompra(
     modifier: Modifier = Modifier,
     uiState: UiState,
     onClickNovaLista: () -> Unit,
-    onCardCompraClick: (ListaCompra) -> Unit
+    onCardCompraClick: (ListaCompraWithProdutos) -> Unit
 ) {
     val appBarState = rememberTopAppBarState()
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(appBarState)
@@ -337,7 +346,7 @@ fun ListaCompra(
             ) {
                 items(
                     items = uiState.listaCompra,
-                    key = { compra -> compra.dataCriacao }) { compra ->
+                    key = { listacompra -> listacompra.detalhes.id }) { compra ->
                     CustomCard(
                         modifier = modifier
                             .animateItemPlacement()
@@ -430,10 +439,10 @@ fun AddListaActionButton(
 fun CardConteudoCompra(
     modifier: Modifier = Modifier,
     uiState: UiState,
-    listaCompra: ListaCompra,
+    listaCompra: ListaCompraWithProdutos,
 ) {
     var expanded by remember { mutableStateOf(false) }
-    val listaComparada = uiState.listaCompra.find { it.id == listaCompra.idListaToComparar }
+    val listaComparada = uiState.listaCompra.find { it.detalhes.id == listaCompra.detalhes.idListaToComparar }
     Column(
         modifier = modifier
             .animateContentSize(
@@ -447,7 +456,7 @@ fun CardConteudoCompra(
         CardCompraTitulo(
             listaCompra = listaCompra,
             expanded = expanded,
-            isShowIconButton = listaCompra.isComparar,
+            isShowIconButton = listaCompra.detalhes.isComparar,
             onClick = {
                 listaComparada?.let {
                     expanded = !expanded
@@ -455,7 +464,7 @@ fun CardConteudoCompra(
             }
         )
         CardCompraDetalhes(listaCompra = listaCompra)
-        if (listaCompra.isComparar && !expanded) {
+        if (listaCompra.detalhes.isComparar && !expanded) {
             CardListaComparadaIndicador()
         }
         if (expanded) {
@@ -502,7 +511,7 @@ fun CardListaComparadaIndicador(
 @Composable
 fun CardCompraTitulo(
     modifier: Modifier = Modifier,
-    listaCompra: ListaCompra,
+    listaCompra: ListaCompraWithProdutos,
     expanded: Boolean,
     isShowIconButton: Boolean = true,
     onClick: () -> Unit
@@ -510,7 +519,7 @@ fun CardCompraTitulo(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .thenIf(!listaCompra.isComparar) {
+            .thenIf(!listaCompra.detalhes.isComparar) {
                 padding(
                     top = 16.dp,
                     bottom = 16.dp,
@@ -522,7 +531,7 @@ fun CardCompraTitulo(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
-            text = listaCompra.titulo,
+            text = listaCompra.detalhes.titulo,
             color = MaterialTheme.colorScheme.onSurface,
             style = MaterialTheme.typography.titleMedium
         )
@@ -542,7 +551,7 @@ fun CardCompraTitulo(
 @Composable
 fun CardCompraDetalhes(
     modifier: Modifier = Modifier,
-    listaCompra: ListaCompra
+    listaCompra: ListaCompraWithProdutos
 ) {
     Row(
         modifier = modifier.padding(
@@ -563,7 +572,7 @@ fun CardCompraDetalhes(
                 style = MaterialTheme.typography.bodyMedium
             )
             Text(
-                text = "0",
+                text = listaCompra.produtos.size.toString(),
                 color = MaterialTheme.colorScheme.onSurface,
                 style = MaterialTheme.typography.titleMedium
             )
@@ -580,7 +589,7 @@ fun CardCompraDetalhes(
                 style = MaterialTheme.typography.bodyMedium
             )
             Text(
-                text = "R$ 0,00",
+                text = listaCompra.valorTotal().toMoedaLocal(),
                 color = MaterialTheme.colorScheme.onSurface,
                 style = MaterialTheme.typography.titleMedium
             )
@@ -591,10 +600,10 @@ fun CardCompraDetalhes(
 @Composable
 fun CardCompraOpcoes(
     modifier: Modifier = Modifier,
-    listaCompraSelecionada: ListaCompra,
+    listaCompraSelecionada: ListaCompraWithProdutos,
     uiState: UiState,
     onDismissRequest: () -> Unit,
-    onOpcoesClick: (ListaCompra, ImageVector) -> Unit
+    onOpcoesClick: (ListaCompraWithProdutos, ImageVector) -> Unit
 ) {
     CustomBottomSheetDialog(
         modifier = modifier,
@@ -617,7 +626,7 @@ fun CardCompraOpcoes(
             ),
         )
         val opcoes = items.filter {
-            if (!listaCompraSelecionada.isComparar) {
+            if (!listaCompraSelecionada.detalhes.isComparar) {
                 it.icone != Icons.Rounded.CompareArrows
             } else {
                 true
@@ -805,7 +814,7 @@ fun OpcoesCompras(
             style = MaterialTheme.typography.titleMedium
         )
 
-        val listaFiltrada = uiState.listaCompra.filter { !it.isComparar }
+        val listaFiltrada = uiState.listaCompra.filter { !it.detalhes.isComparar }
         LazyHorizontalGrid(
             modifier = modifier
                 .fillMaxWidth()
@@ -815,18 +824,18 @@ fun OpcoesCompras(
             horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = dimen.medium)),
             contentPadding = PaddingValues(dimensionResource(id = dimen.medium))
         ) {
-            items(listaFiltrada) { compra ->
+            items(listaFiltrada) { listaCompra ->
                 CustomCard(
                     modifier = Modifier
                         .width(312.dp)
                         .heightIn(min = 56.dp),
                     containerColor =
-                    if (compra.id == uiState.idListaToComparar) MediumSeaGreen
+                    if (listaCompra.detalhes.id == uiState.idListaToComparar) MediumSeaGreen
                     else MaterialTheme.colorScheme.secondary,
                     onCardClick = {
                         onListaToCompararClick(
-                            if (compra.id == uiState.idListaToComparar) -1
-                            else compra.id
+                            if (listaCompra.detalhes.id == uiState.idListaToComparar) -1
+                            else listaCompra.detalhes.id
                         )
                     }
                 ) {
@@ -837,9 +846,9 @@ fun OpcoesCompras(
                         Text(
                             modifier = Modifier
                                 .padding(dimensionResource(id = dimen.normal)),
-                            text = compra.titulo,
+                            text = listaCompra.detalhes.titulo,
                             color =
-                            if (compra.id == uiState.idListaToComparar) MaterialTheme.colorScheme.onPrimary
+                            if (listaCompra.detalhes.id == uiState.idListaToComparar) MaterialTheme.colorScheme.onPrimary
                             else MaterialTheme.colorScheme.onSecondary,
                             style = MaterialTheme.typography.titleMedium
                         )
@@ -856,12 +865,9 @@ private fun PreviewCardCompraDetalhes() {
     ComparaPrecosTheme {
         CustomCard(onCardClick = {}) {
             CardConteudoCompra(
-                listaCompra = ListaCompra(
-                    id = 0,
-                    titulo = "Compra do mês Ago 23",
-                    isComparar = true,
-                    idListaToComparar = -1,
-                    dataCriacao = Instant.now().toEpochMilli()
+                listaCompra = ListaCompraWithProdutos(
+                    detalhes = ListaCompra(0, "", false, -1, 0L),
+                    produtos = emptyList()
                 ),
                 uiState = UiState()
             )

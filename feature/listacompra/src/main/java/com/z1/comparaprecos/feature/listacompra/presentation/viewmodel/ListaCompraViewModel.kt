@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.z1.comparaprecos.common.ui.components.Mensagem
 import com.z1.comparaprecos.core.model.ListaCompra
+import com.z1.comparaprecos.core.model.ListaCompraWithProdutos
 import com.z1.comparaprecos.feature.listacompra.domain.CompraUseCase
 import com.z1.comparaprecos.feature.listacompra.presentation.ELoanding
 import com.z1.comparaprecos.feature.listacompra.presentation.EStatusListaCompra
@@ -46,7 +47,7 @@ class ListaCompraViewModel @Inject constructor(
 
     private fun getListaCompra() =
         viewModelScope.launch {
-            compraUseCase.getListaCompra()
+            compraUseCase.getListaCompraWithProdutos()
                 .onStart {
                     updtateStatusLoading(ELoanding.AGUARDE)
                 }
@@ -101,7 +102,7 @@ class ListaCompraViewModel @Inject constructor(
         }
     }
 
-    private fun updateListaCompra(listaCompra: List<ListaCompra>) {
+    private fun updateListaCompra(listaCompra: List<ListaCompraWithProdutos>) {
         _uiState.update { currentState ->
             currentState.copy(listaCompra = listaCompra)
         }
@@ -146,10 +147,10 @@ class ListaCompraViewModel @Inject constructor(
         if (titulo.isNotEmpty()) updateError()
     }
 
-    fun updateCompraSelecionada(listaCompraSelecionada: ListaCompra?) {
+    fun updateCompraSelecionada(listaCompraSelecionada: ListaCompraWithProdutos?) {
         _uiState.update { currentState ->
             currentState.copy(
-                listaListaCompraSelecionada = listaCompraSelecionada,
+                listaCompraSelecionada = listaCompraSelecionada,
                 statusListaCompra = EStatusListaCompra.NOTHING
             )
         }

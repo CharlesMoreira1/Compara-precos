@@ -2,6 +2,7 @@ package com.z1.comparaprecos.feature.listacompra.presentation
 
 import com.z1.comparaprecos.common.ui.components.Mensagem
 import com.z1.comparaprecos.core.model.ListaCompra
+import com.z1.comparaprecos.core.model.ListaCompraWithProdutos
 
 enum class ELoanding {
     CRIANDO_COMPRA,
@@ -33,8 +34,8 @@ data class UiState(
     var compararListaCompra: Boolean = false,
     var idListaToComparar: Long = -1,
     var statusListaCompra: EStatusListaCompra = EStatusListaCompra.NOTHING,
-    var listaCompra: List<ListaCompra> = emptyList(),
-    var listaListaCompraSelecionada: ListaCompra? = null,
+    var listaCompra: List<ListaCompraWithProdutos> = emptyList(),
+    var listaCompraSelecionada: ListaCompraWithProdutos? = null,
     var listaMensagem: MutableList<Mensagem> = mutableListOf(),
     var isShowingSnackBar: Boolean = false
 )
