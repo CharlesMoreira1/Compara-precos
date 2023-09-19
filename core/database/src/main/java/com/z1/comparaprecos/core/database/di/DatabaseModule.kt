@@ -17,6 +17,8 @@ object DatabaseModule {
     //Provides DAOs
     @Provides
     fun provideListaCompraDao(appDatabase: AppDatabase) = appDatabase.getListaCompraDao()
+    @Provides
+    fun provideProdutoDao(appDatabase: AppDatabase) = appDatabase.getprodutoDao()
     //Provides DAOs
 
     //Provide Database

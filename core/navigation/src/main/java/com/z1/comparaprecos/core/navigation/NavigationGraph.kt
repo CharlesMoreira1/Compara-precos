@@ -4,11 +4,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.z1.comparaprecos.feature.listacompra.presentation.ListaCompraScreen
-import com.z1.comparaprecos.feature.novalista.NovaListaScreen
+import com.z1.comparaprecos.feature.novalista.presentation.NovaListaContainer
 
 enum class ComparaPrecosTelas(val titulo: String) {
     ListaCompra("Lista de Compras"),
@@ -18,13 +21,13 @@ enum class ComparaPrecosTelas(val titulo: String) {
 
 @Composable
 fun NavigationGraph(
-    modifier: Modifier = Modifier,
-    navController: NavHostController
+    modifier: Modifier = Modifier
 ) {
+    val navController = rememberNavController()
     val pilhaDeTela by navController.currentBackStackEntryAsState()
-    val telaAtual = ComparaPrecosTelas.valueOf(
-        pilhaDeTela?.destination?.route ?: ComparaPrecosTelas.ListaCompra.name
-    )
+//    val telaAtual = ComparaPrecosTelas.valueOf(
+//        pilhaDeTela?.destination?.route ?: ComparaPrecosTelas.ListaCompra.name
+//    )
     NavHost(
         modifier = modifier,
         navController = navController,
@@ -32,14 +35,21 @@ fun NavigationGraph(
     ) {
         composable(route = ComparaPrecosTelas.ListaCompra.name) {
             ListaCompraScreen(
-                goToNovaListaCompra = { idNovaLista ->
-                    navController.navigate(ComparaPrecosTelas.NovaListaCompra.name)
+                goToNovaListaCompra = { idListaCompra ->
+                    navController.navigate("${ComparaPrecosTelas.NovaListaCompra.name}/$idListaCompra")
                 }
             )
         }
 
-        composable(route = ComparaPrecosTelas.NovaListaCompra.name) {
-            NovaListaScreen()
+        val idListaCompra = "idListaCompra"
+        composable(
+            route = "${ComparaPrecosTelas.NovaListaCompra.name}/{$idListaCompra}",
+            arguments = listOf(navArgument(idListaCompra) { type = NavType.LongType})
+        ) { backStackEntry ->
+            val idListaCompra = backStackEntry.arguments?.getLong(idListaCompra) ?: -1
+            NovaListaContainer(
+                idListaCompra = idListaCompra
+            )
         }
     }
 }

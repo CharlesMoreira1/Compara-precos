@@ -1,4 +1,4 @@
-package com.z1.comparaprecos.common.ui.extensions
+package com.z1.comparaprecos.common.extensions
 
 import androidx.compose.ui.Modifier
 

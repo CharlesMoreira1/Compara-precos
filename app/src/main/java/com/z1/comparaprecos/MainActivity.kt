@@ -19,7 +19,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        WindowCompat.setDecorFitsSystemWindows(window, false)
+
         setContent {
             ComparaPrecosTheme {
                 // A surface container using the 'background' color from the theme
@@ -38,11 +38,9 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun ComparaPrecosApp(
-    modifier: Modifier = Modifier,
-    navHostController: NavHostController = rememberNavController()
+    modifier: Modifier = Modifier
 ) {
     NavigationGraph(
-        modifier = modifier,
-        navController = navHostController
+        modifier = modifier
     )
 }

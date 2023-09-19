@@ -5,17 +5,10 @@ plugins {
 
 android {
     namespace = "com.z1.comparaprecos.feature.novalista"
-    android {
-
-//        compileSdk = 33
-//        defaultConfig {
-//            minSdk = 26
-//            targetSdk = 33
-//
-//        }
-    }
 }
 
 dependencies {
     implementation(project(":core:common"))
+    implementation(project(":core:database"))
+    implementation(project(":core:model"))
 }

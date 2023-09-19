@@ -4,12 +4,11 @@ import com.z1.comparaprecos.core.database.repository.listacompra.ListaCompraRepo
 import com.z1.comparaprecos.core.model.ListaCompra
 import com.z1.comparaprecos.core.model.ListaCompraWithProdutos
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
-class CompraUseCaseImpl @Inject constructor(
+class ListaCompraUseCaseImpl @Inject constructor(
     private val listaCompraRepository: ListaCompraRepository
-) : CompraUseCase {
+) : ListaCompraUseCase {
 
     override suspend fun getListaCompra(): Flow<List<ListaCompra>> = listaCompraRepository.getListaCompra()
 

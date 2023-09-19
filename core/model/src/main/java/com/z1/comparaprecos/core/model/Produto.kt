@@ -9,5 +9,6 @@ data class Produto(
     val quantidade: Double,
     val precoUnitario: BigDecimal,
 ) {
-    fun precoProduto() = precoUnitario.multiply(BigDecimal.valueOf(quantidade))
+    fun precoProdutoTotal(): BigDecimal = precoUnitario.multiply(BigDecimal.valueOf(quantidade))
+
 }

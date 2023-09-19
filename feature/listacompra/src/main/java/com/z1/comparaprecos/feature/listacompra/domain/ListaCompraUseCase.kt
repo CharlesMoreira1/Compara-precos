@@ -4,7 +4,7 @@ import com.z1.comparaprecos.core.model.ListaCompra
 import com.z1.comparaprecos.core.model.ListaCompraWithProdutos
 import kotlinx.coroutines.flow.Flow
 
-interface CompraUseCase {
+interface ListaCompraUseCase {
     suspend fun getListaCompra(): Flow<List<ListaCompra>>
     suspend fun getListaCompraWithProdutos(): Flow<List<ListaCompraWithProdutos>>
     suspend fun insertNovaCompra(novaListaCompra: ListaCompra): Long

@@ -82,6 +82,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.input.ImeAction
@@ -100,6 +101,7 @@ import com.z1.comparaprecos.common.ui.components.CustomBottomSheetDialog
 import com.z1.comparaprecos.common.ui.components.CustomBottomSheetDialogContent
 import com.z1.comparaprecos.common.ui.components.CustomButton
 import com.z1.comparaprecos.common.ui.components.CustomCard
+import com.z1.comparaprecos.common.ui.components.CustomCheckBox
 import com.z1.comparaprecos.common.ui.components.CustomDivider
 import com.z1.comparaprecos.common.ui.components.CustomFloatingActionButton
 import com.z1.comparaprecos.common.ui.components.CustomIconButton
@@ -107,8 +109,8 @@ import com.z1.comparaprecos.common.ui.components.CustomProgressDialog
 import com.z1.comparaprecos.common.ui.components.CustomSnackBar
 import com.z1.comparaprecos.common.ui.components.ETipoSnackbar
 import com.z1.comparaprecos.common.ui.components.Mensagem
-import com.z1.comparaprecos.common.ui.extensions.thenIf
-import com.z1.comparaprecos.common.ui.extensions.toMoedaLocal
+import com.z1.comparaprecos.common.extensions.thenIf
+import com.z1.comparaprecos.common.extensions.toMoedaLocal
 import com.z1.comparaprecos.common.ui.theme.ComparaPrecosTheme
 import com.z1.comparaprecos.common.ui.theme.MediumSeaGreen
 import com.z1.comparaprecos.core.common.R
@@ -181,7 +183,6 @@ fun ListaCompraScreen(
                 viewModel.addMensagem(Mensagem(string.label_desc_lista_compra_criada, ETipoSnackbar.SUCESSO))
                 scope.launch {
                     scaffoldState.bottomSheetState.hide()
-//                goToNovaListaCompra(0)
                 }
             }
 
@@ -567,7 +568,10 @@ fun CardCompraDetalhes(
             verticalArrangement = Arrangement.Center
         ) {
             Text(
-                text = stringResource(id = string.label_produtos),
+                text = pluralStringResource(
+                    id = R.plurals.label_plural_produto,
+                    count = listaCompra.produtos.size
+                ),
                 color = MaterialTheme.colorScheme.onSurface,
                 style = MaterialTheme.typography.bodyMedium
             )
@@ -641,7 +645,6 @@ fun CardCompraOpcoes(
 //                        spotColor = Color.Green,
                         shape = RoundedCornerShape(dimensionResource(id = dimen.big))
                     ),
-                defaultElevetion = dimensionResource(id = dimen.normal),
                 onCardClick = {}
             ) {
                 CardConteudoCompra(
@@ -745,29 +748,15 @@ fun NovaCompraSheet(
                     color = if (uiState.isError.first == ETypeErrors.TITULO_VAZIO) MaterialTheme.colorScheme.error else Color.Transparent
                 )
                 if (uiState.listaCompra.isNotEmpty()) {
-                    Row(
-                        Modifier
-                            .padding(horizontal = dimensionResource(id = R.dimen.medium))
-                            .toggleable(value = uiState.compararListaCompra,
-                                role = Role.Checkbox,
-                                onValueChange = { checked ->
-                                    compararListaCompraValueChange(checked)
-                                })
+                    CustomCheckBox(
+                        modifier = Modifier
                             .wrapContentWidth()
+                            .padding(horizontal = dimensionResource(id = R.dimen.medium))
                             .align(Alignment.End),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            text = stringResource(id = string.label_comparar),
-                            color = MaterialTheme.colorScheme.onSurface,
-                            style = MaterialTheme.typography.bodyLarge
-                        )
-                        Spacer(
-                            Modifier
-                                .width(dimensionResource(id = dimen.medium))
-                        )
-                        Checkbox(checked = uiState.compararListaCompra, onCheckedChange = null)
-                    }
+                        titulo = stringResource(id = string.label_comparar),
+                        value = uiState.compararListaCompra,
+                        onValueChange = { compararListaCompraValueChange(it) }
+                    )
                 }
 
                 if (uiState.compararListaCompra) {
