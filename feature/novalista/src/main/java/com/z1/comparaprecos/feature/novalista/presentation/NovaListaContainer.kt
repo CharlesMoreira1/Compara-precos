@@ -1,12 +1,15 @@
-@file:OptIn(ExperimentalFoundationApi::class, ExperimentalFoundationApi::class,
+@file:OptIn(
+    ExperimentalFoundationApi::class, ExperimentalFoundationApi::class,
     ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class
 )
 
 package com.z1.comparaprecos.feature.novalista.presentation
 
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
@@ -14,6 +17,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -33,25 +37,32 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.DeleteOutline
 import androidx.compose.material.icons.rounded.ShoppingCartCheckout
 import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.DismissDirection
+import androidx.compose.material3.DismissState
+import androidx.compose.material3.DismissValue
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SwipeToDismiss
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
+import androidx.compose.material3.rememberDismissState
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
@@ -74,8 +85,12 @@ import com.z1.comparaprecos.common.ui.components.CustomBottomSheetDialog
 import com.z1.comparaprecos.common.ui.components.CustomBottomSheetDialogContent
 import com.z1.comparaprecos.common.ui.components.CustomCard
 import com.z1.comparaprecos.common.ui.components.CustomFloatingActionButton
-import com.z1.comparaprecos.common.ui.components.FormularioProduto
+import com.z1.comparaprecos.common.ui.components.CustomSnackBar
+import com.z1.comparaprecos.common.ui.components.CustomTextPriceCounter
+import com.z1.comparaprecos.common.ui.components.ETipoSnackbar
+import com.z1.comparaprecos.common.ui.components.Mensagem
 import com.z1.comparaprecos.common.ui.theme.ComparaPrecosTheme
+import com.z1.comparaprecos.common.ui.theme.CoralRed
 import com.z1.comparaprecos.common.ui.theme.MediumSeaGreen
 import com.z1.comparaprecos.common.util.UiEvent
 import com.z1.comparaprecos.core.common.R
@@ -84,6 +99,9 @@ import com.z1.comparaprecos.feature.novalista.presentation.viewmodel.OnEvent
 import com.z1.comparaprecos.feature.novalista.presentation.viewmodel.ProdutoViewModel
 import kotlinx.coroutines.delay
 import java.math.BigDecimal
+import java.util.Currency
+import java.util.Locale
+import java.util.concurrent.TimeUnit
 
 @Composable
 fun NovaListaContainer(
@@ -92,11 +110,11 @@ fun NovaListaContainer(
 ) {
     val viewModel: ProdutoViewModel = hiltViewModel()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val uiEvent = viewModel.uiEvent.collectAsStateWithLifecycle(initialValue = UiEvent.Success)
+    val uiEvent = viewModel.uiEvent.collectAsStateWithLifecycle(initialValue = UiEvent.Default)
     NovaListaScreen(
         modifier = modifier,
         uiState = uiState,
-        uiEvent = uiEvent,
+        uiEvent = uiEvent.value,
         idListaCompra = idListaCompra,
         onEvent = { viewModel.onEvent(it) }
     )
@@ -106,7 +124,7 @@ fun NovaListaContainer(
 fun NovaListaScreen(
     modifier: Modifier = Modifier,
     uiState: UiState,
-    uiEvent: State<UiEvent>,
+    uiEvent: UiEvent,
     idListaCompra: Long,
     onEvent: (OnEvent) -> Unit
 ) {
@@ -117,6 +135,7 @@ fun NovaListaScreen(
             LoadingScreen()
             onEvent(OnEvent.GetListaCompra(idListaCompra))
         }
+
         EStatusScreen.LISTA_COMPRA -> {
             ListaProdutoScreen(
                 modifier = modifier,
@@ -124,21 +143,21 @@ fun NovaListaScreen(
                 onEvent = onEvent
             )
         }
+
         EStatusScreen.LISTA_COMPRA_COMPARADA -> ListaProdutoComparadoScreen()
     }
-
-
-    when (val event = uiEvent.value) {
+    when (uiEvent) {
+        is UiEvent.Default -> Unit
         is UiEvent.Success -> Unit
-        is UiEvent.Error ->  {
+        is UiEvent.Error -> {
             CustomBottomSheetDialog(
                 onDismissRequest = {
-
+                    onEvent(OnEvent.UpdateUiEvent(UiEvent.Default))
                 }
             ) {
                 CustomBottomSheetDialogContent(
                     titulo = "Atenção",
-                    mensagem = event.message.asString(context),
+                    mensagem = uiEvent.message.asString(context),
                     onAcaoPositivaClick = { },
                     textoBotaoPositivo = "Entendi",
                     onAcaoNegativaClick = { },
@@ -146,8 +165,22 @@ fun NovaListaScreen(
                 )
             }
         }
-        is UiEvent.ShowSnackbar -> Unit
+        is UiEvent.ShowSnackbar -> {
+            val message = Mensagem(
+                uiEvent.message.asResId(),
+                ETipoSnackbar.SUCESSO
+            )
+            CustomSnackBar(
+                modifier = Modifier.width(200.dp),
+                mensagem = message, // aqui vai a event.message do uiEvent (corrigir lógica)
+                duracao = TimeUnit.SECONDS.toMillis(2),
+                onFimShowMensagem = {
+                    onEvent(OnEvent.UpdateUiEvent(UiEvent.Default))
+                }
+            )
+        }
         is UiEvent.NavigateUp -> Unit
+        else -> Unit
     }
 }
 
@@ -215,21 +248,17 @@ fun ListaProdutoScreen(
                 .weight(1f),
             uiState = uiState,
             onEvent = onEvent,
-            onCardProdutoClick = {}
+            onCardProdutoClick = {
+                onEvent(OnEvent.ProdutoSelecionado(it))
+            }
         )
         FormularioProduto(
-            onAdicionarProdutoClick = { nomeProduto, precoUnitario, quantidade, medidaProduto ->
-                onEvent(
-                    OnEvent.InsertProduto(
-                    Produto(
-                        id = 0,
-                        idListaCompra = uiState.listaCompra.detalhes.id,
-                        nomeProduto = nomeProduto,
-                        precoUnitario = precoUnitario,
-                        quantidade = quantidade.toDouble()
-                    )
-                ))
-            }
+            uiState = uiState,
+            onAdicionarProdutoClick = { produto ->
+                if (produto.id == 0L) onEvent(OnEvent.InsertProduto(produto))
+                else onEvent(OnEvent.UpdateProduto(produto))
+            },
+            onCancelarEdicaoProduto = { onEvent(OnEvent.ProdutoSelecionado(null))}
         )
     }
 }
@@ -238,7 +267,7 @@ fun ListaProdutoScreen(
 fun ListaProdutoComparadoScreen(
     modifier: Modifier = Modifier
 ) {
-    
+
 }
 
 @Composable
@@ -252,21 +281,27 @@ fun ListaProduto(
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(appBarState)
     val listState = rememberLazyListState()
 
+    LaunchedEffect(key1 = uiState.listaProduto.size) {
+        if (uiState.listaProduto.isNotEmpty())
+            listState.animateScrollToItem(index = uiState.listaProduto.size -1)
+    }
+
     Scaffold(
         modifier = modifier,
         topBar = {
             TopAppBar(
+                uiState = uiState,
                 scrollBehavior = scrollBehavior,
                 isNotOnTopoLista = listState.firstVisibleItemScrollOffset != 0
             )
         },
         floatingActionButton = {
-            if (uiState.listaCompra.produtos.isNotEmpty()) {
+            if (uiState.listaProduto.isNotEmpty()) {
                 FimListaActionButton {}
             }
-            }
+        }
     ) { innerPadding ->
-        if (uiState.listaCompra.produtos.isEmpty()) {
+        if (uiState.listaProduto.isEmpty()) {
             ListaProdutoVazia(
                 modifier = Modifier.padding(innerPadding)
             )
@@ -281,10 +316,17 @@ fun ListaProduto(
                 state = listState
             ) {
                 itemsIndexed(
-                    items = uiState.listaCompra.produtos
-                    ) { index, produto ->
-                    val shape = when {
-                        index == 0 -> {
+                    key = { _, produto -> produto.id },
+                    items = uiState.listaProduto
+                ) { index, produto ->
+                    val dismissState = rememberDismissState()
+
+                    if (dismissState.isDismissed(DismissDirection.EndToStart)) {
+                        onEvent(OnEvent.DeleteProduto(produto))
+                    }
+
+                    val shape = when (index) {
+                        0 -> {
                             RoundedCornerShape(
                                 topStart = dimensionResource(id = R.dimen.big),
                                 topEnd = dimensionResource(id = R.dimen.big),
@@ -292,7 +334,8 @@ fun ListaProduto(
                                 bottomEnd = 0.dp
                             )
                         }
-                        index == uiState.listaCompra.produtos.size - 1 -> {
+
+                        uiState.listaProduto.size - 1 -> {
                             RoundedCornerShape(
                                 topStart = 0.dp,
                                 topEnd = 0.dp,
@@ -300,20 +343,36 @@ fun ListaProduto(
                                 bottomEnd = dimensionResource(id = R.dimen.big)
                             )
                         }
+
                         else -> RoundedCornerShape(0.dp)
                     }
-                    CustomCard(
-                        modifier = modifier
-                            .animateItemPlacement()
-                            .padding(horizontal = dimensionResource(id = R.dimen.medium)),
-                        shape = shape,
-                        onCardClick = { onCardProdutoClick(produto) }
-                    ) {
-                        CardConteudoProduto(
-                            produto = produto,
-                            uiState = uiState
-                        )
-                    }
+
+                    SwipeToDismiss(
+                        modifier = Modifier
+                            .padding(horizontal = dimensionResource(id = R.dimen.medium))
+                            .animateItemPlacement(),
+                        state = dismissState,
+                        directions = setOf(DismissDirection.EndToStart),
+                        background = {
+                            BackgroundDismiss(
+                                dismissState = dismissState,
+                                shape = shape
+                            )
+                        },
+                        dismissContent = {
+                            CustomCard(
+                                modifier = modifier
+                                    .animateItemPlacement(),
+                                shape = shape,
+                                onCardClick = { onCardProdutoClick(produto) }
+                            ) {
+                                CardConteudoProduto(
+                                    produto = produto,
+                                    uiState = uiState
+                                )
+                            }
+                        }
+                    )
                     Divider(color = MaterialTheme.colorScheme.background)
                 }
             }
@@ -322,11 +381,50 @@ fun ListaProduto(
 }
 
 @Composable
+fun BackgroundDismiss(
+    modifier: Modifier = Modifier,
+    dismissState: DismissState,
+    shape: RoundedCornerShape
+) {
+    val color by animateColorAsState(
+        when (dismissState.targetValue) {
+            DismissValue.Default -> MaterialTheme.colorScheme.surface
+            else -> CoralRed
+        },
+        label = ""
+    )
+
+    val scale by animateFloatAsState(
+        if (dismissState.targetValue == DismissValue.Default) 0.75f else 1f,
+        label = ""
+    )
+
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+            .background(color, shape)
+            .padding(horizontal = dimensionResource(id = R.dimen.medium)),
+        contentAlignment = Alignment.CenterEnd
+    ) {
+        Icon(
+            Icons.Rounded.DeleteOutline,
+            modifier = Modifier.scale(scale),
+            tint = MaterialTheme.colorScheme.onPrimary,
+            contentDescription = "Delete Icon",
+        )
+    }
+}
+
+@Composable
 fun TopAppBar(
     modifier: Modifier = Modifier,
+    uiState: UiState,
     scrollBehavior: TopAppBarScrollBehavior,
     isNotOnTopoLista: Boolean
 ) {
+    val currencySymbol by remember {
+        mutableStateOf("${Currency.getInstance(Locale.getDefault()).symbol} ")
+    }
     CenterAlignedTopAppBar(
         modifier = modifier
             .fillMaxWidth()
@@ -337,28 +435,6 @@ fun TopAppBar(
                 )
             },
         title = {
-//            Box(
-//                modifier = Modifier
-//                    .fillMaxWidth()
-//                    .padding(horizontal = dimensionResource(id = R.dimen.medium)),
-//                contentAlignment = Alignment.CenterStart
-//            ) {
-//                Text(
-//                    modifier = Modifier
-//                        .width(100.dp),
-//                    text = "Nome da lista lalalalalalalalalala",
-//                    style = MaterialTheme.typography.labelLarge,
-//                    maxLines = 1,
-//                    overflow = TextOverflow.Ellipsis
-//                )
-//                Text(
-//                    modifier = Modifier
-//                        .align(Alignment.Center),
-//                    text = "R$ 1.599,99",
-//                    style = MaterialTheme.typography.titleLarge
-//                )
-//            }
-
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -375,21 +451,30 @@ fun TopAppBar(
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
-                Text(
+                Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .weight(1f),
-                    text = "R$ 999.999,99",
-                    textAlign =  TextAlign.End,
-                    style = MaterialTheme.typography.titleLarge
-                )
+                        .weight(1.2f)
+                        .padding(top = dimensionResource(id = R.dimen.small)),
+                    horizontalArrangement = Arrangement.End
+                ) {
+                    Text(
+                        text = currencySymbol,
+                        textAlign = TextAlign.End,
+                        style = MaterialTheme.typography.titleLarge
+                    )
+                    CustomTextPriceCounter(
+                        price = uiState.listaProduto.sumOf { (it.precoProdutoTotal()) },
+                        textStyle = MaterialTheme.typography.titleLarge
+                    )
+                }
             }
         },
         colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
             containerColor = MaterialTheme.colorScheme.background
         ),
-        scrollBehavior = scrollBehavior,
-    )
+
+        )
 }
 
 @Composable
@@ -439,16 +524,19 @@ fun CardConteudoProduto(
                     horizontalArrangement = Arrangement.Center
                 ) {
                     Text(
-                        text = produto.quantidade.toInt().toString(),
+                        text =
+                        if (produto.medida == stringResource(id = R.string.label_medida_unidade))
+                            produto.quantidade.toInt().toString()
+                        else produto.quantidade.toString(),
                         style = MaterialTheme.typography.bodySmall
                     )
                     Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.minimum)))
                     Text(
-                        text = "un",
+                        text = produto.medida,
                         style = MaterialTheme.typography.bodySmall
                     )
                 }
-
+                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.small)))
                 Row(
                     horizontalArrangement = Arrangement.Center
                 ) {
@@ -456,22 +544,24 @@ fun CardConteudoProduto(
                         text = produto.precoUnitario.toMoedaLocal(),
                         style = MaterialTheme.typography.bodySmall
                     )
-                    Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.small)))
-                    Row(
-                        modifier = Modifier
-                            .background(
-                                color = MediumSeaGreen,
-                                shape = RoundedCornerShape(9.dp)
+                    if (uiState.listaCompra.isComparar) {
+                        Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.small)))
+                        Row(
+                            modifier = Modifier
+                                .background(
+                                    color = MediumSeaGreen,
+                                    shape = RoundedCornerShape(9.dp)
+                                )
+                                .padding(dimensionResource(id = R.dimen.minimum)),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Center
+                        ) {
+                            Text(
+                                text = "-0,16%",
+                                style = MaterialTheme.typography.labelSmall,
+                                color = MaterialTheme.colorScheme.onPrimary
                             )
-                            .padding(dimensionResource(id = R.dimen.minimum)),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.Center
-                    ) {
-                        Text(
-                            text = "-0,16%",
-                            style = MaterialTheme.typography.labelSmall,
-                            color = MaterialTheme.colorScheme.onPrimary
-                        )
+                        }
                     }
                 }
 
@@ -492,23 +582,6 @@ fun CardConteudoProduto(
         }
     }
 
-}
-
-@Preview(showBackground = true, backgroundColor = 0xFFFFFFFF)
-@Composable
-fun Preview() {
-    ComparaPrecosTheme {
-        CardConteudoProduto(
-            uiState = UiState(),
-            produto = Produto(
-                -1,
-                -1,
-                "Sabonete com cheiro de rosas coloridas",
-                20.0,
-                BigDecimal("150.0")
-            )
-        )
-    }
 }
 
 @Composable
@@ -541,20 +614,13 @@ fun ListaProdutoVazia(
                 .fillMaxWidth()
                 .heightIn(max = max(160.dp, with(LocalDensity.current) { 160.sp.toDp() })),
             painter = painterResource(id = R.drawable.bg_lista_vazia),
-            contentDescription = null)
+            contentDescription = null
+        )
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.medium)))
         Text(
             text = stringResource(id = R.string.label_desc_lista_produto_vazia),
             style = MaterialTheme.typography.headlineSmall,
             textAlign = TextAlign.Center
         )
-    }
-}
-
-@Preview
-@Composable
-fun LoadingScreenPreview() {
-    ComparaPrecosTheme {
-        LoadingScreenPreview()
     }
 }

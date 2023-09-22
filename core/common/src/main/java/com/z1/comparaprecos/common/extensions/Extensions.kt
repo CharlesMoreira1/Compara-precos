@@ -1,6 +1,7 @@
 package com.z1.comparaprecos.common.extensions
 
 import java.math.BigDecimal
+import java.math.RoundingMode
 import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -16,4 +17,9 @@ fun BigDecimal.toMoedaLocal(): String {
     return NumberFormat
         .getCurrencyInstance(Locale.getDefault())
         .format(this)
+}
+
+fun BigDecimal.toRoundDecimalsPlaces(halfUp: Int, floor: Int): BigDecimal {
+    return this.setScale(halfUp, RoundingMode.HALF_UP)
+        .setScale(floor, RoundingMode.FLOOR)
 }

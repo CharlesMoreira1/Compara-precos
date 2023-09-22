@@ -288,6 +288,7 @@ fun ListaCompraScreen(
 
             uiState.listaMensagem.forEach { mensagem ->
                 CustomSnackBar(
+                    modifier = Modifier.fillMaxWidth(),
                     mensagem = mensagem,
                     onFimShowMensagem = {
                         viewModel.removerMensagem(it)

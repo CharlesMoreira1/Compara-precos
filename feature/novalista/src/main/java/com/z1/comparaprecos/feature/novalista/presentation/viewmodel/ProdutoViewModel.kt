@@ -7,6 +7,7 @@ import com.z1.comparaprecos.common.util.UiText
 import com.z1.comparaprecos.core.model.ListaCompraWithProdutos
 import com.z1.comparaprecos.core.model.Produto
 import com.z1.comparaprecos.core.common.R
+import com.z1.comparaprecos.core.model.ListaCompra
 import com.z1.comparaprecos.feature.novalista.domain.ProdutoUseCase
 import com.z1.comparaprecos.feature.novalista.presentation.EStatusScreen
 import com.z1.comparaprecos.feature.novalista.presentation.UiState
@@ -14,6 +15,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.onCompletion
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -42,24 +46,49 @@ class ProdutoViewModel @Inject constructor(
             is OnEvent.InsertProduto -> insertProduto(event.produto)
             is OnEvent.UpdateProduto -> updateProduto(event.produto)
             is OnEvent.DeleteProduto -> deleteProduto(event.produto)
+            is OnEvent.ProdutoSelecionado -> updateProdutoSelecionado(event.produto)
+            is OnEvent.UpdateUiEvent -> updateUiEvent(event.uiEvent)
         }
     }
+
+    private fun updateUiEvent(uiEvent: UiEvent) =
+        viewModelScope.launch {
+            _uiEvent.send(uiEvent)
+        }
 
     private fun insertProduto(produto: Produto) = viewModelScope.launch {
         val result = isDadosProdutoCorreto(produto)
         if (result.first) {
-            produtoUseCase.insertProduto(produto)
+            val isProdutoAdiconado = produtoUseCase.insertProduto(produto)
+            _uiEvent.send(if (isProdutoAdiconado > 0) UiEvent.Success else UiEvent.Default)
         } else {
             _uiEvent.send(UiEvent.ShowSnackbar(result.second!!))
         }
     }
 
-    private fun updateProduto(produto: Produto) {
-        TODO("Not yet implemented")
-    }
+    private fun updateProduto(produto: Produto) =
+        viewModelScope.launch {
+            val result = produtoUseCase.updateProduto(produto)
+            if (result > 0) {
+                updateProdutoSelecionado()
+                _uiEvent.send(UiEvent.ShowSnackbar(UiText.StringResource(R.string.label_produto_editado)))
+            }
+            else _uiEvent.send(UiEvent.Error(UiText.StringResource(R.string.label_desc_erro_editar_produto)))
+        }
 
-    private fun deleteProduto(produto: Produto) {
-        TODO("Not yet implemented")
+    private fun deleteProduto(produto: Produto) =
+        viewModelScope.launch {
+            val result = produtoUseCase.deleteProduto(produto)
+            _uiEvent.send(
+                if (result > 0) UiEvent.ShowSnackbar(UiText.StringResource(R.string.label_produto_removido))
+                else UiEvent.ShowSnackbar(UiText.StringResource(R.string.label_desc_erro_excluir_produto))
+            )
+        }
+
+    private fun updateProdutoSelecionado(produto: Produto? = null) {
+        _uiState.update { currentState ->
+            currentState.copy(produtoSelecionado = produto)
+        }
     }
 
     private fun isDadosProdutoCorreto(produto: Produto): Pair<Boolean, UiText?> {
@@ -67,17 +96,17 @@ class ProdutoViewModel @Inject constructor(
             produto.idListaCompra <= -1 -> false to UiText.StringResource(R.string.label_peso)
             produto.nomeProduto.isBlank() -> false to UiText.StringResource(R.string.label_peso)
             produto.precoUnitario <= BigDecimal.ZERO -> false to UiText.StringResource(R.string.label_peso)
-            produto.quantidade <= 0.0 -> false to UiText.StringResource(R.string.label_peso)
+            produto.quantidade.toDouble() <= 0.0 -> false to UiText.StringResource(R.string.label_peso)
             else -> true to null
         }
     }
 
-    private fun updateListaCompra(listaCompra: ListaCompraWithProdutos) {
+    private fun updateListaCompra(listaCompra: ListaCompra) {
         _uiState.update { currentState ->
             currentState.copy(
                 listaCompra = listaCompra,
                 screen =
-                if (listaCompra.detalhes.isComparar) EStatusScreen.LISTA_COMPRA_COMPARADA
+                if (listaCompra.isComparar) EStatusScreen.LISTA_COMPRA_COMPARADA
                 else EStatusScreen.LISTA_COMPRA
             )
         }
@@ -86,6 +115,12 @@ class ProdutoViewModel @Inject constructor(
     private fun updateListaCompraComparada(listaCompra: ListaCompraWithProdutos) {
         _uiState.update { currentState ->
             currentState.copy(listaCompraComparada = listaCompra)
+        }
+    }
+
+    private fun updateListaProduto(listaProduto: List<Produto>) {
+        _uiState.update { currentState ->
+            currentState.copy(listaProduto = listaProduto)
         }
     }
 
@@ -99,10 +134,11 @@ class ProdutoViewModel @Inject constructor(
             }
 
             listaCompra?.let {
-                if (it.detalhes.isComparar) {
-                    getListaCompraComparada(it.detalhes.idListaToComparar)
+                if (it.isComparar) {
+                    getListaCompraComparada(it.idListaToComparar)
                 }
                 updateListaCompra(it)
+                getListaProduto(it.id)
             } ?: _uiEvent.send(
                 UiEvent.Error(
                     UiText.StringResource(R.string.label_lista_compra_nao_encontrada)
@@ -110,10 +146,27 @@ class ProdutoViewModel @Inject constructor(
             )
         }
 
+    private fun getListaProduto(idListaCompra: Long) =
+        viewModelScope.launch {
+            produtoUseCase.getListaProduto(idListaCompra)
+                .onStart {
+
+                }
+                .onCompletion {
+
+                }
+                .catch {
+                    _uiEvent.send(UiEvent.Error(UiText.StringMessage(it.message ?: "")))
+                }
+                .collect {
+                    updateListaProduto(it)
+                }
+        }
+
     private fun getListaCompraComparada(idListaCompraComparada: Long) =
         viewModelScope.launch {
             val listaCompra = try {
-                produtoUseCase.getListaCompra(idListaCompraComparada)
+                produtoUseCase.getListaCompraComparada(idListaCompraComparada)
             } catch (e: Exception) {
                 e.printStackTrace()
                 null

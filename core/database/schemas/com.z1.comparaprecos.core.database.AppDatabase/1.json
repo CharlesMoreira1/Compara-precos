@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "f62095964d09153f85265be2d68f39fe",
+    "identityHash": "32219816aa0f3f1d08b4c19d8ee251c9",
     "entities": [
       {
         "tableName": "tb_lista_compra",
@@ -50,7 +50,7 @@
       },
       {
         "tableName": "tb_produtos",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `id_lista_compra` INTEGER NOT NULL, `nome_produto` TEXT NOT NULL, `quantidade` REAL NOT NULL, `preco_unitario` REAL NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `id_lista_compra` INTEGER NOT NULL, `nome_produto` TEXT NOT NULL, `quantidade` TEXT NOT NULL, `preco_unitario` REAL NOT NULL, `medida` TEXT NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -73,13 +73,19 @@
           {
             "fieldPath": "quantidade",
             "columnName": "quantidade",
-            "affinity": "REAL",
+            "affinity": "TEXT",
             "notNull": true
           },
           {
             "fieldPath": "precoUnitario",
             "columnName": "preco_unitario",
             "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "medida",
+            "columnName": "medida",
+            "affinity": "TEXT",
             "notNull": true
           }
         ],
@@ -96,7 +102,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'f62095964d09153f85265be2d68f39fe')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '32219816aa0f3f1d08b4c19d8ee251c9')"
     ]
   }
 }

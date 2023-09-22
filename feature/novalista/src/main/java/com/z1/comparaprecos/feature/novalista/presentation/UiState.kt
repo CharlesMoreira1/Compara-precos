@@ -12,7 +12,8 @@ enum class EStatusScreen {
 }
 data class UiState(
     val screen: EStatusScreen = EStatusScreen.CARREGANDO_LISTA_COMPRA,
-    val produto: Produto = Produto(-1, -1, "", 0.0, BigDecimal.ZERO),
-    val listaCompra: ListaCompraWithProdutos = ListaCompraWithProdutos(ListaCompra(-1, "", false, -2, 0L), emptyList()),
-    val listaCompraComparada: ListaCompraWithProdutos = ListaCompraWithProdutos(ListaCompra(-1, "", false, -2, 0L), emptyList())
+    val produtoSelecionado: Produto? = null, //Produto(-1, -1, "", "0.0", BigDecimal.ZERO, "un"),
+    val listaCompra: ListaCompra = ListaCompra(-1, "", false, -2, 0L),
+    val listaProduto: List<Produto> = emptyList(),
+    val listaCompraComparada: ListaCompraWithProdutos = ListaCompraWithProdutos(listaCompra, emptyList())
 )

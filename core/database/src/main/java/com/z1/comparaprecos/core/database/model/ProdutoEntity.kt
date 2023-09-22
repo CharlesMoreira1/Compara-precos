@@ -12,7 +12,8 @@ data class ProdutoEntity(
     val idListaCompra: Long,
     @ColumnInfo(name = "nome_produto")
     val nomeProduto: String,
-    val quantidade: Double,
+    val quantidade: String,
     @ColumnInfo(name = "preco_unitario")
     val precoUnitario: Double,
+    val medida: String
 )

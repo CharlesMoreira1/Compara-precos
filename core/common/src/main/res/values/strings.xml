@@ -22,6 +22,9 @@
     <string name="label_deletar_lista">Deletar lista</string>
     <string name="label_preco_unitario">Preço unitário</string>
     <string name="label_adicionar_produto">Adicionar produto</string>
+    <string name="label_produto_removido">Produto removido</string>
+    <string name="label_editar_produto">Editar produto</string>
+    <string name="label_produto_editado">Produto editado</string>
 <!--    Label com duas palavras-->
 
 
@@ -41,6 +44,8 @@
     <string name="label_lista_compra_nao_encontrada">Nenhuma lista de compra foi encontrada.</string>
     <string name="label_lista_compra_comparada_nao_encontrada">A lista de compra para comparar não foi encontrada.</string>
     <string name="label_desc_lista_produto_vazia">Essa lista de compra não tem nenhum produto.</string>
+    <string name="label_desc_erro_excluir_produto">Erro ao excluir o produto.</string>
+    <string name="label_desc_erro_editar_produto">Erro ao editar o produto.</string>
 <!--    Label com frases-->
 
 
