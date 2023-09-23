@@ -31,5 +31,5 @@ dependencies {
     implementation(project(":core:database"))
     implementation(project(":core:navigation"))
     implementation(project(":feature:listacompra"))
-    implementation(project(":feature:novalista"))
+    implementation(project(":feature:listaproduto"))
 }

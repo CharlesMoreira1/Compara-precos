@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "com.z1.comparaprecos.feature.novalista"
+    namespace = "com.z1.comparaprecos.feature.listaproduto"
 }
 
 dependencies {

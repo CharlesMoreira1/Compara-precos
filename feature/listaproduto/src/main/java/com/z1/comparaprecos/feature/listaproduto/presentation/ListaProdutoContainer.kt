@@ -3,11 +3,10 @@
     ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class
 )
 
-package com.z1.comparaprecos.feature.novalista.presentation
+package com.z1.comparaprecos.feature.listaproduto.presentation
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.FastOutLinearInEasing
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.Spring
@@ -21,8 +20,6 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
-import androidx.compose.animation.slideInHorizontally
-import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
@@ -44,7 +41,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -105,8 +101,8 @@ import com.z1.comparaprecos.common.ui.theme.MediumSeaGreen
 import com.z1.comparaprecos.common.util.UiEvent
 import com.z1.comparaprecos.core.common.R
 import com.z1.comparaprecos.core.model.Produto
-import com.z1.comparaprecos.feature.novalista.presentation.viewmodel.OnEvent
-import com.z1.comparaprecos.feature.novalista.presentation.viewmodel.ProdutoViewModel
+import com.z1.comparaprecos.feature.listaproduto.presentation.viewmodel.OnEvent
+import com.z1.comparaprecos.feature.listaproduto.presentation.viewmodel.ProdutoViewModel
 import kotlinx.coroutines.delay
 import java.util.Currency
 import java.util.Locale

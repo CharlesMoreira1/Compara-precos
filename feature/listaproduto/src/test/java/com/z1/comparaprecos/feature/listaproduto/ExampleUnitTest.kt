@@ -1,4 +1,4 @@
-package com.z1.comparaprecos.feature.novalista
+package com.z1.comparaprecos.feature.listaproduto
 
 import org.junit.Test
 

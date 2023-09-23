@@ -1,4 +1,4 @@
-package com.z1.comparaprecos.feature.novalista.presentation.viewmodel
+package com.z1.comparaprecos.feature.listaproduto.presentation.viewmodel
 
 import com.z1.comparaprecos.common.util.UiEvent
 import com.z1.comparaprecos.core.model.Produto

@@ -1,4 +1,4 @@
-package com.z1.comparaprecos.feature.novalista.domain
+package com.z1.comparaprecos.feature.listaproduto.domain
 
 import com.z1.comparaprecos.core.model.ListaCompra
 import com.z1.comparaprecos.core.model.ListaCompraWithProdutos

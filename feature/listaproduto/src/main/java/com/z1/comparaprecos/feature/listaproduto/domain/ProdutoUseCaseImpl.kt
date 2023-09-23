@@ -1,4 +1,4 @@
-package com.z1.comparaprecos.feature.novalista.domain
+package com.z1.comparaprecos.feature.listaproduto.domain
 
 import com.z1.comparaprecos.core.database.repository.produto.ProdutoRepository
 import com.z1.comparaprecos.core.model.Produto

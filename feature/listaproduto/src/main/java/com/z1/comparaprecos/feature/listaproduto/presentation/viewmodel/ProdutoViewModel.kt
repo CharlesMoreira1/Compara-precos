@@ -1,4 +1,4 @@
-package com.z1.comparaprecos.feature.novalista.presentation.viewmodel
+package com.z1.comparaprecos.feature.listaproduto.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -8,8 +8,8 @@ import com.z1.comparaprecos.core.model.ListaCompraWithProdutos
 import com.z1.comparaprecos.core.model.Produto
 import com.z1.comparaprecos.core.common.R
 import com.z1.comparaprecos.core.model.ListaCompra
-import com.z1.comparaprecos.feature.novalista.domain.ProdutoUseCase
-import com.z1.comparaprecos.feature.novalista.presentation.UiState
+import com.z1.comparaprecos.feature.listaproduto.domain.ProdutoUseCase
+import com.z1.comparaprecos.feature.listaproduto.presentation.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay

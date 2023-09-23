@@ -33,7 +33,7 @@
             <option value="$PROJECT_DIR$/core/navigation" />
             <option value="$PROJECT_DIR$/feature" />
             <option value="$PROJECT_DIR$/feature/listacompra" />
-            <option value="$PROJECT_DIR$/feature/novalista" />
+            <option value="$PROJECT_DIR$/feature/listaproduto" />
           </set>
         </option>
       </GradleProjectSettings>

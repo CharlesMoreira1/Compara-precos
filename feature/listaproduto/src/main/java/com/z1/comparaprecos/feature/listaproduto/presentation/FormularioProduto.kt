@@ -1,4 +1,4 @@
-package com.z1.comparaprecos.feature.novalista.presentation
+package com.z1.comparaprecos.feature.listaproduto.presentation
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState

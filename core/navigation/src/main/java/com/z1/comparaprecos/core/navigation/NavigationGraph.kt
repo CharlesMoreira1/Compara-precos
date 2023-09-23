@@ -10,7 +10,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.z1.comparaprecos.feature.listacompra.presentation.ListaCompraScreen
-import com.z1.comparaprecos.feature.novalista.presentation.NovaListaContainer
+import com.z1.comparaprecos.feature.listaproduto.presentation.NovaListaContainer
 
 enum class ComparaPrecosTelas(val titulo: String) {
     ListaCompra("Lista de Compras"),
