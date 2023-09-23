@@ -5,14 +5,25 @@
 
 package com.z1.comparaprecos.feature.novalista.presentation
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.FastOutLinearInEasing
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -33,6 +44,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -72,7 +84,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.max
@@ -89,7 +100,6 @@ import com.z1.comparaprecos.common.ui.components.CustomSnackBar
 import com.z1.comparaprecos.common.ui.components.CustomTextPriceCounter
 import com.z1.comparaprecos.common.ui.components.ETipoSnackbar
 import com.z1.comparaprecos.common.ui.components.Mensagem
-import com.z1.comparaprecos.common.ui.theme.ComparaPrecosTheme
 import com.z1.comparaprecos.common.ui.theme.CoralRed
 import com.z1.comparaprecos.common.ui.theme.MediumSeaGreen
 import com.z1.comparaprecos.common.util.UiEvent
@@ -98,7 +108,6 @@ import com.z1.comparaprecos.core.model.Produto
 import com.z1.comparaprecos.feature.novalista.presentation.viewmodel.OnEvent
 import com.z1.comparaprecos.feature.novalista.presentation.viewmodel.ProdutoViewModel
 import kotlinx.coroutines.delay
-import java.math.BigDecimal
 import java.util.Currency
 import java.util.Locale
 import java.util.concurrent.TimeUnit
@@ -130,22 +139,27 @@ fun NovaListaScreen(
 ) {
     val context = LocalContext.current
 
-    when (uiState.screen) {
-        EStatusScreen.CARREGANDO_LISTA_COMPRA -> {
-            LoadingScreen()
-            onEvent(OnEvent.GetListaCompra(idListaCompra))
-        }
-
-        EStatusScreen.LISTA_COMPRA -> {
-            ListaProdutoScreen(
-                modifier = modifier,
-                uiState = uiState,
-                onEvent = onEvent
-            )
-        }
-
-        EStatusScreen.LISTA_COMPRA_COMPARADA -> ListaProdutoComparadoScreen()
+    AnimatedVisibility(
+        visible = uiState.isListaProdutoCarregada,
+        enter = scaleIn(animationSpec = tween(300, easing = LinearEasing)) + fadeIn(),
+        exit = scaleOut(animationSpec = tween(300, easing = LinearEasing)) + fadeOut()
+    ) {
+        ListaProdutoScreen(
+            modifier = modifier,
+            uiState = uiState,
+            onEvent = onEvent
+        )
     }
+
+    AnimatedVisibility(
+        visible = !uiState.isListaProdutoCarregada,
+        enter = fadeIn(),
+        exit = slideOutVertically(animationSpec = tween(500, easing = LinearEasing)) { it }
+    ) {
+        LoadingScreen()
+        onEvent(OnEvent.GetListaCompra(idListaCompra))
+    }
+
     when (uiEvent) {
         is UiEvent.Default -> Unit
         is UiEvent.Success -> Unit
@@ -165,13 +179,14 @@ fun NovaListaScreen(
                 )
             }
         }
+
         is UiEvent.ShowSnackbar -> {
             val message = Mensagem(
                 uiEvent.message.asResId(),
                 ETipoSnackbar.SUCESSO
             )
             CustomSnackBar(
-                modifier = Modifier.width(200.dp),
+                modifier = Modifier.width(220.dp),
                 mensagem = message, // aqui vai a event.message do uiEvent (corrigir lógica)
                 duracao = TimeUnit.SECONDS.toMillis(2),
                 onFimShowMensagem = {
@@ -179,6 +194,7 @@ fun NovaListaScreen(
                 }
             )
         }
+
         is UiEvent.NavigateUp -> Unit
         else -> Unit
     }
@@ -258,7 +274,7 @@ fun ListaProdutoScreen(
                 if (produto.id == 0L) onEvent(OnEvent.InsertProduto(produto))
                 else onEvent(OnEvent.UpdateProduto(produto))
             },
-            onCancelarEdicaoProduto = { onEvent(OnEvent.ProdutoSelecionado(null))}
+            onCancelarEdicaoProduto = { onEvent(OnEvent.ProdutoSelecionado(null)) }
         )
     }
 }
@@ -282,8 +298,7 @@ fun ListaProduto(
     val listState = rememberLazyListState()
 
     LaunchedEffect(key1 = uiState.listaProduto.size) {
-        if (uiState.listaProduto.isNotEmpty())
-            listState.animateScrollToItem(index = uiState.listaProduto.size -1)
+        if (uiState.listaProduto.isNotEmpty()) listState.animateScrollToItem(index = 0)
     }
 
     Scaffold(
@@ -350,7 +365,12 @@ fun ListaProduto(
                     SwipeToDismiss(
                         modifier = Modifier
                             .padding(horizontal = dimensionResource(id = R.dimen.medium))
-                            .animateItemPlacement(),
+                            .animateItemPlacement(
+                                animationSpec = spring(
+                                    dampingRatio = Spring.DampingRatioMediumBouncy,
+                                    stiffness = Spring.StiffnessLow
+                                )
+                            ),
                         state = dismissState,
                         directions = setOf(DismissDirection.EndToStart),
                         background = {
@@ -362,7 +382,13 @@ fun ListaProduto(
                         dismissContent = {
                             CustomCard(
                                 modifier = modifier
-                                    .animateItemPlacement(),
+                                    .padding(horizontal = 8.dp)
+                                    .animateItemPlacement(
+                                        animationSpec = spring(
+                                            dampingRatio = Spring.DampingRatioMediumBouncy,
+                                            stiffness = Spring.StiffnessLow
+                                        )
+                                    ),
                                 shape = shape,
                                 onCardClick = { onCardProdutoClick(produto) }
                             ) {

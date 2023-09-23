@@ -20,7 +20,7 @@ interface ProdutoDao {
     @Query("SELECT * FROM tb_lista_compra WHERE id == :idListaCompra")
     suspend fun getListaCompraComparada(idListaCompra: Long): ListaCompraWithProdutosEntity
 
-    @Query("SELECT * FROM tb_produtos WHERE id_lista_compra = :idListaCompra")
+    @Query("SELECT * FROM tb_produtos WHERE id_lista_compra = :idListaCompra ORDER BY id DESC")
     fun getListaProduto(idListaCompra: Long): Flow<List<ProdutoEntity>>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)

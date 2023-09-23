@@ -1,7 +1,5 @@
 package com.z1.comparaprecos.common.util
 
-import androidx.compose.runtime.State
-
 sealed class UiEvent {
     data object Default: UiEvent()
     data object Success: UiEvent()

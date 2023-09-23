@@ -9,10 +9,10 @@ import com.z1.comparaprecos.core.model.Produto
 import com.z1.comparaprecos.core.common.R
 import com.z1.comparaprecos.core.model.ListaCompra
 import com.z1.comparaprecos.feature.novalista.domain.ProdutoUseCase
-import com.z1.comparaprecos.feature.novalista.presentation.EStatusScreen
 import com.z1.comparaprecos.feature.novalista.presentation.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.catch
@@ -23,6 +23,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.math.BigDecimal
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 @HiltViewModel
@@ -104,10 +105,7 @@ class ProdutoViewModel @Inject constructor(
     private fun updateListaCompra(listaCompra: ListaCompra) {
         _uiState.update { currentState ->
             currentState.copy(
-                listaCompra = listaCompra,
-                screen =
-                if (listaCompra.isComparar) EStatusScreen.LISTA_COMPRA_COMPARADA
-                else EStatusScreen.LISTA_COMPRA
+                listaCompra = listaCompra
             )
         }
     }
@@ -120,12 +118,16 @@ class ProdutoViewModel @Inject constructor(
 
     private fun updateListaProduto(listaProduto: List<Produto>) {
         _uiState.update { currentState ->
-            currentState.copy(listaProduto = listaProduto)
+            currentState.copy(
+                isListaProdutoCarregada = true,
+                listaProduto = listaProduto
+            )
         }
     }
 
     private fun getListaCompra(idListaCompra: Long) =
         viewModelScope.launch {
+            delay(TimeUnit.SECONDS.toMillis(2))
             val listaCompra = try {
                 produtoUseCase.getListaCompra(idListaCompra)
             } catch (e: Exception) {

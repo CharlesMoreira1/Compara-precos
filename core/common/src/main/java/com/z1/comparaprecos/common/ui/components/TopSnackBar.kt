@@ -99,7 +99,8 @@ fun CustomSnackBar(
             Row(
                 modifier = modifier
                     .padding(dimensionResource(id = R.dimen.medium)),
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
                     modifier = Modifier,
