@@ -9,5 +9,6 @@ sealed class OnEvent {
     data class UpdateProduto(val produto: Produto): OnEvent()
     data class DeleteProduto(val produto: Produto): OnEvent()
     data class ProdutoSelecionado(val produto: Produto?): OnEvent()
+    data class UpdateQuantidadeProdutoExistente(val produto: Produto?): OnEvent()
     data class UpdateUiEvent(val uiEvent: UiEvent): OnEvent()
 }

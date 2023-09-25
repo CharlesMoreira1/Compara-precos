@@ -2,6 +2,9 @@
     <string name="app_name">Compara Preços</string>
 
 <!--    Label com uma palavra-->
+    <string name="label_sim">Sim</string>
+    <string name="label_nao">Não</string>
+    <string name="label_atencao">Atenção</string>
     <string name="label_titulo">Título</string>
     <string name="label_comparar">Comparar</string>
     <string name="label_agurade">Aguarde</string>
@@ -46,6 +49,7 @@
     <string name="label_desc_lista_produto_vazia">Essa lista de compra não tem nenhum produto.</string>
     <string name="label_desc_erro_excluir_produto">Erro ao excluir o produto.</string>
     <string name="label_desc_erro_editar_produto">Erro ao editar o produto.</string>
+    <string name="label_desc_produto_existente">Você já tem um produto na lista com o nome %s. Deseja somar a quantidade inserida do novo produto (%s) no produto que já esta na lista?</string>
 <!--    Label com frases-->
 
 

@@ -48,6 +48,7 @@ class ProdutoViewModel @Inject constructor(
             is OnEvent.UpdateProduto -> updateProduto(event.produto)
             is OnEvent.DeleteProduto -> deleteProduto(event.produto)
             is OnEvent.ProdutoSelecionado -> updateProdutoSelecionado(event.produto)
+            is OnEvent.UpdateQuantidadeProdutoExistente -> updateProdutoJaExistente(event.produto)
             is OnEvent.UpdateUiEvent -> updateUiEvent(event.uiEvent)
         }
     }
@@ -58,12 +59,17 @@ class ProdutoViewModel @Inject constructor(
         }
 
     private fun insertProduto(produto: Produto) = viewModelScope.launch {
-        val result = isDadosProdutoCorreto(produto)
-        if (result.first) {
-            val isProdutoAdiconado = produtoUseCase.insertProduto(produto)
-            _uiEvent.send(if (isProdutoAdiconado > 0) UiEvent.Success else UiEvent.Default)
+        if (isProdutoJaExiste(produto) != null) {
+            updateProdutoJaExiste(produto)
+            _uiEvent.send(UiEvent.Error(UiText.StringResource(R.string.label_desc_produto_existente)))
         } else {
-            _uiEvent.send(UiEvent.ShowSnackbar(result.second!!))
+            val result = isDadosProdutoCorreto(produto)
+            if (result.first) {
+                val isProdutoAdiconado = produtoUseCase.insertProduto(produto)
+                _uiEvent.send(if (isProdutoAdiconado > 0) UiEvent.Success else UiEvent.Default)
+            } else {
+                _uiEvent.send(UiEvent.ShowSnackbar(result.second!!))
+            }
         }
     }
 
@@ -76,6 +82,21 @@ class ProdutoViewModel @Inject constructor(
             }
             else _uiEvent.send(UiEvent.Error(UiText.StringResource(R.string.label_desc_erro_editar_produto)))
         }
+
+    private fun updateProdutoJaExistente(produto: Produto?) {
+        produto?.let {
+            val produtoNaLista = isProdutoJaExiste(produto)
+            produtoNaLista?.let {
+                val novaQuantidade  = atualizarNovaQuantidadeProduto(produto, produtoNaLista)
+                val produtoAtualizado = produtoNaLista.copy(quantidade = novaQuantidade)
+                updateProduto(produtoAtualizado)
+            }
+        } ?: updateProdutoJaExiste()
+    }
+
+    private fun atualizarNovaQuantidadeProduto(produto: Produto, produtoNaLista: Produto) =
+        BigDecimal(produtoNaLista.quantidade).plus(BigDecimal(produto.quantidade)).toString()
+
 
     private fun deleteProduto(produto: Produto) =
         viewModelScope.launch {
@@ -92,6 +113,15 @@ class ProdutoViewModel @Inject constructor(
         }
     }
 
+    private fun updateProdutoJaExiste(produto: Produto? = null) {
+        _uiState.update { currentState ->
+            currentState.copy(
+                produtoJaExiste = produto
+            )
+        }
+        if (produto == null) updateUiEvent(UiEvent.Default)
+    }
+
     private fun isDadosProdutoCorreto(produto: Produto): Pair<Boolean, UiText?> {
         return when {
             produto.idListaCompra <= -1 -> false to UiText.StringResource(R.string.label_peso)
@@ -101,6 +131,9 @@ class ProdutoViewModel @Inject constructor(
             else -> true to null
         }
     }
+
+    private fun isProdutoJaExiste(produto: Produto): Produto? =
+        _uiState.value.listaProduto.find { it.nomeProduto == produto.nomeProduto }
 
     private fun updateListaCompra(listaCompra: ListaCompra) {
         _uiState.update { currentState ->

@@ -14,4 +14,9 @@ sealed class UiText {
         is StringResource -> context.getString(resId)
         is StringMessage -> message
     }
+
+    fun asString(context: Context, vararg formatArgs: Any) = when(this) {
+        is StringResource -> context.getString(resId, *formatArgs)
+        is StringMessage -> message
+    }
 }

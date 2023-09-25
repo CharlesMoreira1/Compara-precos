@@ -119,8 +119,7 @@ fun FormularioProduto(
     LaunchedEffect(key1 = produtoSelecionado) {
         produtoSelecionado?.run {
             valueNomeProduto = nomeProduto
-            valueIsPeso =
-                medida == UiText.StringResource(R.string.label_medida_peso).asString(context)
+            valueIsPeso = isMedidaPeso
             isResetQuantidade = false
             valueQuantidade = quantidade.replace(".", "")
             valuePreco = precoUnitario.toString().replace(".", "")
@@ -318,16 +317,12 @@ fun FormularioProduto(
                                 id = produtoSelecionado?.id ?: 0,
                                 idListaCompra = produtoSelecionado?.idListaCompra
                                     ?: uiState.listaCompra.id,
-                                nomeProduto = valueNomeProduto,
+                                nomeProduto = valueNomeProduto.trimEnd(),
                                 precoUnitario = BigDecimal(valuePreco).movePointLeft(2),
                                 quantidade =
                                 if (valueIsPeso) BigDecimal(valueQuantidade).movePointLeft(3).toString()
                                 else BigDecimal(valueQuantidade).toString(),
-                                medida =
-                                if (valueIsPeso) UiText.StringResource(R.string.label_medida_peso)
-                                    .asString(context)
-                                else UiText.StringResource(R.string.label_medida_unidade)
-                                    .asString(context)
+                                isMedidaPeso = valueIsPeso
                             )
                         )
                         resetFormulario()

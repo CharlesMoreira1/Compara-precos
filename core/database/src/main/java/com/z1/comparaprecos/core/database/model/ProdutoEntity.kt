@@ -15,5 +15,6 @@ data class ProdutoEntity(
     val quantidade: String,
     @ColumnInfo(name = "preco_unitario")
     val precoUnitario: Double,
-    val medida: String
+    @ColumnInfo(name = "is_medida_peso")
+    val isMedidaPeso: Boolean
 )
