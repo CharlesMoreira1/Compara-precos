@@ -18,6 +18,6 @@ android {
 }
 
 dependencies {
-    implementation(project(":feature:listacompra"))
-    implementation(project(":feature:listaproduto"))
+    api(project(":feature:listacompra"))
+    api(project(":feature:listaproduto"))
 }
