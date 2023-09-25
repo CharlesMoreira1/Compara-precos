@@ -50,6 +50,7 @@
     <string name="label_desc_erro_excluir_produto">Erro ao excluir o produto.</string>
     <string name="label_desc_erro_editar_produto">Erro ao editar o produto.</string>
     <string name="label_desc_produto_existente">Você já tem um produto na lista com o nome %s. Deseja somar a quantidade inserida do novo produto (%s) no produto que já esta na lista?</string>
+    <string name="label_desc_finalizar_lista">Deseja finalizar a lista de compra?</string>
 <!--    Label com frases-->
 
 

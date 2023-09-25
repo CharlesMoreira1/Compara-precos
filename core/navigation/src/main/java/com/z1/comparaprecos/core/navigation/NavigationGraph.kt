@@ -47,7 +47,8 @@ fun NavigationGraph(
         ) { backStackEntry ->
             val idListaCompra = backStackEntry.arguments?.getLong(idListaCompra) ?: -1
             NovaListaContainer(
-                idListaCompra = idListaCompra
+                idListaCompra = idListaCompra,
+                navigateUp = { navController.navigateUp() }
             )
         }
     }

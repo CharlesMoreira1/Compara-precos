@@ -6,4 +6,5 @@ sealed class UiEvent {
     data class Error(val message: UiText): UiEvent()
     data object NavigateUp: UiEvent()
     data class ShowSnackbar(val message: UiText): UiEvent()
+    data object Finished: UiEvent()
 }

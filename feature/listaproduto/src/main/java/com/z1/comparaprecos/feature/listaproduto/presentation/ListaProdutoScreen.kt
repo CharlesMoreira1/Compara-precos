@@ -67,7 +67,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -109,6 +108,7 @@ import java.util.concurrent.TimeUnit
 @Composable
 fun ListaProdutoScreen(
     modifier: Modifier = Modifier,
+    navigateUp: () -> Unit,
     uiState: UiState,
     uiEvent: UiEvent,
     idListaCompra: Long,
@@ -133,10 +133,7 @@ fun ListaProdutoScreen(
                     .fillMaxHeight()
                     .weight(1f),
                 uiState = uiState,
-                onEvent = onEvent,
-                onCardProdutoClick = {
-                    onEvent(OnEvent.ProdutoSelecionado(it))
-                }
+                onEvent = onEvent
             )
             FormularioProduto(
                 uiState = uiState,
@@ -176,18 +173,17 @@ fun ListaProdutoScreen(
                             quantidade
                         )
                     } ?: "",
+                    textoBotaoPositivo = stringResource(id = R.string.label_sim),
                     onAcaoPositivaClick = {
                         onEvent(OnEvent.UpdateQuantidadeProdutoExistente(uiState.produtoJaExiste))
                     },
-                    textoBotaoPositivo = stringResource(id = R.string.label_sim),
+                    textoBotaoNegativo = stringResource(id = R.string.label_nao),
                     onAcaoNegativaClick = {
                         onEvent(OnEvent.UpdateQuantidadeProdutoExistente(null))
-                    },
-                    textoBotaoNegativo = stringResource(id = R.string.label_nao)
+                    }
                 )
             }
         }
-
         is UiEvent.ShowSnackbar -> {
             val message = Mensagem(
                 uiEvent.message.asResId(),
@@ -202,8 +198,27 @@ fun ListaProdutoScreen(
                 }
             )
         }
-
-        is UiEvent.NavigateUp -> Unit
+        is UiEvent.Finished -> {
+            CustomBottomSheetDialog(
+                onDismissRequest = {
+                    onEvent(OnEvent.UpdateQuantidadeProdutoExistente(null))
+                }
+            ) {
+                CustomBottomSheetDialogContent(
+                    titulo = stringResource(id = R.string.label_atencao),
+                    mensagem = stringResource(id = R.string.label_desc_finalizar_lista),
+                    textoBotaoPositivo = stringResource(id = R.string.label_sim),
+                    onAcaoPositivaClick = {
+                        onEvent(OnEvent.UpdateUiEvent(UiEvent.NavigateUp))
+                    },
+                    textoBotaoNegativo = stringResource(id = R.string.label_nao),
+                    onAcaoNegativaClick = {
+                        onEvent(OnEvent.UpdateUiEvent(UiEvent.Default))
+                    }
+                )
+            }
+        }
+        is UiEvent.NavigateUp -> navigateUp()
         else -> Unit
     }
 }
@@ -212,8 +227,7 @@ fun ListaProdutoScreen(
 fun ListaProduto(
     modifier: Modifier = Modifier,
     uiState: UiState,
-    onEvent: (OnEvent) -> Unit,
-    onCardProdutoClick: (Produto) -> Unit
+    onEvent: (OnEvent) -> Unit
 ) {
     val appBarState = rememberTopAppBarState()
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(appBarState)
@@ -234,7 +248,9 @@ fun ListaProduto(
         },
         floatingActionButton = {
             if (uiState.listaProduto.isNotEmpty()) {
-                FimListaActionButton {}
+                FimListaActionButton {
+                    onEvent(OnEvent.UpdateUiEvent(UiEvent.Finished))
+                }
             }
         }
     ) { innerPadding ->
@@ -312,7 +328,7 @@ fun ListaProduto(
                                         )
                                     ),
                                 shape = shape,
-                                onCardClick = { onCardProdutoClick(produto) }
+                                onCardClick = { onEvent(OnEvent.ProdutoSelecionado(produto)) }
                             ) {
                                 CardConteudoProduto(
                                     produto = produto,

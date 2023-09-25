@@ -11,6 +11,7 @@ import com.z1.comparaprecos.feature.listaproduto.presentation.viewmodel.ProdutoV
 @Composable
 fun NovaListaContainer(
     modifier: Modifier = Modifier,
+    navigateUp: () -> Unit,
     idListaCompra: Long
 ) {
     val viewModel: ProdutoViewModel = hiltViewModel()
@@ -19,6 +20,7 @@ fun NovaListaContainer(
 
     ListaProdutoScreen(
         modifier = modifier,
+        navigateUp = navigateUp,
         uiState = uiState,
         uiEvent = uiEvent.value,
         idListaCompra = idListaCompra,
