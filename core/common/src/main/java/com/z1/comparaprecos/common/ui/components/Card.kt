@@ -2,8 +2,6 @@
 
 package com.z1.comparaprecos.common.ui.components
 
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -12,15 +10,14 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 import com.z1.comparaprecos.core.common.R
 
 @Composable
 fun CustomCard(
     modifier: Modifier = Modifier,
-    defaultElevetion: Dp = 0.dp,
+    shape: Shape = RoundedCornerShape(dimensionResource(id = R.dimen.big)),
     containerColor: Color = MaterialTheme.colorScheme.surface,
     onCardClick: () -> Unit,
     content: @Composable () -> Unit
@@ -33,7 +30,7 @@ fun CustomCard(
 //        elevation = CardDefaults.cardElevation(
 //            defaultElevation = defaultElevetion,
 //        ),
-        shape = RoundedCornerShape(dimensionResource(id = R.dimen.big)),
+        shape = shape,
         onClick = onCardClick,
         content = { content() }
     )

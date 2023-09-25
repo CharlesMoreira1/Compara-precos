@@ -4,7 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.z1.comparaprecos.common.ui.components.Mensagem
 import com.z1.comparaprecos.core.model.ListaCompra
-import com.z1.comparaprecos.feature.listacompra.domain.CompraUseCase
+import com.z1.comparaprecos.core.model.ListaCompraWithProdutos
+import com.z1.comparaprecos.feature.listacompra.domain.ListaCompraUseCase
 import com.z1.comparaprecos.feature.listacompra.presentation.ELoanding
 import com.z1.comparaprecos.feature.listacompra.presentation.EStatusListaCompra
 import com.z1.comparaprecos.feature.listacompra.presentation.ETypeErrors
@@ -21,7 +22,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ListaCompraViewModel @Inject constructor(
-    private val compraUseCase: CompraUseCase,
+    private val listaCompraUseCase: ListaCompraUseCase,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(UiState())
@@ -35,7 +36,7 @@ class ListaCompraViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 updtateStatusLoading(ELoanding.CRIANDO_COMPRA)
-                compraUseCase.insertNovaCompra(novaListaCompra)
+                listaCompraUseCase.insertNovaCompra(novaListaCompra)
                 updtateStatusCompra(EStatusListaCompra.CRIADA)
             } catch (e: Exception) {
                 updtateStatusCompra(EStatusListaCompra.ERRO_AO_CRIAR)
@@ -46,7 +47,7 @@ class ListaCompraViewModel @Inject constructor(
 
     private fun getListaCompra() =
         viewModelScope.launch {
-            compraUseCase.getListaCompra()
+            listaCompraUseCase.getListaCompraWithProdutos()
                 .onStart {
                     updtateStatusLoading(ELoanding.AGUARDE)
                 }
@@ -69,7 +70,7 @@ class ListaCompraViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 updtateStatusLoading(ELoanding.AGUARDE)
-                compraUseCase.deleteCompra(idListaCompra)
+                listaCompraUseCase.deleteCompra(idListaCompra)
                 updtateStatusCompra(EStatusListaCompra.EXCLUIDA)
             } catch (e: Exception) {
                 updtateStatusLoading(ELoanding.NOTHING)
@@ -101,7 +102,7 @@ class ListaCompraViewModel @Inject constructor(
         }
     }
 
-    private fun updateListaCompra(listaCompra: List<ListaCompra>) {
+    private fun updateListaCompra(listaCompra: List<ListaCompraWithProdutos>) {
         _uiState.update { currentState ->
             currentState.copy(listaCompra = listaCompra)
         }
@@ -146,10 +147,10 @@ class ListaCompraViewModel @Inject constructor(
         if (titulo.isNotEmpty()) updateError()
     }
 
-    fun updateCompraSelecionada(listaCompraSelecionada: ListaCompra?) {
+    fun updateCompraSelecionada(listaCompraSelecionada: ListaCompraWithProdutos?) {
         _uiState.update { currentState ->
             currentState.copy(
-                listaListaCompraSelecionada = listaCompraSelecionada,
+                listaCompraSelecionada = listaCompraSelecionada,
                 statusListaCompra = EStatusListaCompra.NOTHING
             )
         }

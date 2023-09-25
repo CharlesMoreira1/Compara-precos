@@ -19,5 +19,5 @@ android {
 
 dependencies {
     implementation(project(":feature:listacompra"))
-    implementation(project(":feature:novalista"))
+    implementation(project(":feature:listaproduto"))
 }

@@ -2,11 +2,17 @@
     <string name="app_name">Compara Preços</string>
 
 <!--    Label com uma palavra-->
+    <string name="label_sim">Sim</string>
+    <string name="label_nao">Não</string>
+    <string name="label_atencao">Atenção</string>
     <string name="label_titulo">Título</string>
     <string name="label_comparar">Comparar</string>
     <string name="label_agurade">Aguarde</string>
-    <string name="label_produtos">Produtos</string>
     <string name="label_valor">Valor</string>
+    <string name="label_peso">Peso</string>
+    <string name="label_quantidade">Quantidade</string>
+    <string name="label_medida_unidade">un</string>
+    <string name="label_medida_peso">kg</string>
 <!--    Label com uma palavra-->
 
 <!--    Label com duas palavras-->
@@ -17,6 +23,11 @@
     <string name="label_abrir_lista">Abrir lista</string>
     <string name="label_editar_lista">Editar lista</string>
     <string name="label_deletar_lista">Deletar lista</string>
+    <string name="label_preco_unitario">Preço unitário</string>
+    <string name="label_adicionar_produto">Adicionar produto</string>
+    <string name="label_produto_removido">Produto removido</string>
+    <string name="label_editar_produto">Editar produto</string>
+    <string name="label_produto_editado">Produto editado</string>
 <!--    Label com duas palavras-->
 
 
@@ -32,6 +43,25 @@
     <string name="label_desc_lista_compra_vazia">Você não criou nenhuma lista de compra. Vamos começar agora? Clique no botão +.</string>
     <string name="label_desc_lista_compra_criada">Lista de compra criada.</string>
     <string name="label_desc_lista_compra_excluida">Lista de compra excluída.</string>
+    <string name="label_esse_produto_e">Esse produto é …</string>
+    <string name="label_lista_compra_nao_encontrada">Nenhuma lista de compra foi encontrada.</string>
+    <string name="label_lista_compra_comparada_nao_encontrada">A lista de compra para comparar não foi encontrada.</string>
+    <string name="label_desc_lista_produto_vazia">Essa lista de compra não tem nenhum produto.</string>
+    <string name="label_desc_erro_excluir_produto">Erro ao excluir o produto.</string>
+    <string name="label_desc_erro_editar_produto">Erro ao editar o produto.</string>
+    <string name="label_desc_produto_existente">Você já tem um produto na lista com o nome %s. Deseja somar a quantidade inserida do novo produto (%s) no produto que já esta na lista?</string>
+    <string name="label_desc_finalizar_lista">Deseja finalizar a lista de compra?</string>
 <!--    Label com frases-->
+
+
+<!--    Label plural-->
+    <plurals name="label_plural_produto">
+        <item quantity="zero">Produto</item>
+        <item quantity="one">Produto</item>
+        <item quantity="other">Produtos</item>
+    </plurals>
+<!--    Label plural-->
+
+
 
 </resources>

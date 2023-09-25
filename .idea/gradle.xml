@@ -27,14 +27,13 @@
             <option value="$PROJECT_DIR$/build-logic" />
             <option value="$PROJECT_DIR$/build-logic/convention" />
             <option value="$PROJECT_DIR$/core" />
-            <option value="$PROJECT_DIR$/core/blur-image" />
             <option value="$PROJECT_DIR$/core/common" />
             <option value="$PROJECT_DIR$/core/database" />
             <option value="$PROJECT_DIR$/core/model" />
             <option value="$PROJECT_DIR$/core/navigation" />
             <option value="$PROJECT_DIR$/feature" />
             <option value="$PROJECT_DIR$/feature/listacompra" />
-            <option value="$PROJECT_DIR$/feature/novalista" />
+            <option value="$PROJECT_DIR$/feature/listaproduto" />
           </set>
         </option>
       </GradleProjectSettings>

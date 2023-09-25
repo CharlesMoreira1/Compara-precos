@@ -7,8 +7,11 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.CheckCircleOutline
@@ -71,16 +74,18 @@ fun CustomSnackBar(
     }
 
     AnimatedVisibility(
+        modifier = modifier
+            .wrapContentWidth(Alignment.Start)
+            .wrapContentHeight(Alignment.Top),
         visible = isVisible,
         enter = expandVertically(),
         exit = fadeOut() + shrinkVertically()
     ) {
         Card(
-            modifier = modifier
-                .fillMaxWidth()
+            modifier = Modifier
                 .padding(dimensionResource(id = R.dimen.medium)),
             colors = CardDefaults.cardColors(
-                containerColor = when(mensagem.tipoMensagem) {
+                containerColor = when (mensagem.tipoMensagem) {
                     ETipoSnackbar.SUCESSO -> MediumSeaGreen
                     ETipoSnackbar.AVISO -> OrangePeel
                     ETipoSnackbar.ERRO -> CoralRed
@@ -93,17 +98,17 @@ fun CustomSnackBar(
         ) {
             Row(
                 modifier = modifier
-                    .fillMaxWidth()
                     .padding(dimensionResource(id = R.dimen.medium)),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    modifier = Modifier.weight(1f),
+                    modifier = Modifier,
                     text = stringResource(id = mensagem.titulo),
                     color = iconeTint,
                     style = MaterialTheme.typography.titleMedium
                 )
+                Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.normal)))
                 Icon(
                     imageVector = icone,
                     contentDescription = null,
@@ -119,7 +124,11 @@ fun CustomSnackBar(
 private fun PreviewCustomSnackbar() {
     ComparaPrecosTheme {
         CustomSnackBar(
-            mensagem = Mensagem(R.string.app_name, ETipoSnackbar.ERRO, Instant.now().toEpochMilli()),
+            mensagem = Mensagem(
+                R.string.app_name,
+                ETipoSnackbar.ERRO,
+                Instant.now().toEpochMilli()
+            ),
             onFimShowMensagem = {}
         )
     }
