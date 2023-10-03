@@ -2,20 +2,21 @@ package com.z1.comparaprecos.feature.listacompra.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.z1.comparaprecos.common.ui.components.Mensagem
+import com.z1.comparaprecos.common.util.UiEvent
+import com.z1.comparaprecos.common.util.UiText
 import com.z1.comparaprecos.core.model.ListaCompra
 import com.z1.comparaprecos.core.model.ListaCompraWithProdutos
+import com.z1.comparaprecos.core.common.R
 import com.z1.comparaprecos.feature.listacompra.domain.ListaCompraUseCase
-import com.z1.comparaprecos.feature.listacompra.presentation.ELoanding
-import com.z1.comparaprecos.feature.listacompra.presentation.EStatusListaCompra
-import com.z1.comparaprecos.feature.listacompra.presentation.ETypeErrors
 import com.z1.comparaprecos.feature.listacompra.presentation.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -28,171 +29,112 @@ class ListaCompraViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(UiState())
     val uiState = _uiState.asStateFlow()
 
+    private val _uiEvent = Channel<UiEvent>(0)
+    val uiEvent = _uiEvent.receiveAsFlow()
+
     init {
         getListaCompra()
     }
 
-    private fun insertNovaCompra(novaListaCompra: ListaCompra) =
+    fun onEvent(event: OnEvent) {
+        when(event) {
+            is OnEvent.Insert -> insertListaCompra(event.novaListaCompra)
+            is OnEvent.Delete -> deletarListaCompra(event.idListaCompra)
+            is OnEvent.UpdateTituloListaCompra -> updateTituloListaCompra(event.titulo)
+            is OnEvent.ListaCompraSelecionada -> listaCompraSelecionada(event.listaCompra)
+            is OnEvent.Reset -> resetCompra()
+            is OnEvent.UpdateUiEvent -> updateUiEvent(event.uiEvent)
+        }
+    }
+
+    private fun updateUiEvent(uiEvent: UiEvent) =
         viewModelScope.launch {
-            try {
-                updtateStatusLoading(ELoanding.CRIANDO_COMPRA)
-                listaCompraUseCase.insertNovaCompra(novaListaCompra)
-                updtateStatusCompra(EStatusListaCompra.CRIADA)
-            } catch (e: Exception) {
-                updtateStatusCompra(EStatusListaCompra.ERRO_AO_CRIAR)
-                e.message?.let { updateError(ETypeErrors.ERRO_INSERIR_LISTA, it) }
-                e.printStackTrace()
-            }
+            _uiEvent.send(uiEvent)
         }
 
     private fun getListaCompra() =
         viewModelScope.launch {
             listaCompraUseCase.getListaCompraWithProdutos()
                 .onStart {
-                    updtateStatusLoading(ELoanding.AGUARDE)
+
                 }
                 .onCompletion {
-                    updtateStatusLoading(ELoanding.NOTHING)
+
                 }
                 .catch {
-                    it.message?.let { message ->
-                        updateError(ETypeErrors.ERRO_CARREGAR_LISTA, message)
-                    }
                     it.printStackTrace()
                 }
                 .collect {
                     updateListaCompra(it)
-                    updtateStatusLoading(ELoanding.NOTHING)
                 }
         }
 
-    fun deletarListaCompra(idListaCompra: Long) =
+    private fun insertListaCompra(novaListaCompra: ListaCompra) =
         viewModelScope.launch {
             try {
-                updtateStatusLoading(ELoanding.AGUARDE)
-                listaCompraUseCase.deleteCompra(idListaCompra)
-                updtateStatusCompra(EStatusListaCompra.EXCLUIDA)
+                if (validarListaCompra(novaListaCompra)) {
+                    val result = listaCompraUseCase.insertNovaCompra(novaListaCompra)
+                    if (result > 0) _uiEvent.send(UiEvent.Success)
+                    else _uiEvent.send(UiEvent.Error(UiText.StringResource(R.string.label_desc_erro_criar_lista)))
+                } else {
+                    _uiEvent.send(UiEvent.ShowSnackbar(UiText.StringResource(R.string.label_desc_erro_titulo_lista)))
+
+                }
             } catch (e: Exception) {
-                updtateStatusLoading(ELoanding.NOTHING)
-                updtateStatusCompra(EStatusListaCompra.ERRO_AO_CRIAR)
-                e.message?.let { updateError(ETypeErrors.ERRO_INSERIR_LISTA, it) }
                 e.printStackTrace()
             }
         }
 
-    private fun updtateStatusLoading(isLoading: ELoanding) {
-        _uiState.update { currentState ->
-            currentState.copy(isLoading = isLoading)
+    private fun deletarListaCompra(idListaCompra: Long) =
+        viewModelScope.launch {
+            try {
+                listaCompraUseCase.deleteCompra(idListaCompra)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
         }
-    }
-
-    private fun updtateStatusCompra(statusListaCompra: EStatusListaCompra) {
-        _uiState.update { currentState ->
-            currentState.copy(statusListaCompra = statusListaCompra)
-        }
-
-        when (statusListaCompra) {
-            EStatusListaCompra.CRIADA,
-            EStatusListaCompra.ERRO_AO_CRIAR,
-            EStatusListaCompra.EDITADA,
-            EStatusListaCompra.ERRO_AO_EDITAR,
-            EStatusListaCompra.EXCLUIDA,
-            EStatusListaCompra.ERRO_AO_EXCLUIR -> updtateStatusLoading(ELoanding.NOTHING)
-            else -> Unit
-        }
-    }
 
     private fun updateListaCompra(listaCompra: List<ListaCompraWithProdutos>) {
         _uiState.update { currentState ->
-            currentState.copy(listaCompra = listaCompra)
+            currentState.copy(
+                listaCompra = listaCompra,
+                isListaCompraCarregada = true
+            )
         }
     }
 
-    fun validarNovaCompra(novaListaCompra: ListaCompra) {
-
-        if (novaListaCompra.isNotTituloValido()) {
-            updateError(ETypeErrors.TITULO_VAZIO)
-            return
-        }
-
-        if (novaListaCompra.isComparar) {
-            if (novaListaCompra.isNotIdListaToComparar()) {
-                updateError(
-                    ETypeErrors.LISTA_TO_COMPARAR_VAZIA,
-                    "Selecione a lista que deseja comparar."
-                )
-                return
+    private fun validarListaCompra(novaListaCompra: ListaCompra) =
+        if (novaListaCompra.isTituloVazio()) {
+            _uiState.update { currentState ->
+                currentState.copy(isTituloVazio = true)
             }
-        }
-        insertNovaCompra(novaListaCompra)
-    }
+            false
+        } else true
 
-    fun updateError(isError: ETypeErrors? = null, message: String = "") {
-        _uiState.update { currentState ->
-            currentState.copy(isError = isError to message)
-        }
-    }
-
-    fun updateCompararCompra(state: Boolean) {
-        _uiState.update { currentState ->
-            currentState.copy(compararListaCompra = state)
-        }
-    }
-
-    fun updateTitulo(titulo: String) {
-        _uiState.update { currentState ->
-            currentState.copy(titulo = titulo)
-        }
-
-        if (titulo.isNotEmpty()) updateError()
-    }
-
-    fun updateCompraSelecionada(listaCompraSelecionada: ListaCompraWithProdutos?) {
+    private fun updateTituloListaCompra(titulo: String) {
         _uiState.update { currentState ->
             currentState.copy(
-                listaCompraSelecionada = listaCompraSelecionada,
-                statusListaCompra = EStatusListaCompra.NOTHING
+                titulo = titulo,
+                isTituloVazio = titulo.isBlank()
             )
         }
     }
 
-    fun updateIdListaToComparar(idListaToComparar: Long) {
-        _uiState.update { currentState ->
-            currentState.copy(idListaToComparar = idListaToComparar)
-        }
-    }
-
-    fun addMensagem(novaMensagem: Mensagem) {
-        val novaLista = _uiState.value.listaMensagem
-        novaLista.add(novaMensagem)
+    private fun listaCompraSelecionada(listaCompraSelecionada: ListaCompraWithProdutos?) {
         _uiState.update { currentState ->
             currentState.copy(
-                listaMensagem = novaLista,
-                isShowingSnackBar = true
+                listaCompraSelecionada = listaCompraSelecionada
             )
         }
     }
 
-    fun removerMensagem(mensagem: Mensagem) {
-        val novaLista = _uiState.value.listaMensagem
-        novaLista.remove(mensagem)
+    private fun resetCompra() {
         _uiState.update { currentState ->
             currentState.copy(
-                listaMensagem = novaLista,
-                isShowingSnackBar = novaLista.isNotEmpty()
-            )
-        }
-    }
-
-    fun resetCompra() {
-        _uiState.update { currentState ->
-            currentState.copy(
-                isLoading = ELoanding.NOTHING,
-                isErrorTitulo = false,
+                isTituloVazio = false,
                 titulo = "",
                 compararListaCompra = false,
                 idListaToComparar = -1,
-                statusListaCompra = EStatusListaCompra.NOTHING
             )
         }
     }

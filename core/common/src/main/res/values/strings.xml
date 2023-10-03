@@ -13,12 +13,12 @@
     <string name="label_quantidade">Quantidade</string>
     <string name="label_medida_unidade">un</string>
     <string name="label_medida_peso">kg</string>
+    <string name="label_resumo">Resumo</string>
 <!--    Label com uma palavra-->
 
 <!--    Label com duas palavras-->
     <string name="label_lista_compras">Lista de Compras</string>
     <string name="label_nova_lista">Nova lista</string>
-    <string name="label_criar_compra">Criar compra</string>
     <string name="label_campo_obrigatorio">Campo obrigatório!</string>
     <string name="label_abrir_lista">Abrir lista</string>
     <string name="label_editar_lista">Editar lista</string>
@@ -28,6 +28,9 @@
     <string name="label_produto_removido">Produto removido</string>
     <string name="label_editar_produto">Editar produto</string>
     <string name="label_produto_editado">Produto editado</string>
+    <string name="label_lista_atual">Lista atual</string>
+    <string name="label_lista_comparada">Lista comparada</string>
+    <string name="label_duplicar_lista">Duplicar lista</string>
 <!--    Label com duas palavras-->
 
 
@@ -35,6 +38,7 @@
     <string name="label_criando_compra">Criando nova compra</string>
     <string name="label_abrir_lista_comparando">Abrir lista comparando</string>
     <string name="label_lista_comparada_com">Lista comparada com</string>
+    <string name="label_criar_lista_compra">Criar lista de compra</string>
 <!--    Label com tres palavras-->
 
 <!--    Label com frases-->
@@ -51,6 +55,10 @@
     <string name="label_desc_erro_editar_produto">Erro ao editar o produto.</string>
     <string name="label_desc_produto_existente">Você já tem um produto na lista com o nome %s. Deseja somar a quantidade inserida do novo produto (%s) no produto que já esta na lista?</string>
     <string name="label_desc_finalizar_lista">Deseja finalizar a lista de compra?</string>
+    <string name="label_desc_erro_titulo_lista">Digite o nome da lista</string>
+    <string name="label_desc_erro_criar_lista">Erro ao criar a lista.</string>
+    <string name="label_desc_carregando_listas">Carregando suas listas…</string>
+    <string name="label_desc_aguarde_carregando_lista_produto">Aguarde um momento.\nEstamos preparando sua lista de compra.</string>
 <!--    Label com frases-->
 
 
@@ -59,6 +67,11 @@
         <item quantity="zero">Produto</item>
         <item quantity="one">Produto</item>
         <item quantity="other">Produtos</item>
+    </plurals>
+    <plurals name="label_plural_item">
+        <item quantity="zero">Item</item>
+        <item quantity="one">Item</item>
+        <item quantity="other">Itens</item>
     </plurals>
 <!--    Label plural-->
 

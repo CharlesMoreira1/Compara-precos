@@ -14,6 +14,5 @@ data class ListaCompra(
         return titulo.isNotBlank() && dataCriacao >= 0L
     }
 
-    fun isNotTituloValido() = titulo.isBlank()
-    fun isNotIdListaToComparar() = idListaToComparar < 0
+    fun isTituloVazio() = titulo.isBlank()
 }

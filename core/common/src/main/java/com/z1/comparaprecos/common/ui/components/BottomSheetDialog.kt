@@ -65,7 +65,7 @@ fun CustomBottomSheetDialogContent(
     textoBotaoNegativo: String? = null,
 
 ) {
-    Column(modifier = Modifier
+    Column(modifier = modifier
         .padding(dimensionResource(id = R.dimen.medium))) {
         Text(
             text = titulo,

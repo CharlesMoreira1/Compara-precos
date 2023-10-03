@@ -43,8 +43,7 @@ fun CustomBottomSheet(
     conteudoAtrasBottomSheet: @Composable () -> Unit
 ) {
     BottomSheetScaffold(
-        modifier = modifier
-            .systemBarsPadding(),
+        modifier = modifier,
         scaffoldState = scaffoldState,
         sheetSwipeEnabled = false,
         sheetDragHandle = null,

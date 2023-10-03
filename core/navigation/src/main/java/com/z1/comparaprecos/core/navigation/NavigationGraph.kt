@@ -9,8 +9,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.z1.comparaprecos.feature.listacompra.presentation.ListaCompraScreen
-import com.z1.comparaprecos.feature.listaproduto.presentation.NovaListaContainer
+import com.z1.comparaprecos.feature.listacompra.presentation.ListaCompraContainer
+import com.z1.comparaprecos.feature.listaproduto.presentation.ListaProdutoContainer
 
 enum class ComparaPrecosTelas(val titulo: String) {
     ListaCompra("Lista de Compras"),
@@ -33,21 +33,27 @@ fun NavigationGraph(
         startDestination = ComparaPrecosTelas.ListaCompra.name
     ) {
         composable(route = ComparaPrecosTelas.ListaCompra.name) {
-            ListaCompraScreen(
-                goToNovaListaCompra = { idListaCompra ->
-                    navController.navigate("${ComparaPrecosTelas.NovaListaCompra.name}/$idListaCompra")
+            ListaCompraContainer(
+                goToListaProduto = { idListaCompra, isComparar ->
+                    navController.navigate("${ComparaPrecosTelas.NovaListaCompra.name}/$idListaCompra/$isComparar")
                 }
             )
         }
 
-        val idListaCompra = "idListaCompra"
+        val idListaCompraArg = "idListaCompra"
+        val isCompararArg = "isComparar"
         composable(
-            route = "${ComparaPrecosTelas.NovaListaCompra.name}/{$idListaCompra}",
-            arguments = listOf(navArgument(idListaCompra) { type = NavType.LongType})
+            route = "${ComparaPrecosTelas.NovaListaCompra.name}/{$idListaCompraArg}/{$isCompararArg}",
+            arguments = listOf(
+                navArgument(idListaCompraArg) { type = NavType.LongType},
+                navArgument(isCompararArg) { type = NavType.BoolType}
+            )
         ) { backStackEntry ->
-            val idListaCompra = backStackEntry.arguments?.getLong(idListaCompra) ?: -1
-            NovaListaContainer(
+            val idListaCompra = backStackEntry.arguments?.getLong(idListaCompraArg) ?: -1
+            val isComparar = backStackEntry.arguments?.getBoolean(isCompararArg) ?: false
+            ListaProdutoContainer(
                 idListaCompra = idListaCompra,
+                isComparar = isComparar,
                 navigateUp = { navController.navigateUp() }
             )
         }

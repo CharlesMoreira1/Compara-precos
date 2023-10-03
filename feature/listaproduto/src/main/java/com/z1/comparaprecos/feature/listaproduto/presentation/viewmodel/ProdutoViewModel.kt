@@ -169,8 +169,8 @@ class ProdutoViewModel @Inject constructor(
             }
 
             listaCompra?.let {
-                if (it.isComparar) {
-                    getListaCompraComparada(it.idListaToComparar)
+                if (true) {
+                    getListaCompraComparada(3)
                 }
                 updateListaCompra(it)
                 getListaProduto(it.id)
