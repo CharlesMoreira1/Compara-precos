@@ -5,17 +5,14 @@
 
 package com.z1.comparaprecos.feature.listaproduto.presentation
 
+import android.util.Log
 import androidx.annotation.StringRes
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
@@ -37,6 +34,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -45,19 +43,12 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.dp
 import com.z1.comparaprecos.common.ui.components.CustomFloatingActionButton
-import com.z1.comparaprecos.common.ui.components.CustomTextPriceCounter
 import com.z1.comparaprecos.common.ui.components.CustomTopAppBar
 import com.z1.comparaprecos.common.ui.theme.MediumSeaGreen
-import com.z1.comparaprecos.common.util.UiEvent
 import com.z1.comparaprecos.core.common.R
-import com.z1.comparaprecos.core.model.Produto
 import com.z1.comparaprecos.feature.listaproduto.presentation.viewmodel.OnEvent
-import java.util.Currency
-import java.util.Locale
+import kotlinx.coroutines.launch
 
 data class TabItem(
     @StringRes val titleId: Int,
@@ -69,9 +60,10 @@ fun ListaProdutoComparadaScreen(
     uiState: UiState,
     onEvent: (OnEvent) -> Unit
 ) {
+    val scope = rememberCoroutineScope()
     val appBarState = rememberTopAppBarState()
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(appBarState)
-    val listState = rememberLazyListState()
+    val elevateTopAppBar by remember { mutableStateOf(false) }
 
     val tabItems by remember {
         mutableStateOf(
@@ -86,12 +78,15 @@ fun ListaProdutoComparadaScreen(
     var selectedIndex by remember {
         mutableIntStateOf(0)
     }
+
     val pagerState = rememberPagerState {
         tabItems.size
     }
 
     LaunchedEffect(key1 = selectedIndex) {
-        pagerState.animateScrollToPage(selectedIndex)
+        scope.launch {
+            pagerState.animateScrollToPage(selectedIndex)
+        }
     }
 
     LaunchedEffect(key1 = pagerState.currentPage, key2 = pagerState.isScrollInProgress) {
@@ -99,25 +94,26 @@ fun ListaProdutoComparadaScreen(
             selectedIndex = pagerState.currentPage
         }
     }
+
     Scaffold(
         modifier = modifier
-            .nestedScroll(scrollBehavior.nestedScrollConnection)
+//            .nestedScroll(scrollBehavior.nestedScrollConnection)
             .systemBarsPadding()
             .fillMaxSize(),
         topBar = {
             CustomTopAppBar(
-                scrollBehavior = scrollBehavior,
-                isNotOnTopoLista = false
+//                scrollBehavior = scrollBehavior,
+                elevateTopAppBar = elevateTopAppBar
             ) {
                 TituloListaProduto(
-                    titulo = when(selectedIndex) {
+                    titulo = when (selectedIndex) {
                         0 -> uiState.listaCompra.titulo
                         1 -> uiState.listaCompraComparada.detalhes.titulo
                         else -> stringResource(id = R.string.label_resumo)
                     },
-                    listaProduto = when (selectedIndex) {
-                        0 -> uiState.listaProduto
-                        1 -> uiState.listaCompraComparada.produtos
+                    valorLista = when (selectedIndex) {
+                        0 -> uiState.listaProduto.sumOf { (it.valorProduto()) }
+                        1 -> uiState.listaCompraComparada.produtos.sumOf { (it.valorProduto()) }
                         else -> null
                     }
                 )
@@ -147,78 +143,73 @@ fun ListaProdutoComparadaScreen(
                 modifier = Modifier
                     .weight(1f),
                 state = pagerState,
-                verticalAlignment = Alignment.Top,
+                beyondBoundsPageCount = 3,
+                verticalAlignment = Alignment.Top
             ) { index ->
 
-                Column(
-                    modifier = modifier
-                        .fillMaxSize(),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Bottom
+                Column( modifier = modifier
+                    .fillMaxSize()
                 ) {
-                    Scaffold(
+                    Box(
                         modifier = modifier
-                            .fillMaxWidth()
                             .weight(1f),
-                        floatingActionButton = {
-                            when(index) {
-                                0 -> {
-                                    if (uiState.listaProduto.isNotEmpty()) {
-                                        FloatingActionButton(
-                                            containerColor = MediumSeaGreen,
-                                            icon = Icons.Rounded.ShoppingCartCheckout,
-                                            onClick = {}
-                                        )
+                    ) {
+                        when(index) {
+                            0 -> {
+                                ListaProduto(
+                                    listaProduto = uiState.listaProduto,
+                                    listaProdutoComparada = uiState.listaCompraComparada.produtos,
+                                    isOnTopOfList = {},
+                                    onProdutoClick = { produto ->
+                                        onEvent(OnEvent.ProdutoSelecionado(produto))
                                     }
-                                }
+                                )
 
-                                1 -> {
+                                if (uiState.listaProduto.isNotEmpty()) {
                                     FloatingActionButton(
-                                        icon =
-                                        if (uiState.listaCompraComparada.produtos.isEmpty()) Icons.Rounded.Add
-                                        else Icons.Rounded.Edit,
-                                        onClick = {}
-                                    )
-                                }
-
-                                2 -> {
-                                    FloatingActionButton(
-                                        icon = Icons.Rounded.Share,
+                                        modifier = Modifier.align(Alignment.BottomEnd),
+                                        containerColor = MediumSeaGreen,
+                                        icon = Icons.Rounded.ShoppingCartCheckout,
                                         onClick = {}
                                     )
                                 }
                             }
-                        }
-                    ) { innerPadding ->
-                        when(index) {
-                            in 0..1 -> {
+                            1 -> {
                                 ListaProduto(
-                                    listState = listState,
-                                    listaProduto =
-                                    if (index == 0) uiState.listaProduto
-                                    else uiState.listaCompraComparada.produtos,
-                                    listaProdutoComparada =
-                                    if (index == 1) uiState.listaProduto
-                                    else uiState.listaCompraComparada.produtos,
-                                    canDeleteProduto = selectedIndex == 0,
-                                    onEvent = onEvent
+                                    listaProduto = uiState.listaCompraComparada.produtos,
+                                    listaProdutoComparada = uiState.listaProduto,
+                                    isOnTopOfList = {},
+                                    onProdutoClick = {}
+                                )
+
+                                FloatingActionButton(
+                                    modifier = Modifier.align(Alignment.BottomEnd),
+                                    icon =
+                                    if (uiState.listaCompraComparada.produtos.isEmpty()) Icons.Rounded.Add
+                                    else Icons.Rounded.Edit,
+                                    onClick = {}
                                 )
                             }
-
                             2 -> {
-
+                                FloatingActionButton(
+                                    modifier = Modifier.align(Alignment.BottomEnd),
+                                    icon = Icons.Rounded.Share,
+                                    onClick = {}
+                                )
                             }
                         }
                     }
 
                     if (index == 0) {
                         FormularioProduto(
-                            uiState = uiState,
+                            produtoSelecionado = uiState.produtoSelecionado,
+                            idListaCompra = uiState.listaCompra.id,
                             onAdicionarProdutoClick = { produto ->
                                 if (produto.id == 0L) onEvent(OnEvent.InsertProduto(produto))
                                 else onEvent(OnEvent.UpdateProduto(produto))
                             },
-                            onCancelarEdicaoProduto = { onEvent(OnEvent.ProdutoSelecionado(null)) }
+                            onCancelarEdicaoProduto = { onEvent(OnEvent.ProdutoSelecionado(null)) },
+                            onDeletarProdutoClick = { onEvent(OnEvent.DeleteProduto(it)) }
                         )
                     }
                 }
@@ -235,7 +226,8 @@ fun FloatingActionButton(
     onClick: () -> Unit
 ) {
     CustomFloatingActionButton(
-        modifier = modifier,
+        modifier = modifier
+            .padding(dimensionResource(id = R.dimen.medium)),
         onClick = onClick,
         containerColor = containerColor,
         iconTint = MaterialTheme.colorScheme.onPrimary,

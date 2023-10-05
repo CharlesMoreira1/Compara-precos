@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -19,7 +20,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.z1.comparaprecos.common.ui.components.CustomTextPriceCounter
 import com.z1.comparaprecos.core.common.R
-import com.z1.comparaprecos.core.model.Produto
+import java.math.BigDecimal
 import java.util.Currency
 import java.util.Locale
 
@@ -27,7 +28,7 @@ import java.util.Locale
 fun TituloListaProduto(
     modifier: Modifier = Modifier,
     titulo: String,
-    listaProduto: List<Produto>?
+    valorLista: BigDecimal?
 ) {
     val currencySymbol by remember {
         mutableStateOf("${Currency.getInstance(Locale.getDefault()).symbol} ")
@@ -51,7 +52,7 @@ fun TituloListaProduto(
             overflow = TextOverflow.Ellipsis
         )
 
-        listaProduto?.let {
+        valorLista?.let {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -66,7 +67,7 @@ fun TituloListaProduto(
                 )
 
                 CustomTextPriceCounter(
-                    price = listaProduto.sumOf { (it.valorProduto()) },
+                    price = it,
                     textStyle = MaterialTheme.typography.titleLarge
                 )
             }

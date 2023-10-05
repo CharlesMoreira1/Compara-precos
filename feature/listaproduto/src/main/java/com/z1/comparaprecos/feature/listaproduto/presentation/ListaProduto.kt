@@ -1,19 +1,13 @@
-@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
+@file:OptIn(ExperimentalFoundationApi::class)
 
 package com.z1.comparaprecos.feature.listaproduto.presentation
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -27,31 +21,21 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.DeleteOutline
-import androidx.compose.material3.DismissDirection
-import androidx.compose.material3.DismissState
-import androidx.compose.material3.DismissValue
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SwipeToDismiss
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberDismissState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberUpdatedState
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
@@ -69,20 +53,30 @@ import com.z1.comparaprecos.common.ui.theme.CoralRed
 import com.z1.comparaprecos.common.ui.theme.MediumSeaGreen
 import com.z1.comparaprecos.core.common.R
 import com.z1.comparaprecos.core.model.Produto
-import com.z1.comparaprecos.feature.listaproduto.presentation.viewmodel.OnEvent
-import kotlinx.coroutines.delay
 import java.math.BigDecimal
 
 @Composable
 fun ListaProduto(
     modifier: Modifier = Modifier,
     innerPadding: PaddingValues = PaddingValues(dimensionResource(id = R.dimen.medium)),
-    listState: LazyListState,
     listaProduto: List<Produto>,
     listaProdutoComparada: List<Produto> = emptyList(),
-    canDeleteProduto: Boolean,
-    onEvent: (OnEvent) -> Unit
+    isOnTopOfList: (Boolean) -> Unit,
+    onProdutoClick: (Produto) -> Unit,
 ) {
+    val listState = rememberLazyListState()
+
+    val isElevateTopAppBar by remember {
+        derivedStateOf { listState.firstVisibleItemScrollOffset != 0 }
+    }
+
+    val stateListaProdutoComparada by remember {
+        mutableStateOf(listaProdutoComparada)
+    }
+
+    LaunchedEffect(key1 = isElevateTopAppBar) {
+        isOnTopOfList(isElevateTopAppBar)
+    }
 
     if (listaProduto.isEmpty()) {
         ListaProdutoVazia(
@@ -135,10 +129,9 @@ fun ListaProduto(
                             )
                         ),
                     produto = produto,
-                    listaProdutoComparada = listaProdutoComparada,
+                    listaProdutoComparada = stateListaProdutoComparada,
                     shape = shape,
-                    canDeleteProduto = canDeleteProduto,
-                    onEvent = onEvent
+                    onProdutoClick = { onProdutoClick(produto) }
                 )
                 Divider(color = MaterialTheme.colorScheme.background)
             }
@@ -179,103 +172,15 @@ fun CardItem(
     produto: Produto,
     listaProdutoComparada: List<Produto>,
     shape: RoundedCornerShape,
-    canDeleteProduto: Boolean,
-    onEvent: (OnEvent) -> Unit
+    onProdutoClick: () -> Unit
 ) {
-    var show by remember { mutableStateOf(true) }
-    val currentItem by rememberUpdatedState(produto)
-    val dismissState = rememberDismissState(
-        confirmValueChange = {
-            if (it == DismissValue.DismissedToEnd) {
-                show = false
-                true
-            } else false
-        },
-        positionalThreshold = { 200.dp.toPx() }
-    )
-
-    AnimatedVisibility(
+    CardConteudoProduto(
         modifier = modifier,
-        visible = show,
-        exit = shrinkVertically()
-    ) {
-        if (canDeleteProduto) {
-            SwipeToDismiss(
-                state = dismissState,
-                directions = setOf(DismissDirection.StartToEnd),
-                background = {
-                    DismissBackground(
-                        dismissState = dismissState,
-                        shape = shape
-                    )
-                },
-                dismissContent = {
-                    CardConteudoProduto(
-                        produto = produto,
-                        listaProdutoComparada = listaProdutoComparada,
-                        shape = shape,
-                        onEvent = onEvent
-                    )
-                }
-            )
-        } else {
-            CardConteudoProduto(
-                produto = produto,
-                listaProdutoComparada = listaProdutoComparada,
-                shape = shape,
-                onEvent = onEvent
-            )
-        }
-    }
-
-    LaunchedEffect(key1 = show) {
-        if (!show) {
-            delay(200)
-            onEvent(OnEvent.DeleteProduto(currentItem))
-        }
-    }
-}
-
-@Composable
-fun DismissBackground(
-    modifier: Modifier = Modifier,
-    dismissState: DismissState,
-    shape: RoundedCornerShape
-) {
-    val color by animateColorAsState(
-        when (dismissState.targetValue) {
-            DismissValue.Default -> MaterialTheme.colorScheme.background
-            else -> CoralRed
-        },
-        label = ""
+        produto = produto,
+        listaProdutoComparada = listaProdutoComparada,
+        shape = shape,
+        onProdutoClick = onProdutoClick
     )
-
-    val colorIcon by animateColorAsState(
-        if (dismissState.targetValue == DismissValue.Default)
-            MaterialTheme.colorScheme.onBackground
-        else MaterialTheme.colorScheme.onPrimary,
-        label = ""
-    )
-
-    val scale by animateFloatAsState(
-        if (dismissState.targetValue == DismissValue.Default) 0.75f else 1f,
-        label = ""
-    )
-
-    Box(
-        modifier = modifier
-            .fillMaxSize()
-            .background(color, shape)
-            .padding(horizontal = dimensionResource(id = R.dimen.medium)),
-        contentAlignment = Alignment.CenterStart
-    ) {
-        Icon(
-            Icons.Rounded.DeleteOutline,
-            modifier = Modifier.scale(scale),
-            tint = colorIcon,
-            contentDescription = "Delete Icon",
-        )
-    }
 }
 
 @Composable
@@ -284,12 +189,12 @@ fun CardConteudoProduto(
     produto: Produto,
     listaProdutoComparada: List<Produto>,
     shape: RoundedCornerShape,
-    onEvent: (OnEvent) -> Unit
+    onProdutoClick: () -> Unit
 ) {
     CustomCard(
         modifier = modifier,
         shape = shape,
-        onCardClick = { onEvent(OnEvent.ProdutoSelecionado(produto)) }
+        onCardClick = onProdutoClick
     ) {
         Row(
             modifier = modifier
@@ -360,9 +265,9 @@ fun CardConteudoProduto(
                                 modifier = Modifier
                                     .background(
                                         color = when {
-                                         diferencaPreco < BigDecimal.ZERO -> MediumSeaGreen
-                                         diferencaPreco == BigDecimal("0.00") -> CelticBlue
-                                         else -> CoralRed
+                                            diferencaPreco < BigDecimal.ZERO -> MediumSeaGreen
+                                            diferencaPreco == BigDecimal("0.00") -> CelticBlue
+                                            else -> CoralRed
                                         },
                                         shape = RoundedCornerShape(9.dp)
                                     )

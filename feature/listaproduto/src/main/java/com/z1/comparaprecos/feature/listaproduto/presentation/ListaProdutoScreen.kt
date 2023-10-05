@@ -13,9 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.ShoppingCartCheckout
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -23,12 +21,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -64,13 +61,7 @@ fun ListaProdutoScreen(
     onEvent: (OnEvent) -> Unit
 ) {
     val context = LocalContext.current
-    val appBarState = rememberTopAppBarState()
-    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(appBarState)
-    val listState = rememberLazyListState()
-
-    LaunchedEffect(key1 = uiState.listaProduto.size) {
-        if (uiState.listaProduto.isNotEmpty()) listState.animateScrollToItem(index = 0)
-    }
+    var isOnTopoLista by remember { mutableStateOf(true) }
 
     Column(
         modifier = modifier
@@ -86,11 +77,11 @@ fun ListaProdutoScreen(
                 .systemBarsPadding(),
             topBar = {
                 CustomTopAppBar(
-                    isNotOnTopoLista = listState.firstVisibleItemScrollOffset != 0
+                    elevateTopAppBar = isOnTopoLista
                 ) {
                     TituloListaProduto(
                         titulo = uiState.listaCompra.titulo,
-                        listaProduto = uiState.listaProduto
+                        valorLista = uiState.listaProduto.sumOf { (it.valorProduto()) }
                     )
                 }
             },
@@ -109,20 +100,25 @@ fun ListaProdutoScreen(
                     start = dimensionResource(id = R.dimen.medium),
                     end = dimensionResource(id = R.dimen.medium)
                 ),
-                listState = listState,
                 listaProduto = uiState.listaProduto,
-                canDeleteProduto = true,
-                onEvent = onEvent
+                isOnTopOfList = {
+                    isOnTopoLista = it
+                },
+                onProdutoClick = {produto ->
+                    onEvent(OnEvent.ProdutoSelecionado(produto))
+                }
             )
         }
 
         FormularioProduto(
-            uiState = uiState,
+            produtoSelecionado = uiState.produtoSelecionado,
+            idListaCompra = uiState.listaCompra.id,
             onAdicionarProdutoClick = { produto ->
                 if (produto.id == 0L) onEvent(OnEvent.InsertProduto(produto))
                 else onEvent(OnEvent.UpdateProduto(produto))
             },
-            onCancelarEdicaoProduto = { onEvent(OnEvent.ProdutoSelecionado(null)) }
+            onCancelarEdicaoProduto = { onEvent(OnEvent.ProdutoSelecionado(null)) },
+            onDeletarProdutoClick = { onEvent(OnEvent.DeleteProduto(it))}
         )
     }
 

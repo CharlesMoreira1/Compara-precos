@@ -17,6 +17,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Close
+import androidx.compose.material.icons.rounded.DeleteOutline
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
@@ -24,6 +25,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -32,7 +34,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
@@ -50,7 +51,6 @@ import com.z1.comparaprecos.common.ui.components.mask.MascaraPeso
 import com.z1.comparaprecos.common.ui.components.mask.MascaraPreco
 import com.z1.comparaprecos.common.ui.theme.ComparaPrecosTheme
 import com.z1.comparaprecos.common.ui.theme.CoolMint
-import com.z1.comparaprecos.common.util.UiText
 import com.z1.comparaprecos.core.common.R
 import com.z1.comparaprecos.core.model.Produto
 import java.math.BigDecimal
@@ -58,12 +58,12 @@ import java.math.BigDecimal
 @Composable
 fun FormularioProduto(
     modifier: Modifier = Modifier,
-    uiState: UiState,
+    produtoSelecionado: Produto?,
+    idListaCompra: Long,
     onAdicionarProdutoClick: (Produto) -> Unit,
+    onDeletarProdutoClick: (Produto) -> Unit,
     onCancelarEdicaoProduto: () -> Unit
 ) {
-    val context = LocalContext.current
-    val produtoSelecionado = uiState.produtoSelecionado
 
     val containerColor by animateColorAsState(
         when (produtoSelecionado) {
@@ -153,8 +153,7 @@ fun FormularioProduto(
     ) {
         Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(dimensionResource(id = R.dimen.medium)),
+                .fillMaxWidth(),
             verticalArrangement = Arrangement.Center
         ) {
             AnimatedVisibility(
@@ -165,28 +164,46 @@ fun FormularioProduto(
                 Row(
                     modifier = Modifier
                         .padding(
-                            bottom = dimensionResource(id = R.dimen.normal)
+                            vertical = dimensionResource(id = R.dimen.normal)
                         )
                         .fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
                 ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        CustomIconButton(
+                            onIconButtonClick = onCancelarEdicaoProduto,
+                            iconImageVector = Icons.Rounded.Close,
+                            iconTint = MaterialTheme.colorScheme.onSurface
+                        )
+                        Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.normal)))
+                        Text(
+                            text = "Editando produto",
+                            style = MaterialTheme.typography.titleMedium,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                    }
                     CustomIconButton(
-                        onIconButtonClick = onCancelarEdicaoProduto,
-                        iconImageVector = Icons.Rounded.Close,
+                        modifier = Modifier
+                            .padding(end = dimensionResource(id = R.dimen.little)),
+                        onIconButtonClick = {
+                            onDeletarProdutoClick(produtoSelecionado!!)
+                            onCancelarEdicaoProduto()
+                        },
+                        iconImageVector = Icons.Rounded.DeleteOutline,
                         iconTint = MaterialTheme.colorScheme.onSurface
-                    )
-                    Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.normal)))
-                    Text(
-                        text = "Editando produto",
-                        style = MaterialTheme.typography.titleMedium,
-                        color = MaterialTheme.colorScheme.onSurface
                     )
                 }
             }
-            
+
             Row(
                 modifier = Modifier
-                    .fillMaxWidth(),
+                    .fillMaxWidth()
+                    .padding(
+                        horizontal = dimensionResource(id = R.dimen.medium)
+                    ),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 CustomOutlinedTextInput(
@@ -226,7 +243,10 @@ fun FormularioProduto(
             Spacer(modifier = Modifier.height(height = dimensionResource(id = R.dimen.medium)))
             Row(
                 modifier = Modifier
-                    .fillMaxWidth(),
+                    .fillMaxWidth()
+                    .padding(
+                        horizontal = dimensionResource(id = R.dimen.medium)
+                    ),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 CustomOutlinedTextInput(
@@ -297,7 +317,12 @@ fun FormularioProduto(
             Spacer(modifier = Modifier.height(height = dimensionResource(id = R.dimen.medium)))
             CustomButton(
                 modifier = Modifier
-                    .fillMaxWidth(),
+                    .fillMaxWidth()
+                    .padding(
+                        start = dimensionResource(id = R.dimen.medium),
+                        end = dimensionResource(id = R.dimen.medium),
+                        bottom = dimensionResource(id = R.dimen.medium),
+                    ),
                 containerColor = MaterialTheme.colorScheme.primary,
                 titulo =
                 if (produtoSelecionado == null) stringResource(id = R.string.label_adicionar_produto)
@@ -316,7 +341,7 @@ fun FormularioProduto(
                             Produto(
                                 id = produtoSelecionado?.id ?: 0,
                                 idListaCompra = produtoSelecionado?.idListaCompra
-                                    ?: uiState.listaCompra.id,
+                                    ?: idListaCompra,
                                 nomeProduto = valueNomeProduto.trimEnd(),
                                 precoUnitario = BigDecimal(valuePreco).movePointLeft(2),
                                 quantidade =
@@ -338,9 +363,11 @@ fun FormularioProduto(
 fun CustomProdutoInsertPreview() {
     ComparaPrecosTheme {
         FormularioProduto(
-            uiState = UiState(),
-            onAdicionarProdutoClick = { Produto -> },
-            onCancelarEdicaoProduto = {}
+            produtoSelecionado = Produto(-1, -1, "", "", BigDecimal.ZERO, false),
+            idListaCompra = -1,
+            onAdicionarProdutoClick = { produto -> },
+            onCancelarEdicaoProduto = {},
+            onDeletarProdutoClick = {produto ->  }
         )
     }
 }
