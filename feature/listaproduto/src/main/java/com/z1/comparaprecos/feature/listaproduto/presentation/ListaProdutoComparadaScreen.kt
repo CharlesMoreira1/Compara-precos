@@ -5,7 +5,6 @@
 
 package com.z1.comparaprecos.feature.listaproduto.presentation
 
-import android.util.Log
 import androidx.annotation.StringRes
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
@@ -40,7 +39,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import com.z1.comparaprecos.common.ui.components.CustomFloatingActionButton
@@ -191,6 +189,10 @@ fun ListaProdutoComparadaScreen(
                                 )
                             }
                             2 -> {
+                                ResumoComparacaoListaScreen(
+                                    listaProduto = uiState.listaCompra.titulo to uiState.listaProduto,
+                                    listaProdutoComparada = uiState.listaCompraComparada.detalhes.titulo to uiState.listaCompraComparada.produtos
+                                )
                                 FloatingActionButton(
                                     modifier = Modifier.align(Alignment.BottomEnd),
                                     icon = Icons.Rounded.Share,
