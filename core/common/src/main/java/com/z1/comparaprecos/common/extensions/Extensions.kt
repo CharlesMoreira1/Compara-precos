@@ -2,6 +2,7 @@ package com.z1.comparaprecos.common.extensions
 
 import java.math.BigDecimal
 import java.math.RoundingMode
+import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -36,4 +37,19 @@ fun BigDecimal.getPercentageDifference(compare: BigDecimal): String {
         porcentagem == BigDecimal("0.00") -> "$porcentagem %"
         else -> "+$porcentagem %"
     }
+}
+
+fun BigDecimal.removeZerosFromLeft(): String {
+    val formato = DecimalFormat("0.00")
+    val valorFormatado = formato.format(this.toDouble())
+    val valor = valorFormatado.toString().replace(",", "")
+    val array = valor.toCharArray()
+    var startIndex = 0
+    for (i in array.indices) {
+        if (valor[i] != '0') {
+            startIndex = i
+            break
+        }
+    }
+    return if (valor.toInt() == 0) "" else valor.substring(startIndex)
 }

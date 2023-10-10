@@ -1,5 +1,8 @@
+@file:OptIn(ExperimentalComposeUiApi::class)
+
 package com.z1.comparaprecos.feature.listaproduto.presentation
 
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.expandVertically
@@ -25,15 +28,17 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
@@ -42,6 +47,7 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.z1.comparaprecos.common.extensions.removeZerosFromLeft
 import com.z1.comparaprecos.common.ui.components.CustomButton
 import com.z1.comparaprecos.common.ui.components.CustomCheckBox
 import com.z1.comparaprecos.common.ui.components.CustomIconButton
@@ -64,6 +70,8 @@ fun FormularioProduto(
     onDeletarProdutoClick: (Produto) -> Unit,
     onCancelarEdicaoProduto: () -> Unit
 ) {
+
+    val focusManager = LocalFocusManager.current
 
     val containerColor by animateColorAsState(
         when (produtoSelecionado) {
@@ -114,16 +122,17 @@ fun FormularioProduto(
         isResetQuantidade = true
         valueQuantidade = "1"
         valuePreco = ""
+        focusManager.clearFocus()
     }
 
     LaunchedEffect(key1 = produtoSelecionado) {
         produtoSelecionado?.run {
+            focusManager.clearFocus()
             valueNomeProduto = nomeProduto
             valueIsPeso = isMedidaPeso
             isResetQuantidade = false
             valueQuantidade = quantidade.replace(".", "")
-            valuePreco = precoUnitario.toString().replace(".", "")
-
+            valuePreco = precoUnitario.removeZerosFromLeft()
             isErrorNomeProduto = false
             isErrorPreco = false
             isErrorQuantidade = false
@@ -174,13 +183,16 @@ fun FormularioProduto(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         CustomIconButton(
-                            onIconButtonClick = onCancelarEdicaoProduto,
+                            onIconButtonClick = {
+                                focusManager.clearFocus()
+                                onCancelarEdicaoProduto()
+                             },
                             iconImageVector = Icons.Rounded.Close,
                             iconTint = MaterialTheme.colorScheme.onSurface
                         )
                         Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.normal)))
                         Text(
-                            text = "Editando produto",
+                            text = stringResource(id = R.string.label_editando_produto),
                             style = MaterialTheme.typography.titleMedium,
                             color = MaterialTheme.colorScheme.onSurface
                         )
@@ -265,10 +277,7 @@ fun FormularioProduto(
                             it.length == 1 && it == "0" -> Unit
                             it.isBlank() -> valuePreco = ""
                             it.length > 8 -> Unit
-                            else -> {
-                                valuePreco = it
-                                isErrorPreco = false
-                            }
+                            else -> valuePreco = it
                         }
                     },
                     isError = isErrorPreco,
@@ -332,8 +341,6 @@ fun FormularioProduto(
                 onClick = {
                     if (valueNomeProduto.isBlank()) {
                         isErrorNomeProduto = true
-                    } else if (valuePreco.isBlank() || valuePreco == "0") {
-                        isErrorPreco = true
                     } else if (valueQuantidade.isBlank() || valueQuantidade == "0") {
                         isErrorQuantidade = true
                     } else {
@@ -343,7 +350,9 @@ fun FormularioProduto(
                                 idListaCompra = produtoSelecionado?.idListaCompra
                                     ?: idListaCompra,
                                 nomeProduto = valueNomeProduto.trimEnd(),
-                                precoUnitario = BigDecimal(valuePreco).movePointLeft(2),
+                                precoUnitario =
+                                if (valuePreco.isBlank()) BigDecimal(0).movePointLeft(2)
+                                else BigDecimal(valuePreco).movePointLeft(2),
                                 quantidade =
                                 if (valueIsPeso) BigDecimal(valueQuantidade).movePointLeft(3).toString()
                                 else BigDecimal(valueQuantidade).toString(),

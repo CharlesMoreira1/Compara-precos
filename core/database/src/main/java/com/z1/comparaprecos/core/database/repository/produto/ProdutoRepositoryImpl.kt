@@ -4,6 +4,7 @@ import com.z1.comparaprecos.core.database.dao.ProdutoDao
 import com.z1.comparaprecos.core.database.mapper.ListaCompraMapper
 import com.z1.comparaprecos.core.database.mapper.ListaCompraWithProdutosMapper
 import com.z1.comparaprecos.core.database.mapper.ProdutoMapper
+import com.z1.comparaprecos.core.model.ListaCompra
 import com.z1.comparaprecos.core.model.Produto
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
@@ -16,6 +17,9 @@ class ProdutoRepositoryImpl @Inject constructor(
 ): ProdutoRepository {
     override suspend fun getListaCompra(idListaCompra: Long) =
         listaCompraMapper.mapEntityToModel(produtoDao.getListaCompra(idListaCompra))
+
+    override suspend fun getAllListaCompra(): List<ListaCompra> =
+        listaCompraMapper.mapEntityListToModelList(produtoDao.getAllListaCompra())
 
     override suspend fun getListaCompraComparada(idListaCompra: Long) =
         listaCompraWithProdutosMapper.mapEntityToModel(produtoDao.getListaCompraComparada(idListaCompra))

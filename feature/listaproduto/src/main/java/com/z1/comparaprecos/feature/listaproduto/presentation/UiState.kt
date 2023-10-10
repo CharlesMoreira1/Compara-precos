@@ -10,6 +10,7 @@ data class UiState(
     val produtoSelecionado: Produto? = null,
     val produtoJaExiste: Produto? = null,
     val listaCompra: ListaCompra = ListaCompra(-1, "", false, -2, 0L),
+    val allListaCompra: List<Pair<String, Long>> = emptyList(),
     val listaProduto: List<Produto> = emptyList(),
     val listaCompraComparada: ListaCompraWithProdutos = ListaCompraWithProdutos(listaCompra, emptyList())
 )

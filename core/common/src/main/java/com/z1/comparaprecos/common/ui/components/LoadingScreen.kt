@@ -1,5 +1,6 @@
 package com.z1.comparaprecos.common.ui.components
 
+import androidx.annotation.StringRes
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
@@ -30,6 +31,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.max
@@ -40,14 +42,14 @@ import kotlinx.coroutines.delay
 @Composable
 fun CustomLoadingScreen(
     modifier: Modifier = Modifier,
-    titulo: String,
+    @StringRes titulo: Int,
     image: Int? = null
 ) {
     var isFadingIn by remember { mutableStateOf(true) }
     val infiniteTransition = rememberInfiniteTransition(label = "")
     val transition = infiniteTransition.animateFloat(
-        initialValue = if (isFadingIn) 0f else 1f,
-        targetValue = if (isFadingIn) 1f else 0f,
+        initialValue = if (isFadingIn) 0.5f else 1f,
+        targetValue = if (isFadingIn) 1f else 0.5f,
         animationSpec = infiniteRepeatable(
             animation = tween(durationMillis = 3000, easing = LinearEasing),
             repeatMode = RepeatMode.Reverse // Inverte a animação após cada repetição
@@ -79,7 +81,7 @@ fun CustomLoadingScreen(
         }
 
         Text(
-            text = titulo,
+            text = stringResource(id = titulo),
             style = MaterialTheme.typography.headlineSmall,
             textAlign = TextAlign.Center
         )

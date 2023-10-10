@@ -17,6 +17,9 @@ interface ProdutoDao {
     @Query("SELECT * FROM tb_lista_compra WHERE id == :idListaCompra")
     suspend fun getListaCompra(idListaCompra: Long): ListaCompraEntity
 
+    @Query("SELECT * FROM tb_lista_compra")
+    suspend fun getAllListaCompra(): List<ListaCompraEntity>
+
     @Query("SELECT * FROM tb_lista_compra WHERE id == :idListaCompra")
     suspend fun getListaCompraComparada(idListaCompra: Long): ListaCompraWithProdutosEntity
 

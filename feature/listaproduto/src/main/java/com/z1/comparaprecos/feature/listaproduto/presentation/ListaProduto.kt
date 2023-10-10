@@ -2,6 +2,7 @@
 
 package com.z1.comparaprecos.feature.listaproduto.presentation
 
+import androidx.annotation.StringRes
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -70,17 +71,14 @@ fun ListaProduto(
         derivedStateOf { listState.firstVisibleItemScrollOffset != 0 }
     }
 
-    val stateListaProdutoComparada by remember {
-        mutableStateOf(listaProdutoComparada)
-    }
-
     LaunchedEffect(key1 = isElevateTopAppBar) {
         isOnTopOfList(isElevateTopAppBar)
     }
 
     if (listaProduto.isEmpty()) {
         ListaProdutoVazia(
-            modifier = modifier.padding(innerPadding)
+            modifier = modifier.padding(innerPadding),
+            message = R.string.label_desc_lista_produto_vazia
         )
     } else {
         LazyColumn(
@@ -129,7 +127,7 @@ fun ListaProduto(
                             )
                         ),
                     produto = produto,
-                    listaProdutoComparada = stateListaProdutoComparada,
+                    listaProdutoComparada = listaProdutoComparada,
                     shape = shape,
                     onProdutoClick = { onProdutoClick(produto) }
                 )
@@ -141,7 +139,8 @@ fun ListaProduto(
 
 @Composable
 fun ListaProdutoVazia(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    @StringRes message: Int
 ) {
     Column(
         modifier = modifier
@@ -159,7 +158,7 @@ fun ListaProdutoVazia(
         )
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.medium)))
         Text(
-            text = stringResource(id = R.string.label_desc_lista_produto_vazia),
+            text = stringResource(id = message),
             style = MaterialTheme.typography.headlineSmall,
             textAlign = TextAlign.Center
         )
@@ -250,16 +249,14 @@ fun CardConteudoProduto(
                         )
                     }
                     Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.small)))
-                    Row(
-                        horizontalArrangement = Arrangement.Center
-                    ) {
+
                         Text(
                             text = produto.precoUnitario.toMoedaLocal(),
                             style = MaterialTheme.typography.bodySmall
                         )
                         val produtoComparado = listaProdutoComparada.find { it.nomeProduto == produto.nomeProduto }
                         produtoComparado?.let {
-                            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.small)))
+                            Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.small)))
                             val diferencaPreco = produto.compararPreco(produtoComparado.precoUnitario)
                             Row(
                                 modifier = Modifier
@@ -289,8 +286,6 @@ fun CardConteudoProduto(
                                 )
                             }
                         }
-                    }
-
                 }
             }
 

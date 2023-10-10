@@ -5,11 +5,6 @@
 
 package com.z1.comparaprecos.feature.listacompra.presentation
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.animateContentSize
-import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.spring
-import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -39,6 +34,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.ArrowForward
 import androidx.compose.material.icons.rounded.CompareArrows
+import androidx.compose.material.icons.rounded.ContentCopy
 import androidx.compose.material.icons.rounded.CopyAll
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.Edit
@@ -510,20 +506,23 @@ fun ListaCompraOpcoes(
     ) {
 
         val items = listOf(
-            ListaCompraOpcoes(
+            com.z1.comparaprecos.feature.listacompra.model.ListaCompraOpcoes(
                 Icons.Rounded.ArrowForward,
                 stringResource(id = string.label_abrir_lista)
             ),
-            ListaCompraOpcoes(
+            com.z1.comparaprecos.feature.listacompra.model.ListaCompraOpcoes(
                 Icons.Rounded.CompareArrows,
                 stringResource(id = string.label_abrir_lista_comparando)
             ),
-            ListaCompraOpcoes(
-                Icons.Rounded.CopyAll,
+            com.z1.comparaprecos.feature.listacompra.model.ListaCompraOpcoes(
+                Icons.Rounded.ContentCopy,
                 stringResource(id = string.label_duplicar_lista)
             ),
-            ListaCompraOpcoes(Icons.Rounded.Edit, stringResource(id = string.label_editar_lista)),
-            ListaCompraOpcoes(
+            com.z1.comparaprecos.feature.listacompra.model.ListaCompraOpcoes(
+                Icons.Rounded.Edit,
+                stringResource(id = string.label_editar_lista)
+            ),
+            com.z1.comparaprecos.feature.listacompra.model.ListaCompraOpcoes(
                 Icons.Rounded.Delete,
                 stringResource(id = string.label_deletar_lista)
             ),

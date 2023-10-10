@@ -31,6 +31,7 @@
     <string name="label_lista_atual">Lista atual</string>
     <string name="label_lista_comparada">Lista comparada</string>
     <string name="label_duplicar_lista">Duplicar lista</string>
+    <string name="label_editando_produto">Editando produto</string>
 <!--    Label com duas palavras-->
 
 
@@ -59,6 +60,10 @@
     <string name="label_desc_erro_criar_lista">Erro ao criar a lista.</string>
     <string name="label_desc_carregando_listas">Carregando suas listas…</string>
     <string name="label_desc_aguarde_carregando_lista_produto">Aguarde um momento.\nEstamos preparando sua lista de compra.</string>
+    <string name="label_desc_erro_listas_to_comparar">Não ha listas para comparar</string>
+    <string name="label_desc_erro_buscar_listas_compra">Não ha listas para comparar</string>
+    <string name="label_desc_adicionar_lista_to_comparar">Adicione uma lista com produtos para começar a comparar.</string>
+    <string name="label_desc_necessario_duas_listas_to_comparar">Para ver o resumo, você deve adicionar uma lista para comparar.</string>
 <!--    Label com frases-->
 
 

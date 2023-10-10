@@ -44,6 +44,8 @@ class ProdutoViewModel @Inject constructor(
     fun onEvent(event: OnEvent) {
         when (event) {
             is OnEvent.GetListaCompra -> getListaCompra(event.idListaCompra)
+            is OnEvent.GetListaCompraToComparar -> getListaCompraToComparar(event.idListaCompra)
+            is OnEvent.GetAllListaCompra -> getAllListaCompra()
             is OnEvent.InsertProduto -> insertProduto(event.produto)
             is OnEvent.UpdateProduto -> updateProduto(event.produto)
             is OnEvent.DeleteProduto -> deleteProduto(event.produto)
@@ -143,6 +145,14 @@ class ProdutoViewModel @Inject constructor(
         }
     }
 
+    private fun updateAllListaCompra(allListaCompra: List<Pair<String, Long>>) {
+        _uiState.update { currentState ->
+            currentState.copy(
+                allListaCompra = allListaCompra
+            )
+        }
+    }
+
     private fun updateListaCompraComparada(listaCompra: ListaCompraWithProdutos) {
         _uiState.update { currentState ->
             currentState.copy(listaCompraComparada = listaCompra)
@@ -158,6 +168,33 @@ class ProdutoViewModel @Inject constructor(
         }
     }
 
+    private fun getAllListaCompra() =
+        viewModelScope.launch {
+            try {
+                _uiState.value.allListaCompra.isEmpty().also {
+                    val listaCompra = produtoUseCase.getAllListaCompra()
+                    if (listaCompra.isNotEmpty()) {
+                        val pairListaCompra = listaCompra.filter {
+                            it.id != _uiState.value.listaCompra.id
+                        }.map {
+                            it.titulo to it.id
+                        }
+                        updateAllListaCompra(pairListaCompra)
+                    }
+                }
+
+                if (_uiState.value.allListaCompra.isEmpty()) {
+                    updateUiEvent(UiEvent.ShowSnackbar(UiText.StringResource(R.string.label_desc_erro_listas_to_comparar)))
+                } else {
+                    updateUiEvent(UiEvent.ShowAlertDialog)
+                }
+
+            } catch (e: Exception) {
+                e.printStackTrace()
+                updateUiEvent(UiEvent.ShowSnackbar(UiText.StringResource(R.string.label_desc_erro_buscar_listas_compra)))
+            }
+        }
+
     private fun getListaCompra(idListaCompra: Long) =
         viewModelScope.launch {
             delay(TimeUnit.SECONDS.toMillis(2))
@@ -169,9 +206,6 @@ class ProdutoViewModel @Inject constructor(
             }
 
             listaCompra?.let {
-                if (true) {
-                    getListaCompraComparada(3)
-                }
                 updateListaCompra(it)
                 getListaProduto(it.id)
             } ?: _uiEvent.send(
@@ -198,7 +232,7 @@ class ProdutoViewModel @Inject constructor(
                 }
         }
 
-    private fun getListaCompraComparada(idListaCompraComparada: Long) =
+    private fun getListaCompraToComparar(idListaCompraComparada: Long) =
         viewModelScope.launch {
             val listaCompra = try {
                 produtoUseCase.getListaCompraComparada(idListaCompraComparada)
@@ -209,6 +243,7 @@ class ProdutoViewModel @Inject constructor(
 
             listaCompra?.let {
                 updateListaCompraComparada(it)
+                _uiEvent.send(UiEvent.Default)
             } ?: _uiEvent.send(
                 UiEvent.Error(
                     UiText.StringResource(R.string.label_lista_compra_comparada_nao_encontrada)

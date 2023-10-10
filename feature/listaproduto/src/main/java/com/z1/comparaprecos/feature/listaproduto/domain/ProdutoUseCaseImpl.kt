@@ -1,6 +1,7 @@
 package com.z1.comparaprecos.feature.listaproduto.domain
 
 import com.z1.comparaprecos.core.database.repository.produto.ProdutoRepository
+import com.z1.comparaprecos.core.model.ListaCompra
 import com.z1.comparaprecos.core.model.Produto
 
 class ProdutoUseCaseImpl(
@@ -8,6 +9,9 @@ class ProdutoUseCaseImpl(
 ): ProdutoUseCase {
     override suspend fun getListaCompra(idListaCompra: Long) =
         produtoRepository.getListaCompra(idListaCompra)
+
+    override suspend fun getAllListaCompra(): List<ListaCompra> =
+        produtoRepository.getAllListaCompra()
 
     override suspend fun getListaCompraComparada(idListaCompra: Long) =
         produtoRepository.getListaCompraComparada(idListaCompra)

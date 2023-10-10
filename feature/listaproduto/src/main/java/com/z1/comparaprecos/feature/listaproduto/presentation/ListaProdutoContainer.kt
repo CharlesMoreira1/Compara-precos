@@ -37,7 +37,7 @@ fun ListaProdutoContainer(
         exit = slideOutVertically(animationSpec = tween(500, easing = LinearEasing)) { it }
     ) {
         CustomLoadingScreen(
-            titulo = stringResource(id = R.string.label_desc_aguarde_carregando_lista_produto),
+            titulo = R.string.label_desc_aguarde_carregando_lista_produto,
             image = R.drawable.bg_loading
         )
         viewModel.onEvent(OnEvent.GetListaCompra(idListaCompra))
@@ -52,6 +52,7 @@ fun ListaProdutoContainer(
             if (isComparar) {
                 ListaProdutoComparadaScreen(
                     uiState = uiState,
+                    uiEvent = uiEvent.value,
                     onEvent = { viewModel.onEvent(it) }
                 )
             } else {
