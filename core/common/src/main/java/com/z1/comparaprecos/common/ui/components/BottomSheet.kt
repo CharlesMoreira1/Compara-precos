@@ -57,7 +57,12 @@ fun CustomBottomSheet(
                     descricao = descricaoBottomSheet,
                     onFecharBottomSheetClick = onFecharBottomSheetClick
                 )
-                CustomDivider()
+                CustomDivider(
+                    modifier = Modifier
+                        .padding(
+                            bottom = dimensionResource(id = R.dimen.medium)
+                        )
+                )
                 conteudoBottomSheet()
             }
         },

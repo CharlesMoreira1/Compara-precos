@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "739eec5890572208bcc9f2967ad1bae5",
+    "identityHash": "27eca64434e98a548ef7c62863db54f7",
     "entities": [
       {
         "tableName": "tb_lista_compra",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `titulo` TEXT NOT NULL, `is_comparar` INTEGER NOT NULL, `id_lista_to_comparar` INTEGER NOT NULL, `data_criacao` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `titulo` TEXT NOT NULL, `data_criacao` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -18,18 +18,6 @@
             "fieldPath": "titulo",
             "columnName": "titulo",
             "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "isComparar",
-            "columnName": "is_comparar",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "idListaToComparar",
-            "columnName": "id_lista_to_comparar",
-            "affinity": "INTEGER",
             "notNull": true
           },
           {
@@ -50,7 +38,7 @@
       },
       {
         "tableName": "tb_produtos",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `id_lista_compra` INTEGER NOT NULL, `nome_produto` TEXT NOT NULL, `quantidade` TEXT NOT NULL, `preco_unitario` REAL NOT NULL, `is_medida_peso` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `id_lista_compra` INTEGER NOT NULL, `nome_produto` TEXT NOT NULL, `quantidade` TEXT NOT NULL, `preco_unitario` REAL NOT NULL, `is_medida_peso` INTEGER NOT NULL, FOREIGN KEY(`id_lista_compra`) REFERENCES `tb_lista_compra`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -96,13 +84,25 @@
           ]
         },
         "indices": [],
-        "foreignKeys": []
+        "foreignKeys": [
+          {
+            "table": "tb_lista_compra",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "id_lista_compra"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
       }
     ],
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '739eec5890572208bcc9f2967ad1bae5')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '27eca64434e98a548ef7c62863db54f7')"
     ]
   }
 }

@@ -14,14 +14,15 @@
     <string name="label_medida_unidade">un</string>
     <string name="label_medida_peso">kg</string>
     <string name="label_resumo">Resumo</string>
+    <string name="label_entendi">Entendi</string>
 <!--    Label com uma palavra-->
 
 <!--    Label com duas palavras-->
     <string name="label_lista_compras">Lista de Compras</string>
-    <string name="label_nova_lista">Nova lista</string>
+    <string name="label_nova_lista_compra">Nova lista</string>
     <string name="label_campo_obrigatorio">Campo obrigatório!</string>
     <string name="label_abrir_lista">Abrir lista</string>
-    <string name="label_editar_lista">Editar lista</string>
+    <string name="label_renomear_lista">Renomear lista</string>
     <string name="label_deletar_lista">Deletar lista</string>
     <string name="label_preco_unitario">Preço unitário</string>
     <string name="label_adicionar_produto">Adicionar produto</string>
@@ -40,10 +41,18 @@
     <string name="label_abrir_lista_comparando">Abrir lista comparando</string>
     <string name="label_lista_comparada_com">Lista comparada com</string>
     <string name="label_criar_lista_compra">Criar lista de compra</string>
+    <string name="label_duplicar_lista_compra">Duplicar lista de compra</string>
+    <string name="label_lista_compra_duplicada">Lista de compra duplicada</string>
+    <string name="label_renomear_lista_compra">Renomear lista de compra</string>
+    <string name="label_nome_lista_atualizado">Nome da Lista atualizado</string>
+    <string name="label_lista_compra_excluida">Lista de compra excluída</string>
+    <string name="label_erro_excluir_lista_compra">Erro ao excluir lista</string>
 <!--    Label com tres palavras-->
 
 <!--    Label com frases-->
-    <string name="label_desc_nova_compra">Vamos criar sua nova lista de compras. Se você tiver outras listas, você pode compara-las.</string>
+    <string name="label_desc_nova_lista_compra">Vamos criar sua nova lista de compras. Se você tiver outras listas, você pode compara-las.</string>
+    <string name="label_desc_duplicar_lista">Você esta criando uma nova lista a partir da lista %s. Todos os produtos da lista selecionada serão adiconados na nova lista.</string>
+    <string name="label_desc_renomear_lista_compra">Você esta renomeando a lista de compra selecionada. Capricha no novo nome.</string>
     <string name="label_desc_selecionar_lista">Selecione a lista que deseja comparar:</string>
     <string name="label_desc_lista_compra_vazia">Você não criou nenhuma lista de compra. Vamos começar agora? Clique no botão +.</string>
     <string name="label_desc_lista_compra_criada">Lista de compra criada.</string>
@@ -58,6 +67,7 @@
     <string name="label_desc_finalizar_lista">Deseja finalizar a lista de compra?</string>
     <string name="label_desc_erro_titulo_lista">Digite o nome da lista</string>
     <string name="label_desc_erro_criar_lista">Erro ao criar a lista.</string>
+    <string name="label_desc_erro_atualizar_lista">Erro ao renomear a lista. Tente novamente.</string>
     <string name="label_desc_carregando_listas">Carregando suas listas…</string>
     <string name="label_desc_aguarde_carregando_lista_produto">Aguarde um momento.\nEstamos preparando sua lista de compra.</string>
     <string name="label_desc_erro_listas_to_comparar">Não ha listas para comparar</string>

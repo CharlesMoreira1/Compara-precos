@@ -35,7 +35,6 @@ import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.ArrowForward
 import androidx.compose.material.icons.rounded.CompareArrows
 import androidx.compose.material.icons.rounded.ContentCopy
-import androidx.compose.material.icons.rounded.CopyAll
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -65,6 +64,7 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -85,19 +85,20 @@ import com.z1.comparaprecos.common.extensions.toMoedaLocal
 import com.z1.comparaprecos.common.ui.OnBackPressed
 import com.z1.comparaprecos.common.ui.components.CustomBottomSheet
 import com.z1.comparaprecos.common.ui.components.CustomBottomSheetDialog
+import com.z1.comparaprecos.common.ui.components.CustomBottomSheetDialogAviso
 import com.z1.comparaprecos.common.ui.components.CustomButton
 import com.z1.comparaprecos.common.ui.components.CustomCard
 import com.z1.comparaprecos.common.ui.components.CustomFloatingActionButton
 import com.z1.comparaprecos.common.ui.components.CustomSnackBar
 import com.z1.comparaprecos.common.ui.components.ETipoSnackbar
 import com.z1.comparaprecos.common.ui.components.Mensagem
-import com.z1.comparaprecos.common.util.UiEvent
 import com.z1.comparaprecos.common.util.UiText
 import com.z1.comparaprecos.core.common.R
 import com.z1.comparaprecos.core.common.R.dimen
 import com.z1.comparaprecos.core.common.R.string
 import com.z1.comparaprecos.core.model.ListaCompra
 import com.z1.comparaprecos.core.model.ListaCompraWithProdutos
+import com.z1.comparaprecos.feature.listacompra.model.OpcoesItem
 import com.z1.comparaprecos.feature.listacompra.presentation.viewmodel.OnEvent
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -124,20 +125,60 @@ fun ListaCompraScreen(
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
 
+    fun hideBottomSheet() {
+        scope.launch {
+            focusManager.clearFocus()
+            keyboardController?.hide()
+            delay(500)
+            scaffoldState.bottomSheetState.hide()
+        }.invokeOnCompletion {
+            onEvent(OnEvent.Reset)
+        }
+    }
+
     LaunchedEffect(key1 = uiEvent) {
         when (uiEvent) {
-            is UiEvent.Success -> {
-                scope.launch {
-                    scaffoldState.bottomSheetState.hide()
-                    onEvent(
-                        OnEvent.UpdateUiEvent(
-                            UiEvent.ShowSnackbar(
-                                UiText.StringResource(string.label_desc_lista_compra_criada)
-                            )
+            is UiEvent.Inserted -> scope.launch {
+                scaffoldState.bottomSheetState.hide()
+                onEvent(
+                    OnEvent.UpdateUiEvent(
+                        UiEvent.ShowSnackbar(
+                            UiText.StringResource(uiEvent.message),
+                            ETipoSnackbar.SUCESSO
                         )
                     )
-                }
+                )
             }
+
+            is UiEvent.Updated -> scope.launch {
+                scaffoldState.bottomSheetState.hide()
+                onEvent(
+                    OnEvent.UpdateUiEvent(
+                        UiEvent.ShowSnackbar(
+                            UiText.StringResource(uiEvent.message),
+                            ETipoSnackbar.SUCESSO
+                        )
+                    )
+                )
+            }
+
+            is UiEvent.Deleted -> scope.launch {
+                scaffoldState.bottomSheetState.hide()
+                onEvent(
+                    OnEvent.UpdateUiEvent(
+                        UiEvent.ShowSnackbar(
+                            UiText.StringResource(uiEvent.message),
+                            ETipoSnackbar.SUCESSO
+                        )
+                    )
+                )
+            }
+
+            is UiEvent.ShowBottomSheet -> scope.launch {
+                scaffoldState.bottomSheetState.expand()
+            }
+
+            is UiEvent.HideBottomSheet -> hideBottomSheet()
 
             else -> Unit
         }
@@ -146,77 +187,71 @@ fun ListaCompraScreen(
     CustomBottomSheet(
         modifier = modifier,
         scaffoldState = scaffoldState,
-        tituloBottomSheet = stringResource(id = string.label_nova_lista),
-        descricaoBottomSheet = stringResource(id = string.label_desc_nova_compra),
-        onFecharBottomSheetClick = {
-            scope.launch {
-                focusManager.clearFocus()
-                keyboardController?.hide()
-                delay(500)
-                scaffoldState.bottomSheetState.hide()
-            }.invokeOnCompletion {
-                onEvent(OnEvent.Reset)
-            }
-        },
+        tituloBottomSheet = stringResource(id = uiState.tituloBottomSheet),
+        descricaoBottomSheet = stringResource(
+            id = uiState.descricaoBottomSheet,
+            uiState.listaCompraSelecionada?.detalhes?.titulo ?: ""
+        ),
+        onFecharBottomSheetClick = { onEvent(OnEvent.UpdateUiEvent(UiEvent.HideBottomSheet)) },
         conteudoBottomSheet = {
             NovaListaCompraBottomSheet(
                 modifier = Modifier
                     .fillMaxHeight(),
-                uiState = uiState,
+                tituloListaCompra = uiState.tituloListaCompra,
+                buttonTitle = stringResource(id = uiState.buttonBottomSheet),
+                isEmptyTitle = uiState.isTituloVazio,
                 onTituloChange = { novoTitulo ->
                     if (novoTitulo.length <= 25) onEvent(OnEvent.UpdateTituloListaCompra(novoTitulo))
                 },
                 sheetState = sheetState,
-                onCriarCompraClick = {
-                    val novaListaCompra = ListaCompra(
-                        id = 0,
-                        titulo = uiState.titulo,
-                        isComparar = uiState.compararListaCompra,
-                        idListaToComparar = uiState.idListaToComparar,
-                        dataCriacao = Instant.now().toEpochMilli()
+                onClick = { titulo, dataCriacao ->
+                    val listaCompra = ListaCompra(
+                        id =
+                        if (uiState.isRenomearListaCompra) uiState.listaCompraSelecionada?.detalhes?.id ?: 0
+                        else 0,
+                        titulo = titulo,
+                        dataCriacao = dataCriacao
                     )
-                    onEvent(OnEvent.Insert(novaListaCompra))
+                    val event = when {
+                        uiState.isRenomearListaCompra -> OnEvent.UpdateList(listaCompra)
+                        uiState.isDuplicarListaCompra -> OnEvent.DuplicateList(
+                            listaCompra,
+                            uiState.listaCompraSelecionada?.produtos ?: emptyList()
+                        )
+                        else -> OnEvent.Insert(listaCompra)
+                    }
+                    onEvent(event)
                 }
             )
-
         },
         conteudoAtrasBottomSheet = {
             OnBackPressed(
                 condition = scaffoldState.bottomSheetState.isVisible
             ) {
-                scope.launch {
-                    onEvent(OnEvent.Reset)
-                    scaffoldState.bottomSheetState.hide()
-                }
+                onEvent(OnEvent.UpdateUiEvent(UiEvent.HideBottomSheet))
             }
             ListaCompra(
                 uiState = uiState,
-                onClickNovaLista = {
-                    scope.launch {
-                        onEvent(OnEvent.Reset)
-                        scaffoldState.bottomSheetState.expand()
-                    }
-                },
+                onClickNovaLista = { onEvent(OnEvent.UiCreateNewList) },
                 onListaCompraClick = { listaCompraSelecionada ->
                     onEvent(OnEvent.ListaCompraSelecionada(listaCompraSelecionada))
                 }
             )
 
-
-            uiState.listaCompraSelecionada?.let {
+            if (uiEvent == UiEvent.ShowBottomSheetOptions) {
                 ListaCompraOpcoes(
-                    listaCompraSelecionada = it,
+                    listaCompraSelecionada = uiState.listaCompraSelecionada!!,
                     uiState = uiState,
                     onDismissRequest = {
-                        onEvent(OnEvent.ListaCompraSelecionada(null))
+                        onEvent(OnEvent.UpdateUiEvent(UiEvent.HideBottomSheetOptions))
                     },
-                    onOpcoesClick = { compraSelecionada, icone ->
+                    onOpcoesClick = { listaCompraSelecionada, icone ->
                         when (icone) {
                             //Abrir lista
                             Icons.Rounded.ArrowForward -> {
                                 scope.launch {
                                     delay(100)
-                                    goToListaProduto(compraSelecionada.detalhes.id, false)
+                                    goToListaProduto(listaCompraSelecionada.detalhes.id, false)
                                 }
                             }
 
@@ -224,34 +259,33 @@ fun ListaCompraScreen(
                             Icons.Rounded.CompareArrows -> {
                                 scope.launch {
                                     delay(100)
-                                    goToListaProduto(compraSelecionada.detalhes.id, true)
+                                    goToListaProduto(listaCompraSelecionada.detalhes.id, true)
                                 }
                             }
 
                             //Duplicar lista
-                            Icons.Rounded.CopyAll -> {
-
+                            Icons.Rounded.ContentCopy -> {
+                                onEvent(OnEvent.UiDuplicateList)
                             }
 
                             //Editar lista
                             Icons.Rounded.Edit -> {
-
+                                onEvent(OnEvent.UiRenameList)
                             }
 
                             // Deletar lista
                             Icons.Rounded.Delete -> {
-                                onEvent(OnEvent.Delete(compraSelecionada.detalhes.id))
+                                onEvent(OnEvent.Delete(listaCompraSelecionada.detalhes.id))
                             }
                         }
                     }
                 )
             }
 
-
             when (uiEvent) {
                 is UiEvent.ShowSnackbar -> {
                     val message = Mensagem(
-                        uiEvent.message.asResId(),
+                        uiEvent.message.asString(),
                         ETipoSnackbar.SUCESSO
                     )
                     CustomSnackBar(
@@ -261,6 +295,20 @@ fun ListaCompraScreen(
                         onFimShowMensagem = {
                             onEvent(OnEvent.UpdateUiEvent(UiEvent.Default))
                         }
+                    )
+                }
+
+                is UiEvent.Error -> {
+                    CustomBottomSheetDialogAviso(
+                        titulo = stringResource(id = string.label_atencao),
+                        mensagem = uiEvent.message.asString(LocalContext.current),
+                        onDismissRequest = {
+                            onEvent(OnEvent.UpdateUiEvent(UiEvent.Default))
+                        },
+                        onAcaoPositivaClick = {
+                            onEvent(OnEvent.UpdateUiEvent(UiEvent.Default))
+                        },
+                        textoBotaoPositivo = stringResource(id = string.label_entendi)
                     )
                 }
 
@@ -506,23 +554,23 @@ fun ListaCompraOpcoes(
     ) {
 
         val items = listOf(
-            com.z1.comparaprecos.feature.listacompra.model.ListaCompraOpcoes(
+            OpcoesItem(
                 Icons.Rounded.ArrowForward,
                 stringResource(id = string.label_abrir_lista)
             ),
-            com.z1.comparaprecos.feature.listacompra.model.ListaCompraOpcoes(
+            OpcoesItem(
                 Icons.Rounded.CompareArrows,
                 stringResource(id = string.label_abrir_lista_comparando)
             ),
-            com.z1.comparaprecos.feature.listacompra.model.ListaCompraOpcoes(
+            OpcoesItem(
                 Icons.Rounded.ContentCopy,
                 stringResource(id = string.label_duplicar_lista)
             ),
-            com.z1.comparaprecos.feature.listacompra.model.ListaCompraOpcoes(
+            OpcoesItem(
                 Icons.Rounded.Edit,
-                stringResource(id = string.label_editar_lista)
+                stringResource(id = string.label_renomear_lista)
             ),
-            com.z1.comparaprecos.feature.listacompra.model.ListaCompraOpcoes(
+            OpcoesItem(
                 Icons.Rounded.Delete,
                 stringResource(id = string.label_deletar_lista)
             ),
@@ -590,10 +638,12 @@ fun ListaCompraOpcoes(
 @Composable
 fun NovaListaCompraBottomSheet(
     modifier: Modifier = Modifier,
-    uiState: UiState,
+    tituloListaCompra: String,
+    buttonTitle: String,
+    isEmptyTitle: Boolean,
     sheetState: SheetState,
     onTituloChange: (String) -> Unit,
-    onCriarCompraClick: () -> Unit,
+    onClick: (String, Long) -> Unit,
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
@@ -606,6 +656,7 @@ fun NovaListaCompraBottomSheet(
             keyboardController?.hide()
         }
     }
+
     Box {
         Image(
             modifier = Modifier
@@ -625,7 +676,7 @@ fun NovaListaCompraBottomSheet(
                         .focusRequester(focusRequester)
                         .fillMaxWidth()
                         .padding(start = dimensionResource(id = R.dimen.medium)),
-                    value = uiState.titulo,
+                    value = tituloListaCompra,
                     onValueChange = onTituloChange,
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Text,
@@ -641,7 +692,7 @@ fun NovaListaCompraBottomSheet(
                     singleLine = true,
                     textStyle = MaterialTheme.typography.headlineSmall,
                     decorationBox = { innerTextField ->
-                        if (uiState.titulo.isEmpty()) {
+                        if (tituloListaCompra.isEmpty()) {
                             Text(
                                 text = stringResource(id = string.label_titulo),
                                 style = MaterialTheme.typography.headlineSmall,
@@ -659,7 +710,7 @@ fun NovaListaCompraBottomSheet(
                         ),
                     text = stringResource(id = string.label_campo_obrigatorio),
                     style = MaterialTheme.typography.bodySmall,
-                    color = if (uiState.isTituloVazio) MaterialTheme.colorScheme.error else Color.Transparent
+                    color = if (isEmptyTitle) MaterialTheme.colorScheme.error else Color.Transparent
                 )
             }
 
@@ -670,13 +721,13 @@ fun NovaListaCompraBottomSheet(
                         dimensionResource(id = dimen.medium)
                     ),
                 containerColor = MaterialTheme.colorScheme.primary,
-                titulo = stringResource(id = string.label_criar_lista_compra),
+                titulo = buttonTitle,
                 textColor = MaterialTheme.colorScheme.onPrimary,
                 textStyle = MaterialTheme.typography.bodyLarge,
                 onClick = {
+                    onClick(tituloListaCompra, Instant.now().toEpochMilli())
                     focusManager.clearFocus()
                     keyboardController?.hide()
-                    onCriarCompraClick()
                 }
             )
         }

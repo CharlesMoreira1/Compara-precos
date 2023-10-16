@@ -22,7 +22,6 @@ object DatabaseModule {
     //Provides DAOs
 
     //Provide Database
-
     @Provides
     @Singleton
     fun provideAppDatabase(@ApplicationContext appContext: Context): AppDatabase {

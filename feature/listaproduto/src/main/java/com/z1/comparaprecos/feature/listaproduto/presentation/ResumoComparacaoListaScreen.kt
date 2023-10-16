@@ -75,7 +75,12 @@ fun ResumoComparacaoListaScreen(
                     ),
                 listaProduto = listaProdutoComparada
             )
-            CustomDivider()
+            CustomDivider(
+                modifier = Modifier
+                    .padding(
+                        vertical = dimensionResource(id = R.dimen.medium)
+                )
+            )
             SomaProdutosQueEstaoNasDuasListas(
                 modifier = Modifier
                     .padding(
@@ -84,7 +89,12 @@ fun ResumoComparacaoListaScreen(
                 listaProduto = listaProduto.second,
                 listaProdutoComparada = listaProdutoComparada.second
             )
-            CustomDivider()
+            CustomDivider(
+                modifier = Modifier
+                    .padding(
+                        vertical = dimensionResource(id = R.dimen.medium)
+                    )
+            )
             SomaTotal(
                 modifier = Modifier
                     .padding(
@@ -199,7 +209,12 @@ fun ListaComparadaCom(
         modifier = modifier,
         contentAlignment = Alignment.Center
     ) {
-        CustomDivider()
+        CustomDivider(
+            modifier = Modifier
+                .padding(
+                    vertical = dimensionResource(id = R.dimen.medium)
+                )
+        )
         Text(
             modifier = Modifier
                 .width(150.dp)

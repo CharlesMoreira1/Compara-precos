@@ -1,5 +1,6 @@
 package com.z1.comparaprecos.core.database.di
 
+import com.z1.comparaprecos.core.database.AppDatabase
 import com.z1.comparaprecos.core.database.dao.ListaCompraDao
 import com.z1.comparaprecos.core.database.dao.ProdutoDao
 import com.z1.comparaprecos.core.database.mapper.ListaCompraMapper
@@ -22,10 +23,20 @@ object RepositoryModule {
     @Singleton
     @Provides
     fun provideListaCompraRepository(
+        appDatabase: AppDatabase,
         listaCompraDao: ListaCompraDao,
+        produtoDao: ProdutoDao,
         listaCompraMapper: ListaCompraMapper,
+        produtoMapper: ProdutoMapper,
         listaCompraWithProdutosMapper: ListaCompraWithProdutosMapper
-    ): ListaCompraRepository = ListaCompraRepositoryImpl(listaCompraDao, listaCompraMapper, listaCompraWithProdutosMapper)
+    ): ListaCompraRepository = ListaCompraRepositoryImpl(
+        appDatabase,
+        listaCompraDao,
+        produtoDao,
+        listaCompraMapper,
+        produtoMapper,
+        listaCompraWithProdutosMapper
+    )
 
     @Singleton
     @Provides

@@ -15,13 +15,11 @@ import com.z1.comparaprecos.core.common.R
 @Composable
 fun CustomDivider(
     modifier: Modifier = Modifier,
-    padding: Dp = dimensionResource(id = R.dimen.medium),
     color: Color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.10f)
 ) {
     Divider(
         modifier = modifier
-            .fillMaxWidth()
-            .padding(vertical = padding),
+            .fillMaxWidth(),
         color = color
     )
 }

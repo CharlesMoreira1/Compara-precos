@@ -64,7 +64,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.z1.comparaprecos.common.ui.components.CustomDivider
 import com.z1.comparaprecos.common.ui.components.CustomFloatingActionButton
@@ -73,9 +72,7 @@ import com.z1.comparaprecos.common.ui.components.CustomSnackBar
 import com.z1.comparaprecos.common.ui.components.CustomTopAppBar
 import com.z1.comparaprecos.common.ui.components.ETipoSnackbar
 import com.z1.comparaprecos.common.ui.components.Mensagem
-import com.z1.comparaprecos.common.ui.theme.ComparaPrecosTheme
 import com.z1.comparaprecos.common.ui.theme.MediumSeaGreen
-import com.z1.comparaprecos.common.util.UiEvent
 import com.z1.comparaprecos.core.common.R
 import com.z1.comparaprecos.feature.listaproduto.presentation.viewmodel.OnEvent
 import kotlinx.coroutines.launch
@@ -289,7 +286,7 @@ fun ListaProdutoComparadaScreen(
         }
         is UiEvent.ShowSnackbar -> {
             val message = Mensagem(
-                uiEvent.message.asResId(),
+                uiEvent.message.asString(),
                 ETipoSnackbar.ERRO
             )
             CustomSnackBar(
@@ -332,9 +329,7 @@ fun AlertDialogListaCompra(
                 text = "Selecione uma lista de compra",
                 style = MaterialTheme.typography.titleLarge
             )
-            CustomDivider(
-                padding = 0.dp
-            )
+            CustomDivider()
             LazyColumn(
                 modifier = Modifier
                     .heightIn(min = 150.dp, max = 250.dp)
@@ -345,9 +340,7 @@ fun AlertDialogListaCompra(
                     }
                 }
             }
-            CustomDivider(
-                padding = 0.dp
-            )
+            CustomDivider()
 
             Row(
                 modifier = Modifier

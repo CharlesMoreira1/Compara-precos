@@ -36,8 +36,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.z1.comparaprecos.common.extensions.thenIf
-import com.z1.comparaprecos.common.ui.components.CustomBottomSheetDialog
-import com.z1.comparaprecos.common.ui.components.CustomBottomSheetDialogContent
+import com.z1.comparaprecos.common.ui.components.CustomBottomSheetDialogAviso
 import com.z1.comparaprecos.common.ui.components.CustomFloatingActionButton
 import com.z1.comparaprecos.common.ui.components.CustomSnackBar
 import com.z1.comparaprecos.common.ui.components.CustomTextPriceCounter
@@ -45,7 +44,6 @@ import com.z1.comparaprecos.common.ui.components.CustomTopAppBar
 import com.z1.comparaprecos.common.ui.components.ETipoSnackbar
 import com.z1.comparaprecos.common.ui.components.Mensagem
 import com.z1.comparaprecos.common.ui.theme.MediumSeaGreen
-import com.z1.comparaprecos.common.util.UiEvent
 import com.z1.comparaprecos.core.common.R
 import com.z1.comparaprecos.feature.listaproduto.presentation.viewmodel.OnEvent
 import java.util.Currency
@@ -126,34 +124,27 @@ fun ListaProdutoScreen(
         is UiEvent.Default -> Unit
         is UiEvent.Success -> Unit
         is UiEvent.Error -> {
-            CustomBottomSheetDialog(
+            CustomBottomSheetDialogAviso(
+                titulo = stringResource(id = R.string.label_atencao),
+                mensagem = uiState.produtoJaExiste?.run {
+                    uiEvent.message.asString()
+                } ?: "",
                 onDismissRequest = {
                     onEvent(OnEvent.UpdateQuantidadeProdutoExistente(null))
+                },
+                textoBotaoPositivo = stringResource(id = R.string.label_sim),
+                onAcaoPositivaClick = {
+                    onEvent(OnEvent.UpdateQuantidadeProdutoExistente(uiState.produtoJaExiste))
+                },
+                textoBotaoNegativo = stringResource(id = R.string.label_nao),
+                onAcaoNegativaClick = {
+                    onEvent(OnEvent.UpdateQuantidadeProdutoExistente(null))
                 }
-            ) {
-                CustomBottomSheetDialogContent(
-                    titulo = stringResource(id = R.string.label_atencao),
-                    mensagem = uiState.produtoJaExiste?.run {
-                        uiEvent.message.asString(
-                            context,
-                            nomeProduto,
-                            quantidade
-                        )
-                    } ?: "",
-                    textoBotaoPositivo = stringResource(id = R.string.label_sim),
-                    onAcaoPositivaClick = {
-                        onEvent(OnEvent.UpdateQuantidadeProdutoExistente(uiState.produtoJaExiste))
-                    },
-                    textoBotaoNegativo = stringResource(id = R.string.label_nao),
-                    onAcaoNegativaClick = {
-                        onEvent(OnEvent.UpdateQuantidadeProdutoExistente(null))
-                    }
-                )
-            }
+            )
         }
         is UiEvent.ShowSnackbar -> {
             val message = Mensagem(
-                uiEvent.message.asResId(),
+                uiEvent.message.asString(),
                 ETipoSnackbar.SUCESSO
             )
             CustomSnackBar(
@@ -166,24 +157,21 @@ fun ListaProdutoScreen(
             )
         }
         is UiEvent.Finished -> {
-            CustomBottomSheetDialog(
+            CustomBottomSheetDialogAviso(
+                titulo = stringResource(id = R.string.label_atencao),
+                mensagem = stringResource(id = R.string.label_desc_finalizar_lista),
+                textoBotaoPositivo = stringResource(id = R.string.label_sim),
+                onAcaoPositivaClick = {
+                    onEvent(OnEvent.UpdateUiEvent(UiEvent.NavigateUp))
+                },
                 onDismissRequest = {
                     onEvent(OnEvent.UpdateQuantidadeProdutoExistente(null))
+                },
+                textoBotaoNegativo = stringResource(id = R.string.label_nao),
+                onAcaoNegativaClick = {
+                    onEvent(OnEvent.UpdateUiEvent(UiEvent.Default))
                 }
-            ) {
-                CustomBottomSheetDialogContent(
-                    titulo = stringResource(id = R.string.label_atencao),
-                    mensagem = stringResource(id = R.string.label_desc_finalizar_lista),
-                    textoBotaoPositivo = stringResource(id = R.string.label_sim),
-                    onAcaoPositivaClick = {
-                        onEvent(OnEvent.UpdateUiEvent(UiEvent.NavigateUp))
-                    },
-                    textoBotaoNegativo = stringResource(id = R.string.label_nao),
-                    onAcaoNegativaClick = {
-                        onEvent(OnEvent.UpdateUiEvent(UiEvent.Default))
-                    }
-                )
-            }
+            )
         }
         is UiEvent.NavigateUp -> navigateUp()
         else -> Unit

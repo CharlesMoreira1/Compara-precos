@@ -2,13 +2,13 @@ package com.z1.comparaprecos.feature.listaproduto.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.z1.comparaprecos.common.util.UiEvent
 import com.z1.comparaprecos.common.util.UiText
-import com.z1.comparaprecos.core.model.ListaCompraWithProdutos
-import com.z1.comparaprecos.core.model.Produto
 import com.z1.comparaprecos.core.common.R
 import com.z1.comparaprecos.core.model.ListaCompra
+import com.z1.comparaprecos.core.model.ListaCompraWithProdutos
+import com.z1.comparaprecos.core.model.Produto
 import com.z1.comparaprecos.feature.listaproduto.domain.ProdutoUseCase
+import com.z1.comparaprecos.feature.listaproduto.presentation.UiEvent
 import com.z1.comparaprecos.feature.listaproduto.presentation.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -63,7 +63,15 @@ class ProdutoViewModel @Inject constructor(
     private fun insertProduto(produto: Produto) = viewModelScope.launch {
         if (isProdutoJaExiste(produto) != null) {
             updateProdutoJaExiste(produto)
-            _uiEvent.send(UiEvent.Error(UiText.StringResource(R.string.label_desc_produto_existente)))
+            _uiEvent.send(
+                UiEvent.Error(
+                    UiText.StringResource(
+                        resId = R.string.label_desc_produto_existente,
+                        produto.nomeProduto,
+                        produto.quantidade
+                    )
+                )
+            )
         } else {
             val result = isDadosProdutoCorreto(produto)
             if (result.first) {
@@ -225,7 +233,7 @@ class ProdutoViewModel @Inject constructor(
 
                 }
                 .catch {
-                    _uiEvent.send(UiEvent.Error(UiText.StringMessage(it.message ?: "")))
+                    _uiEvent.send(UiEvent.Error(UiText.DynamicString(it.message ?: "")))
                 }
                 .collect {
                     updateListaProduto(it)

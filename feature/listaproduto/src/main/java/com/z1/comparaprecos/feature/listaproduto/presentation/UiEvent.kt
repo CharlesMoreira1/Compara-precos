@@ -1,4 +1,6 @@
-package com.z1.comparaprecos.common.util
+package com.z1.comparaprecos.feature.listaproduto.presentation
+
+import com.z1.comparaprecos.common.util.UiText
 
 sealed class UiEvent {
     data object Default: UiEvent()
@@ -7,5 +9,6 @@ sealed class UiEvent {
     data object NavigateUp: UiEvent()
     data class ShowSnackbar(val message: UiText): UiEvent()
     data object ShowAlertDialog: UiEvent()
+    data object DuplicarLista: UiEvent()
     data object Finished: UiEvent()
 }

@@ -11,11 +11,9 @@ import androidx.compose.animation.slideOutVertically
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.z1.comparaprecos.common.ui.components.CustomLoadingScreen
-import com.z1.comparaprecos.common.util.UiEvent
 import com.z1.comparaprecos.core.common.R
 import com.z1.comparaprecos.feature.listaproduto.presentation.viewmodel.OnEvent
 import com.z1.comparaprecos.feature.listaproduto.presentation.viewmodel.ProdutoViewModel
