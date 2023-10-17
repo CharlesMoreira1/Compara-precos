@@ -115,10 +115,12 @@ fun ListaProdutoComparadaScreen(
     LaunchedEffect(key1 = selectedIndex) {
         scope.launch {
             pagerState.animateScrollToPage(selectedIndex)
+            onEvent(OnEvent.UpdateUiEvent(UiEvent.Default))
         }
     }
 
     LaunchedEffect(key1 = pagerState.currentPage, key2 = pagerState.isScrollInProgress) {
+        onEvent(OnEvent.UpdateUiEvent(UiEvent.Default))
         if (!pagerState.isScrollInProgress) {
             selectedIndex = pagerState.currentPage
         }
@@ -287,7 +289,7 @@ fun ListaProdutoComparadaScreen(
         is UiEvent.ShowSnackbar -> {
             val message = Mensagem(
                 uiEvent.message.asString(),
-                ETipoSnackbar.ERRO
+                uiEvent.tipoMensagem
             )
             CustomSnackBar(
                 modifier = Modifier.fillMaxWidth(),
