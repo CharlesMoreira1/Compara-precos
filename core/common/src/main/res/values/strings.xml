@@ -15,6 +15,8 @@
     <string name="label_medida_peso">kg</string>
     <string name="label_resumo">Resumo</string>
     <string name="label_entendi">Entendi</string>
+    <string name="label_atual">Atual</string>
+    <string name="label_comparada">Comparada</string>
 <!--    Label com uma palavra-->
 
 <!--    Label com duas palavras-->
@@ -33,6 +35,8 @@
     <string name="label_lista_comparada">Lista comparada</string>
     <string name="label_duplicar_lista">Duplicar lista</string>
     <string name="label_editando_produto">Editando produto</string>
+    <string name="label_quantidade_invalida">Quantidade inválida</string>
+    <string name="label_produto_adicionado">Produto adicionado</string>
 <!--    Label com duas palavras-->
 
 
@@ -47,6 +51,7 @@
     <string name="label_nome_lista_atualizado">Nome da Lista atualizado</string>
     <string name="label_lista_compra_excluida">Lista de compra excluída</string>
     <string name="label_erro_excluir_lista_compra">Erro ao excluir lista</string>
+    <string name="label_informe_nome_produto">Informe o nome do produto</string>
 <!--    Label com tres palavras-->
 
 <!--    Label com frases-->
@@ -74,6 +79,15 @@
     <string name="label_desc_erro_buscar_listas_compra">Não ha listas para comparar</string>
     <string name="label_desc_adicionar_lista_to_comparar">Adicione uma lista com produtos para começar a comparar.</string>
     <string name="label_desc_necessario_duas_listas_to_comparar">Para ver o resumo, você deve adicionar uma lista para comparar.</string>
+    <string name="label_erro_generico">alguma coisa deu errado</string>
+    <string name="label_desc_resumo_economizou_mesmos_produtos">Você economizou em relação a lista comparada somando somente os mesmos produtos. Parabéns!</string>
+    <string name="label_desc_resumo_preco_igual_mesmos_produtos">Os preços estão iguais nas duas listas somando somente os mesmos produtos.</string>
+    <string name="label_desc_resumo_nao_economizou_mesmos_produtos">Você gastou mais em relação a lista comparada somando somente os mesmos produtos.</string>
+    <string name="label_desc_resumo_economizou_todos_produtos">Você economizou em relação a lista comparada somando todos os produtos. Parabéns!</string>
+    <string name="label_desc_resumo_preco_igual_todos_produtos">Os preços estão iguais nas duas listas somando todos os produtos.</string>
+    <string name="label_desc_resumo_nao_economizou_todos_produtos">Você gastou mais em relação a lista comparada somando todos os produtos.</string>
+    <string name="label_desc_somando_todos_produtos">Somando todos os produtos da lista</string>
+    <string name="label_desc_somando_produtos_nas_listas">Produtos que estão nas duas listas: %d</string>
 <!--    Label com frases-->
 
 

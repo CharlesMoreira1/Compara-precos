@@ -259,7 +259,7 @@ fun SomaProdutosQueEstaoNasDuasListas(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "Produtos que estão nas duas listas: $listaProdutoIgualQtd",
+                text = stringResource(id = R.string.label_desc_somando_produtos_nas_listas, listaProdutoIgualQtd),
                 color = MaterialTheme.colorScheme.onSurface,
                 style = MaterialTheme.typography.titleMedium
             )
@@ -280,7 +280,7 @@ fun SomaProdutosQueEstaoNasDuasListas(
                 verticalArrangement = Arrangement.Center
             ) {
                 Text(
-                    text = "Atual",
+                    text = stringResource(id = R.string.label_atual),
                     color = MaterialTheme.colorScheme.onSurface,
                     style = MaterialTheme.typography.bodyMedium
                 )
@@ -300,7 +300,7 @@ fun SomaProdutosQueEstaoNasDuasListas(
                 verticalArrangement = Arrangement.Center
             ) {
                 Text(
-                    text = "Comparada",
+                    text = stringResource(id = R.string.label_comparada),
                     color = MaterialTheme.colorScheme.onSurface,
                     style = MaterialTheme.typography.bodyMedium
                 )
@@ -324,7 +324,7 @@ fun SomaProdutosQueEstaoNasDuasListas(
                 )
                 val color = when {
                     diferencaPreco < BigDecimal.ZERO -> MediumSeaGreen
-                    diferencaPreco == BigDecimal("0.00") -> CelticBlue
+                    diferencaPreco.toDouble() == 0.0 -> CelticBlue
                     else -> CoralRed
                 }
                 Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.normal)))
@@ -337,12 +337,12 @@ fun SomaProdutosQueEstaoNasDuasListas(
         }
 
         val texto = when {
-            diferencaPreco < BigDecimal.ZERO -> "Você economizou em relação a lista comparada somando somente os mesmos produtos. Parabéns!"
-            diferencaPreco == BigDecimal("0.00") -> "Os preços estão iguais nas duas listas."
-            else -> "Você gastou mais em relação a lista comparada somando somente os mesmos produtos."
+            diferencaPreco < BigDecimal.ZERO -> R.string.label_desc_resumo_economizou_mesmos_produtos
+            diferencaPreco.toDouble() == 0.0 -> R.string.label_desc_resumo_preco_igual_mesmos_produtos
+            else -> R.string.label_desc_resumo_nao_economizou_mesmos_produtos
         }
         Text(
-            text = texto,
+            text = stringResource(id = texto),
             style = MaterialTheme.typography.bodySmall
         )
     }
@@ -370,7 +370,7 @@ fun SomaTotal(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "Somando todos os produtos da lista",
+                text = stringResource(id = R.string.label_desc_somando_todos_produtos),
                 color = MaterialTheme.colorScheme.onSurface,
                 style = MaterialTheme.typography.titleMedium
             )
@@ -390,7 +390,7 @@ fun SomaTotal(
                 verticalArrangement = Arrangement.Center
             ) {
                 Text(
-                    text = "Atual",
+                    text = stringResource(id = R.string.label_atual),
                     color = MaterialTheme.colorScheme.onSurface,
                     style = MaterialTheme.typography.bodyMedium
                 )
@@ -410,7 +410,7 @@ fun SomaTotal(
                 verticalArrangement = Arrangement.Center
             ) {
                 Text(
-                    text = "Comparada",
+                    text = stringResource(id = R.string.label_comparada),
                     color = MaterialTheme.colorScheme.onSurface,
                     style = MaterialTheme.typography.bodyMedium
                 )
@@ -434,7 +434,7 @@ fun SomaTotal(
                 )
                 val color = when {
                     diferencaPreco < BigDecimal.ZERO -> MediumSeaGreen
-                    diferencaPreco == BigDecimal("0.00") -> CelticBlue
+                    diferencaPreco.toDouble() == 0.0 -> CelticBlue
                     else -> CoralRed
                 }
                 Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.normal)))
@@ -447,24 +447,13 @@ fun SomaTotal(
         }
 
         val texto = when {
-            diferencaPreco < BigDecimal.ZERO -> "Você economizou em relação a lista comparada somando todos os produtos. Parabéns!"
-            diferencaPreco == BigDecimal("0.00") -> "Os preços estão iguais nas duas listas."
-            else -> "Você gastou mais em relação a lista comparada somando todos os produtos."
+            diferencaPreco < BigDecimal.ZERO -> R.string.label_desc_resumo_economizou_todos_produtos
+            diferencaPreco.toDouble() == 0.0 -> R.string.label_desc_resumo_preco_igual_todos_produtos
+            else -> R.string.label_desc_resumo_nao_economizou_todos_produtos
         }
         Text(
-            text = texto,
+            text = stringResource(id = texto),
             style = MaterialTheme.typography.bodySmall
-        )
-    }
-}
-
-@Preview
-@Composable
-fun ResumoComparacaoListaScreenPreview() {
-    ComparaPrecosTheme {
-        ResumoComparacaoListaScreen(
-            listaProduto = "Lista compra out/23" to emptyList(),
-            listaProdutoComparada = "Lista compra set/23" to emptyList()
         )
     }
 }

@@ -58,7 +58,6 @@ fun ListaProdutoScreen(
     uiEvent: UiEvent,
     onEvent: (OnEvent) -> Unit
 ) {
-    val context = LocalContext.current
     var isOnTopoLista by remember { mutableStateOf(true) }
 
     Column(
@@ -190,65 +189,4 @@ private fun FimListaActionButton(
         iconTint = MaterialTheme.colorScheme.onPrimary,
         imageVector = Icons.Rounded.ShoppingCartCheckout
     )
-}
-
-@Composable
-fun TopAppBar(
-    modifier: Modifier = Modifier,
-    uiState: UiState,
-    isNotOnTopoLista: Boolean
-) {
-    val currencySymbol by remember {
-        mutableStateOf("${Currency.getInstance(Locale.getDefault()).symbol} ")
-    }
-    CenterAlignedTopAppBar(
-        modifier = modifier
-            .fillMaxWidth()
-            .thenIf(isNotOnTopoLista) {
-                shadow(
-                    elevation = 8.dp,
-                    clip = true
-                )
-            },
-        title = {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = dimensionResource(id = R.dimen.medium)),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(1.5f),
-                    text = uiState.listaCompra.titulo,
-                    style = MaterialTheme.typography.titleSmall,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(1.2f)
-                        .padding(top = dimensionResource(id = R.dimen.small)),
-                    horizontalArrangement = Arrangement.End
-                ) {
-                    Text(
-                        text = currencySymbol,
-                        textAlign = TextAlign.End,
-                        style = MaterialTheme.typography.titleLarge
-                    )
-                    CustomTextPriceCounter(
-                        price = uiState.listaProduto.sumOf { (it.valorProduto()) },
-                        textStyle = MaterialTheme.typography.titleLarge
-                    )
-                }
-            }
-        },
-        colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-            containerColor = MaterialTheme.colorScheme.background
-        ),
-
-        )
 }

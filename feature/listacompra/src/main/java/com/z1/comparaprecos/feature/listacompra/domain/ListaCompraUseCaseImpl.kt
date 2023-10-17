@@ -7,7 +7,7 @@ import com.z1.comparaprecos.core.model.ListaCompraWithProdutos
 import com.z1.comparaprecos.core.model.Produto
 import com.z1.comparaprecos.core.model.exceptions.ErrorDelete
 import com.z1.comparaprecos.core.model.exceptions.ErrorEmptyTitle
-import com.z1.comparaprecos.core.model.exceptions.ErrorInserte
+import com.z1.comparaprecos.core.model.exceptions.ErrorInsert
 import com.z1.comparaprecos.core.model.exceptions.ErrorUpdate
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
@@ -25,7 +25,7 @@ class ListaCompraUseCaseImpl @Inject constructor(
         if (novaListaCompra.isTituloVazio()) throw ErrorEmptyTitle()
         val isInserted = listaCompraRepository.insertListaCompra(novaListaCompra) > 0
         return if (isInserted) R.string.label_desc_lista_compra_criada
-        else throw ErrorInserte()
+        else throw ErrorInsert()
     }
 
     override suspend fun duplicateListaCompra(

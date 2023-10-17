@@ -286,7 +286,7 @@ fun ListaCompraScreen(
                 is UiEvent.ShowSnackbar -> {
                     val message = Mensagem(
                         uiEvent.message.asString(),
-                        ETipoSnackbar.SUCESSO
+                        uiEvent.tipoMensagem
                     )
                     CustomSnackBar(
                         modifier = Modifier.fillMaxWidth(),
@@ -301,7 +301,7 @@ fun ListaCompraScreen(
                 is UiEvent.Error -> {
                     CustomBottomSheetDialogAviso(
                         titulo = stringResource(id = string.label_atencao),
-                        mensagem = uiEvent.message.asString(LocalContext.current),
+                        mensagem = uiEvent.message.asString(),
                         onDismissRequest = {
                             onEvent(OnEvent.UpdateUiEvent(UiEvent.Default))
                         },
