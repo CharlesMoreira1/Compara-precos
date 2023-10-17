@@ -80,7 +80,7 @@ fun PreviewButton() {
     ComparaPrecosTheme {
         CustomButton(
             containerColor = MaterialTheme.colorScheme.primary,
-            titulo = stringResource(id = R.string.label_criar_compra),
+            titulo = stringResource(id = R.string.label_criar_lista_compra),
             textColor = MaterialTheme.colorScheme.onPrimary,
             textStyle = MaterialTheme.typography.bodyMedium,
             onClick = {}

@@ -9,10 +9,6 @@ data class ListaCompraEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long,
     val titulo: String,
-    @ColumnInfo(name = "is_comparar")
-    val isComparar: Boolean,
-    @ColumnInfo(name = "id_lista_to_comparar")
-    val idListaToComparar: Long,
     @ColumnInfo(name = "data_criacao")
     val dataCriacao: Long
 )

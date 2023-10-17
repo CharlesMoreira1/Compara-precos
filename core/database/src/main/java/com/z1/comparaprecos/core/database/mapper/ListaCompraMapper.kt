@@ -9,8 +9,6 @@ class ListaCompraMapper : BaseMapper<ListaCompra, ListaCompraEntity>() {
             ListaCompra(
                 id = id,
                 titulo = titulo,
-                isComparar = isComparar,
-                idListaToComparar = idListaToComparar,
                 dataCriacao = dataCriacao
             )
         }
@@ -20,8 +18,6 @@ class ListaCompraMapper : BaseMapper<ListaCompra, ListaCompraEntity>() {
             ListaCompraEntity(
                 id = id,
                 titulo = titulo,
-                isComparar = isComparar,
-                idListaToComparar = idListaToComparar,
                 dataCriacao = dataCriacao
             )
         }

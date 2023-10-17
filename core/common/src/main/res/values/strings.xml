@@ -13,21 +13,30 @@
     <string name="label_quantidade">Quantidade</string>
     <string name="label_medida_unidade">un</string>
     <string name="label_medida_peso">kg</string>
+    <string name="label_resumo">Resumo</string>
+    <string name="label_entendi">Entendi</string>
+    <string name="label_atual">Atual</string>
+    <string name="label_comparada">Comparada</string>
 <!--    Label com uma palavra-->
 
 <!--    Label com duas palavras-->
     <string name="label_lista_compras">Lista de Compras</string>
-    <string name="label_nova_lista">Nova lista</string>
-    <string name="label_criar_compra">Criar compra</string>
+    <string name="label_nova_lista_compra">Nova lista</string>
     <string name="label_campo_obrigatorio">Campo obrigatório!</string>
     <string name="label_abrir_lista">Abrir lista</string>
-    <string name="label_editar_lista">Editar lista</string>
+    <string name="label_renomear_lista">Renomear lista</string>
     <string name="label_deletar_lista">Deletar lista</string>
     <string name="label_preco_unitario">Preço unitário</string>
     <string name="label_adicionar_produto">Adicionar produto</string>
     <string name="label_produto_removido">Produto removido</string>
     <string name="label_editar_produto">Editar produto</string>
     <string name="label_produto_editado">Produto editado</string>
+    <string name="label_lista_atual">Lista atual</string>
+    <string name="label_lista_comparada">Lista comparada</string>
+    <string name="label_duplicar_lista">Duplicar lista</string>
+    <string name="label_editando_produto">Editando produto</string>
+    <string name="label_quantidade_invalida">Quantidade inválida</string>
+    <string name="label_produto_adicionado">Produto adicionado</string>
 <!--    Label com duas palavras-->
 
 
@@ -35,10 +44,20 @@
     <string name="label_criando_compra">Criando nova compra</string>
     <string name="label_abrir_lista_comparando">Abrir lista comparando</string>
     <string name="label_lista_comparada_com">Lista comparada com</string>
+    <string name="label_criar_lista_compra">Criar lista de compra</string>
+    <string name="label_duplicar_lista_compra">Duplicar lista de compra</string>
+    <string name="label_lista_compra_duplicada">Lista de compra duplicada</string>
+    <string name="label_renomear_lista_compra">Renomear lista de compra</string>
+    <string name="label_nome_lista_atualizado">Nome da Lista atualizado</string>
+    <string name="label_lista_compra_excluida">Lista de compra excluída</string>
+    <string name="label_erro_excluir_lista_compra">Erro ao excluir lista</string>
+    <string name="label_informe_nome_produto">Informe o nome do produto</string>
 <!--    Label com tres palavras-->
 
 <!--    Label com frases-->
-    <string name="label_desc_nova_compra">Vamos criar sua nova lista de compras. Se você tiver outras listas, você pode compara-las.</string>
+    <string name="label_desc_nova_lista_compra">Vamos criar sua nova lista de compras. Se você tiver outras listas, você pode compara-las.</string>
+    <string name="label_desc_duplicar_lista">Você esta criando uma nova lista a partir da lista %s. Todos os produtos da lista selecionada serão adiconados na nova lista.</string>
+    <string name="label_desc_renomear_lista_compra">Você esta renomeando a lista de compra selecionada. Capricha no novo nome.</string>
     <string name="label_desc_selecionar_lista">Selecione a lista que deseja comparar:</string>
     <string name="label_desc_lista_compra_vazia">Você não criou nenhuma lista de compra. Vamos começar agora? Clique no botão +.</string>
     <string name="label_desc_lista_compra_criada">Lista de compra criada.</string>
@@ -51,6 +70,24 @@
     <string name="label_desc_erro_editar_produto">Erro ao editar o produto.</string>
     <string name="label_desc_produto_existente">Você já tem um produto na lista com o nome %s. Deseja somar a quantidade inserida do novo produto (%s) no produto que já esta na lista?</string>
     <string name="label_desc_finalizar_lista">Deseja finalizar a lista de compra?</string>
+    <string name="label_desc_erro_titulo_lista">Digite o nome da lista</string>
+    <string name="label_desc_erro_criar_lista">Erro ao criar a lista.</string>
+    <string name="label_desc_erro_atualizar_lista">Erro ao renomear a lista. Tente novamente.</string>
+    <string name="label_desc_carregando_listas">Carregando suas listas…</string>
+    <string name="label_desc_aguarde_carregando_lista_produto">Aguarde um momento.\nEstamos preparando sua lista de compra.</string>
+    <string name="label_desc_erro_listas_to_comparar">Não ha listas para comparar</string>
+    <string name="label_desc_erro_buscar_listas_compra">Não ha listas para comparar</string>
+    <string name="label_desc_adicionar_lista_to_comparar">Adicione uma lista com produtos para começar a comparar.</string>
+    <string name="label_desc_necessario_duas_listas_to_comparar">Para ver o resumo, você deve adicionar uma lista para comparar.</string>
+    <string name="label_erro_generico">alguma coisa deu errado</string>
+    <string name="label_desc_resumo_economizou_mesmos_produtos">Você economizou em relação a lista comparada somando somente os mesmos produtos. Parabéns!</string>
+    <string name="label_desc_resumo_preco_igual_mesmos_produtos">Os preços estão iguais nas duas listas somando somente os mesmos produtos.</string>
+    <string name="label_desc_resumo_nao_economizou_mesmos_produtos">Você gastou mais em relação a lista comparada somando somente os mesmos produtos.</string>
+    <string name="label_desc_resumo_economizou_todos_produtos">Você economizou em relação a lista comparada somando todos os produtos. Parabéns!</string>
+    <string name="label_desc_resumo_preco_igual_todos_produtos">Os preços estão iguais nas duas listas somando todos os produtos.</string>
+    <string name="label_desc_resumo_nao_economizou_todos_produtos">Você gastou mais em relação a lista comparada somando todos os produtos.</string>
+    <string name="label_desc_somando_todos_produtos">Somando todos os produtos da lista</string>
+    <string name="label_desc_somando_produtos_nas_listas">Produtos que estão nas duas listas: %d</string>
 <!--    Label com frases-->
 
 
@@ -59,6 +96,11 @@
         <item quantity="zero">Produto</item>
         <item quantity="one">Produto</item>
         <item quantity="other">Produtos</item>
+    </plurals>
+    <plurals name="label_plural_item">
+        <item quantity="zero">Item</item>
+        <item quantity="one">Item</item>
+        <item quantity="other">Itens</item>
     </plurals>
 <!--    Label plural-->
 

@@ -1,5 +1,8 @@
+@file:OptIn(ExperimentalComposeUiApi::class)
+
 package com.z1.comparaprecos.feature.listaproduto.presentation
 
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.expandVertically
@@ -17,6 +20,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Close
+import androidx.compose.material.icons.rounded.DeleteOutline
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
@@ -28,11 +32,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
@@ -41,6 +47,7 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.z1.comparaprecos.common.extensions.removeZerosFromLeft
 import com.z1.comparaprecos.common.ui.components.CustomButton
 import com.z1.comparaprecos.common.ui.components.CustomCheckBox
 import com.z1.comparaprecos.common.ui.components.CustomIconButton
@@ -50,7 +57,6 @@ import com.z1.comparaprecos.common.ui.components.mask.MascaraPeso
 import com.z1.comparaprecos.common.ui.components.mask.MascaraPreco
 import com.z1.comparaprecos.common.ui.theme.ComparaPrecosTheme
 import com.z1.comparaprecos.common.ui.theme.CoolMint
-import com.z1.comparaprecos.common.util.UiText
 import com.z1.comparaprecos.core.common.R
 import com.z1.comparaprecos.core.model.Produto
 import java.math.BigDecimal
@@ -58,12 +64,14 @@ import java.math.BigDecimal
 @Composable
 fun FormularioProduto(
     modifier: Modifier = Modifier,
-    uiState: UiState,
+    produtoSelecionado: Produto?,
+    idListaCompra: Long,
     onAdicionarProdutoClick: (Produto) -> Unit,
+    onDeletarProdutoClick: (Produto) -> Unit,
     onCancelarEdicaoProduto: () -> Unit
 ) {
-    val context = LocalContext.current
-    val produtoSelecionado = uiState.produtoSelecionado
+
+    val focusManager = LocalFocusManager.current
 
     val containerColor by animateColorAsState(
         when (produtoSelecionado) {
@@ -114,16 +122,17 @@ fun FormularioProduto(
         isResetQuantidade = true
         valueQuantidade = "1"
         valuePreco = ""
+        focusManager.clearFocus()
     }
 
     LaunchedEffect(key1 = produtoSelecionado) {
         produtoSelecionado?.run {
+            focusManager.clearFocus()
             valueNomeProduto = nomeProduto
             valueIsPeso = isMedidaPeso
             isResetQuantidade = false
             valueQuantidade = quantidade.replace(".", "")
-            valuePreco = precoUnitario.toString().replace(".", "")
-
+            valuePreco = precoUnitario.removeZerosFromLeft()
             isErrorNomeProduto = false
             isErrorPreco = false
             isErrorQuantidade = false
@@ -153,8 +162,7 @@ fun FormularioProduto(
     ) {
         Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(dimensionResource(id = R.dimen.medium)),
+                .fillMaxWidth(),
             verticalArrangement = Arrangement.Center
         ) {
             AnimatedVisibility(
@@ -165,28 +173,49 @@ fun FormularioProduto(
                 Row(
                     modifier = Modifier
                         .padding(
-                            bottom = dimensionResource(id = R.dimen.normal)
+                            vertical = dimensionResource(id = R.dimen.normal)
                         )
                         .fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
                 ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        CustomIconButton(
+                            onIconButtonClick = {
+                                focusManager.clearFocus()
+                                onCancelarEdicaoProduto()
+                             },
+                            iconImageVector = Icons.Rounded.Close,
+                            iconTint = MaterialTheme.colorScheme.onSurface
+                        )
+                        Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.normal)))
+                        Text(
+                            text = stringResource(id = R.string.label_editando_produto),
+                            style = MaterialTheme.typography.titleMedium,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                    }
                     CustomIconButton(
-                        onIconButtonClick = onCancelarEdicaoProduto,
-                        iconImageVector = Icons.Rounded.Close,
+                        modifier = Modifier
+                            .padding(end = dimensionResource(id = R.dimen.little)),
+                        onIconButtonClick = {
+                            onDeletarProdutoClick(produtoSelecionado!!)
+                            onCancelarEdicaoProduto()
+                        },
+                        iconImageVector = Icons.Rounded.DeleteOutline,
                         iconTint = MaterialTheme.colorScheme.onSurface
-                    )
-                    Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.normal)))
-                    Text(
-                        text = "Editando produto",
-                        style = MaterialTheme.typography.titleMedium,
-                        color = MaterialTheme.colorScheme.onSurface
                     )
                 }
             }
-            
+
             Row(
                 modifier = Modifier
-                    .fillMaxWidth(),
+                    .fillMaxWidth()
+                    .padding(
+                        horizontal = dimensionResource(id = R.dimen.medium)
+                    ),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 CustomOutlinedTextInput(
@@ -226,7 +255,10 @@ fun FormularioProduto(
             Spacer(modifier = Modifier.height(height = dimensionResource(id = R.dimen.medium)))
             Row(
                 modifier = Modifier
-                    .fillMaxWidth(),
+                    .fillMaxWidth()
+                    .padding(
+                        horizontal = dimensionResource(id = R.dimen.medium)
+                    ),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 CustomOutlinedTextInput(
@@ -245,10 +277,7 @@ fun FormularioProduto(
                             it.length == 1 && it == "0" -> Unit
                             it.isBlank() -> valuePreco = ""
                             it.length > 8 -> Unit
-                            else -> {
-                                valuePreco = it
-                                isErrorPreco = false
-                            }
+                            else -> valuePreco = it
                         }
                     },
                     isError = isErrorPreco,
@@ -297,7 +326,12 @@ fun FormularioProduto(
             Spacer(modifier = Modifier.height(height = dimensionResource(id = R.dimen.medium)))
             CustomButton(
                 modifier = Modifier
-                    .fillMaxWidth(),
+                    .fillMaxWidth()
+                    .padding(
+                        start = dimensionResource(id = R.dimen.medium),
+                        end = dimensionResource(id = R.dimen.medium),
+                        bottom = dimensionResource(id = R.dimen.medium),
+                    ),
                 containerColor = MaterialTheme.colorScheme.primary,
                 titulo =
                 if (produtoSelecionado == null) stringResource(id = R.string.label_adicionar_produto)
@@ -307,8 +341,6 @@ fun FormularioProduto(
                 onClick = {
                     if (valueNomeProduto.isBlank()) {
                         isErrorNomeProduto = true
-                    } else if (valuePreco.isBlank() || valuePreco == "0") {
-                        isErrorPreco = true
                     } else if (valueQuantidade.isBlank() || valueQuantidade == "0") {
                         isErrorQuantidade = true
                     } else {
@@ -316,9 +348,11 @@ fun FormularioProduto(
                             Produto(
                                 id = produtoSelecionado?.id ?: 0,
                                 idListaCompra = produtoSelecionado?.idListaCompra
-                                    ?: uiState.listaCompra.id,
+                                    ?: idListaCompra,
                                 nomeProduto = valueNomeProduto.trimEnd(),
-                                precoUnitario = BigDecimal(valuePreco).movePointLeft(2),
+                                precoUnitario =
+                                if (valuePreco.isBlank()) BigDecimal(0).movePointLeft(2)
+                                else BigDecimal(valuePreco).movePointLeft(2),
                                 quantidade =
                                 if (valueIsPeso) BigDecimal(valueQuantidade).movePointLeft(3).toString()
                                 else BigDecimal(valueQuantidade).toString(),
@@ -338,9 +372,11 @@ fun FormularioProduto(
 fun CustomProdutoInsertPreview() {
     ComparaPrecosTheme {
         FormularioProduto(
-            uiState = UiState(),
-            onAdicionarProdutoClick = { Produto -> },
-            onCancelarEdicaoProduto = {}
+            produtoSelecionado = Produto(-1, -1, "", "", BigDecimal.ZERO, false),
+            idListaCompra = -1,
+            onAdicionarProdutoClick = { produto -> },
+            onCancelarEdicaoProduto = {},
+            onDeletarProdutoClick = {produto ->  }
         )
     }
 }

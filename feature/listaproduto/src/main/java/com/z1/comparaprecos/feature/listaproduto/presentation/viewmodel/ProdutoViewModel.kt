@@ -2,13 +2,16 @@ package com.z1.comparaprecos.feature.listaproduto.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.z1.comparaprecos.common.util.UiEvent
+import com.z1.comparaprecos.common.ui.components.ETipoSnackbar
 import com.z1.comparaprecos.common.util.UiText
-import com.z1.comparaprecos.core.model.ListaCompraWithProdutos
-import com.z1.comparaprecos.core.model.Produto
 import com.z1.comparaprecos.core.common.R
 import com.z1.comparaprecos.core.model.ListaCompra
+import com.z1.comparaprecos.core.model.ListaCompraWithProdutos
+import com.z1.comparaprecos.core.model.Produto
+import com.z1.comparaprecos.core.model.exceptions.ErrorProductData
+import com.z1.comparaprecos.core.model.exceptions.ErrorProductExists
 import com.z1.comparaprecos.feature.listaproduto.domain.ProdutoUseCase
+import com.z1.comparaprecos.feature.listaproduto.presentation.UiEvent
 import com.z1.comparaprecos.feature.listaproduto.presentation.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -16,8 +19,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.onCompletion
-import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -29,7 +30,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ProdutoViewModel @Inject constructor(
     private val produtoUseCase: ProdutoUseCase
-): ViewModel() {
+) : ViewModel() {
 
     private val _uiState = MutableStateFlow(UiState())
     val uiState = _uiState.stateIn(
@@ -44,68 +45,218 @@ class ProdutoViewModel @Inject constructor(
     fun onEvent(event: OnEvent) {
         when (event) {
             is OnEvent.GetListaCompra -> getListaCompra(event.idListaCompra)
+            is OnEvent.GetListaCompraToComparar -> getListaCompraToComparar(event.idListaCompra)
+            is OnEvent.GetAllListaCompra -> getAllListaCompra()
             is OnEvent.InsertProduto -> insertProduto(event.produto)
             is OnEvent.UpdateProduto -> updateProduto(event.produto)
             is OnEvent.DeleteProduto -> deleteProduto(event.produto)
             is OnEvent.ProdutoSelecionado -> updateProdutoSelecionado(event.produto)
-            is OnEvent.UpdateQuantidadeProdutoExistente -> updateProdutoJaExistente(event.produto)
+            is OnEvent.UpdateQuantidadeProdutoExistente -> updateProdutoExistente(event.produto)
             is OnEvent.UpdateUiEvent -> updateUiEvent(event.uiEvent)
         }
     }
 
-    private fun updateUiEvent(uiEvent: UiEvent) =
-        viewModelScope.launch {
-            _uiEvent.send(uiEvent)
-        }
+    //DATABASE
 
-    private fun insertProduto(produto: Produto) = viewModelScope.launch {
-        if (isProdutoJaExiste(produto) != null) {
-            updateProdutoJaExiste(produto)
-            _uiEvent.send(UiEvent.Error(UiText.StringResource(R.string.label_desc_produto_existente)))
-        } else {
-            val result = isDadosProdutoCorreto(produto)
-            if (result.first) {
-                val isProdutoAdiconado = produtoUseCase.insertProduto(produto)
-                _uiEvent.send(if (isProdutoAdiconado > 0) UiEvent.Success else UiEvent.Default)
-            } else {
-                _uiEvent.send(UiEvent.ShowSnackbar(result.second!!))
+    //Insert
+    private fun insertProduto(produto: Produto) =
+        viewModelScope.launch {
+            try {
+                val listaProduto = _uiState.value.listaProduto
+                produtoUseCase.insertProduto(produto, listaProduto)
+                _uiEvent.send(UiEvent.Success)
+            } catch (e: ErrorProductExists) {
+                e.printStackTrace()
+                updateProdutoJaExiste(produto)
+                _uiEvent.send(
+                    UiEvent.Error(
+                        UiText.StringResource(
+                            resId = R.string.label_desc_produto_existente,
+                            produto.nomeProduto,
+                            produto.quantidade
+                        )
+                    )
+                )
+            } catch (e: ErrorProductData) {
+                e.printStackTrace()
+                _uiEvent.send(
+                    UiEvent.ShowSnackbar(
+                        UiText.StringResource(
+                            e.getUiMessageId() ?: R.string.label_erro_generico
+                        ),
+                        ETipoSnackbar.ERRO
+                    )
+                )
+            } catch (e: Exception) {
+                e.printStackTrace()
+                _uiEvent.send(
+                    UiEvent.ShowSnackbar(
+                        UiText.StringResource(
+                            R.string.label_erro_generico
+                        ),
+                        ETipoSnackbar.ERRO
+                    )
+                )
             }
         }
-    }
 
+    //Get
+    private fun getListaCompra(idListaCompra: Long) =
+        viewModelScope.launch {
+            delay(TimeUnit.SECONDS.toMillis(2))
+            val listaCompra = try {
+                produtoUseCase.getListaCompra(idListaCompra)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                null
+            }
+
+            listaCompra?.let {
+                setListaCompra(it)
+                getListaProduto(it.id)
+            } ?: _uiEvent.send(
+                UiEvent.Error(
+                    UiText.StringResource(R.string.label_lista_compra_nao_encontrada)
+                )
+            )
+        }
+
+    private fun getListaProduto(idListaCompra: Long) =
+        viewModelScope.launch {
+            produtoUseCase.getListaProduto(idListaCompra)
+                .catch {
+                    _uiEvent.send(UiEvent.Error(UiText.DynamicString(it.message ?: "")))
+                }
+                .collect {
+                    setListaProduto(it)
+                }
+        }
+
+    private fun getAllListaCompra() =
+        viewModelScope.launch {
+            try {
+                if (_uiState.value.allListaCompra.isEmpty()) {
+                    val listaCompraOpcoes =
+                        produtoUseCase.getAllListaCompra(_uiState.value.listaCompra.id)
+                    setAllListaCompra(listaCompraOpcoes)
+                }
+                updateUiEvent(UiEvent.ShowAlertDialog)
+
+            } catch (e: Exception) {
+                e.printStackTrace()
+                updateUiEvent(
+                    UiEvent.ShowSnackbar(
+                        UiText.StringResource(R.string.label_desc_erro_buscar_listas_compra),
+                        ETipoSnackbar.SUCESSO
+                    )
+                )
+            }
+        }
+
+    private fun getListaCompraToComparar(idListaCompraComparada: Long) =
+        viewModelScope.launch {
+            val listaCompra = try {
+                produtoUseCase.getListaCompraComparada(idListaCompraComparada)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                null
+            }
+
+            listaCompra?.let {
+                updateListaCompraComparada(it)
+                _uiEvent.send(UiEvent.Default)
+            } ?: _uiEvent.send(
+                UiEvent.Error(
+                    UiText.StringResource(R.string.label_lista_compra_comparada_nao_encontrada)
+                )
+            )
+        }
+
+    //Update
     private fun updateProduto(produto: Produto) =
         viewModelScope.launch {
-            val result = produtoUseCase.updateProduto(produto)
-            if (result > 0) {
+            try {
+                val resultMessage = produtoUseCase.updateProduto(produto)
                 updateProdutoSelecionado()
-                _uiEvent.send(UiEvent.ShowSnackbar(UiText.StringResource(R.string.label_produto_editado)))
+                _uiEvent.send(
+                    UiEvent.ShowSnackbar(
+                        UiText.StringResource(resultMessage),
+                        ETipoSnackbar.SUCESSO
+                    )
+                )
+            } catch (e: Exception) {
+                _uiEvent.send(UiEvent.Error(UiText.StringResource(R.string.label_desc_erro_editar_produto)))
             }
-            else _uiEvent.send(UiEvent.Error(UiText.StringResource(R.string.label_desc_erro_editar_produto)))
         }
 
-    private fun updateProdutoJaExistente(produto: Produto?) {
+    private fun updateProdutoExistente(produto: Produto?) {
         produto?.let {
-            val produtoNaLista = isProdutoJaExiste(produto)
+            val produtoNaLista = findProduto(produto)
             produtoNaLista?.let {
-                val novaQuantidade  = atualizarNovaQuantidadeProduto(produto, produtoNaLista)
+                val novaQuantidade = novaQuantidadeProduto(produto, produtoNaLista)
                 val produtoAtualizado = produtoNaLista.copy(quantidade = novaQuantidade)
                 updateProduto(produtoAtualizado)
             }
         } ?: updateProdutoJaExiste()
     }
 
-    private fun atualizarNovaQuantidadeProduto(produto: Produto, produtoNaLista: Produto) =
+    private fun novaQuantidadeProduto(produto: Produto, produtoNaLista: Produto) =
         BigDecimal(produtoNaLista.quantidade).plus(BigDecimal(produto.quantidade)).toString()
 
+    private fun findProduto(produto: Produto): Produto? =
+        _uiState.value.listaProduto.find { it.nomeProduto == produto.nomeProduto }
 
+    //Delete
     private fun deleteProduto(produto: Produto) =
         viewModelScope.launch {
-            val result = produtoUseCase.deleteProduto(produto)
-            _uiEvent.send(
-                if (result > 0) UiEvent.ShowSnackbar(UiText.StringResource(R.string.label_produto_removido))
-                else UiEvent.ShowSnackbar(UiText.StringResource(R.string.label_desc_erro_excluir_produto))
+            try {
+                val resultMessage = produtoUseCase.deleteProduto(produto)
+                _uiEvent.send(
+                    UiEvent.ShowSnackbar(
+                        UiText.StringResource(resultMessage),
+                        ETipoSnackbar.SUCESSO
+                    )
+                )
+            } catch (e: Exception) {
+                e.printStackTrace()
+                UiEvent.ShowSnackbar(
+                    UiText.StringResource(R.string.label_desc_erro_excluir_produto),
+                    ETipoSnackbar.ERRO
+                )
+            }
+        }
+    //DATABASE
+
+    //UISTATE
+    private fun updateUiEvent(uiEvent: UiEvent) =
+        viewModelScope.launch {
+            _uiEvent.send(uiEvent)
+        }
+
+    private fun setListaCompra(listaCompra: ListaCompra) {
+        _uiState.update { currentState ->
+            currentState.copy(
+                listaCompra = listaCompra
             )
         }
+    }
+
+    private fun setListaProduto(listaProduto: List<Produto>) {
+        _uiState.update { currentState ->
+            currentState.copy(
+                isListaProdutoCarregada = true,
+                listaProduto = listaProduto
+            )
+        }
+    }
+
+    private fun setAllListaCompra(allListaCompra: List<Pair<String, Long>>) {
+        _uiState.update { currentState ->
+            currentState.copy(
+                allListaCompra = allListaCompra
+            )
+        }
+    }
 
     private fun updateProdutoSelecionado(produto: Produto? = null) {
         _uiState.update { currentState ->
@@ -122,97 +273,10 @@ class ProdutoViewModel @Inject constructor(
         if (produto == null) updateUiEvent(UiEvent.Default)
     }
 
-    private fun isDadosProdutoCorreto(produto: Produto): Pair<Boolean, UiText?> {
-        return when {
-            produto.idListaCompra <= -1 -> false to UiText.StringResource(R.string.label_peso)
-            produto.nomeProduto.isBlank() -> false to UiText.StringResource(R.string.label_peso)
-            produto.precoUnitario <= BigDecimal.ZERO -> false to UiText.StringResource(R.string.label_peso)
-            produto.quantidade.toDouble() <= 0.0 -> false to UiText.StringResource(R.string.label_peso)
-            else -> true to null
-        }
-    }
-
-    private fun isProdutoJaExiste(produto: Produto): Produto? =
-        _uiState.value.listaProduto.find { it.nomeProduto == produto.nomeProduto }
-
-    private fun updateListaCompra(listaCompra: ListaCompra) {
-        _uiState.update { currentState ->
-            currentState.copy(
-                listaCompra = listaCompra
-            )
-        }
-    }
-
     private fun updateListaCompraComparada(listaCompra: ListaCompraWithProdutos) {
         _uiState.update { currentState ->
             currentState.copy(listaCompraComparada = listaCompra)
         }
     }
-
-    private fun updateListaProduto(listaProduto: List<Produto>) {
-        _uiState.update { currentState ->
-            currentState.copy(
-                isListaProdutoCarregada = true,
-                listaProduto = listaProduto
-            )
-        }
-    }
-
-    private fun getListaCompra(idListaCompra: Long) =
-        viewModelScope.launch {
-            delay(TimeUnit.SECONDS.toMillis(2))
-            val listaCompra = try {
-                produtoUseCase.getListaCompra(idListaCompra)
-            } catch (e: Exception) {
-                e.printStackTrace()
-                null
-            }
-
-            listaCompra?.let {
-                if (it.isComparar) {
-                    getListaCompraComparada(it.idListaToComparar)
-                }
-                updateListaCompra(it)
-                getListaProduto(it.id)
-            } ?: _uiEvent.send(
-                UiEvent.Error(
-                    UiText.StringResource(R.string.label_lista_compra_nao_encontrada)
-                )
-            )
-        }
-
-    private fun getListaProduto(idListaCompra: Long) =
-        viewModelScope.launch {
-            produtoUseCase.getListaProduto(idListaCompra)
-                .onStart {
-
-                }
-                .onCompletion {
-
-                }
-                .catch {
-                    _uiEvent.send(UiEvent.Error(UiText.StringMessage(it.message ?: "")))
-                }
-                .collect {
-                    updateListaProduto(it)
-                }
-        }
-
-    private fun getListaCompraComparada(idListaCompraComparada: Long) =
-        viewModelScope.launch {
-            val listaCompra = try {
-                produtoUseCase.getListaCompraComparada(idListaCompraComparada)
-            } catch (e: Exception) {
-                e.printStackTrace()
-                null
-            }
-
-            listaCompra?.let {
-                updateListaCompraComparada(it)
-            } ?: _uiEvent.send(
-                UiEvent.Error(
-                    UiText.StringResource(R.string.label_lista_compra_comparada_nao_encontrada)
-                )
-            )
-        }
+    //UISTATE
 }

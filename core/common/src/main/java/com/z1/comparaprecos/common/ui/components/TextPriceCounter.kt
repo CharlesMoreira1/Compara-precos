@@ -44,6 +44,9 @@ fun CustomTextPriceCounter(
     val counterText = counter.toString().padStart(3, '0')
 
     val durations = when (counterText.length) {
+        1 -> intArrayOf(1600, 1500, 1400, 1300, 1200, 1100, 1000, 900, 800, 700, 600, 500, 400, 300, 200)
+        2 -> intArrayOf(1600, 1500, 1400, 1300, 1200, 1100, 1000, 900, 800, 700, 600, 500, 400, 300)
+        3 -> intArrayOf(1600, 1500, 1400, 1300, 1200, 1100, 1000, 900, 800, 700, 600, 500, 400)
         4 -> intArrayOf(1600, 1500, 1400, 1300, 1200, 1100, 1000, 900, 800, 700, 600, 500)
         5 -> intArrayOf(1600, 1500, 1400, 1300, 1200, 1100, 1000, 900, 800, 700, 600)
         6 -> intArrayOf(1600, 1500, 1400, 1300, 1200, 1100, 1000, 900, 800, 700)
@@ -52,7 +55,7 @@ fun CustomTextPriceCounter(
         9 -> intArrayOf(1600, 1500, 1400, 1300, 1200, 1100, 1000)
         10 -> intArrayOf(1600, 1500, 1400, 1300, 1200, 1100)
         11 -> intArrayOf(1600, 1500, 1400, 1300, 1200)
-        else -> IntArray(12) { 0 }
+        else -> IntArray(15) { 500 }
     }
 
     val separatorPointIndices = when (counterText.length) {
@@ -65,28 +68,6 @@ fun CustomTextPriceCounter(
         9 -> intArrayOf(7, 4, 1) //0.000.000,00
         10 -> intArrayOf(8, 5, 2) //00.000.000,00
         11 -> intArrayOf(9, 6, 3) //000.000.000,00
-        else -> intArrayOf()
-    }
-
-    val decimalPointIndices = when (counterText.length) {
-        3 -> intArrayOf(1, -1, -1) //0,00
-        4 -> intArrayOf(2, -1, -1) //00,00
-        5 -> intArrayOf(3, -1, -1) //000,00
-
-        else -> intArrayOf()
-    }
-
-    val thousandsSeparatorIndices = when(counterText.length) {
-        6 -> intArrayOf(1, 4, -1) //0.000,00
-        7 -> intArrayOf(2, 5, -1) //00.000,00
-        8 -> intArrayOf(3, 6, -1) //000.000,00
-        else -> intArrayOf()
-    }
-
-    val millionsSeparatorIndices = when (counterText.length) {
-        9 -> intArrayOf(1, 4, 7) //0.000.000,00
-        10 -> intArrayOf(2, 5, 8) //00.000.000,00
-        11 -> intArrayOf(3, 6, 9) //000.000.000,00
         else -> intArrayOf()
     }
 
@@ -116,10 +97,6 @@ fun CustomTextPriceCounter(
                     AdicionarSeparador(text = ".", textStyle = textStyle)
                 }
             }
-
-//            if (isDecimal) {
-//                AdicionarSeparador(text = if (isThousands || isMillions) "." else ",", textStyle = textStyle)
-//            }
 
             AnimatedContent(
                 targetState = digit,

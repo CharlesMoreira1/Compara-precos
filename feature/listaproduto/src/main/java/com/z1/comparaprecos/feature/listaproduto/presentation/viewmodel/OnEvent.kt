@@ -1,10 +1,12 @@
 package com.z1.comparaprecos.feature.listaproduto.presentation.viewmodel
 
-import com.z1.comparaprecos.common.util.UiEvent
 import com.z1.comparaprecos.core.model.Produto
+import com.z1.comparaprecos.feature.listaproduto.presentation.UiEvent
 
 sealed class OnEvent {
     data class GetListaCompra(val idListaCompra: Long): OnEvent()
+    data class GetListaCompraToComparar(val idListaCompra: Long): OnEvent()
+    data object GetAllListaCompra: OnEvent()
     data class InsertProduto(val produto: Produto): OnEvent()
     data class UpdateProduto(val produto: Produto): OnEvent()
     data class DeleteProduto(val produto: Produto): OnEvent()

@@ -55,50 +55,55 @@ fun CustomBottomSheetDialog(
 }
 
 @Composable
-fun CustomBottomSheetDialogContent(
+fun CustomBottomSheetDialogAviso(
     modifier: Modifier = Modifier,
     titulo: String,
     mensagem: String,
+    onDismissRequest: () -> Unit,
     onAcaoPositivaClick: () -> Unit,
     textoBotaoPositivo: String,
     onAcaoNegativaClick: (() -> Unit)? = null,
     textoBotaoNegativo: String? = null,
 
 ) {
-    Column(modifier = Modifier
-        .padding(dimensionResource(id = R.dimen.medium))) {
-        Text(
-            text = titulo,
-            style = MaterialTheme.typography.headlineSmall
-        )
-        Spacer(modifier = Modifier.height(height = dimensionResource(id = R.dimen.medium)))
-        Text(
-            text = mensagem,
-            style = MaterialTheme.typography.bodyLarge
-        )
-        Spacer(modifier = Modifier.height(height = dimensionResource(id = R.dimen.big)))
-        CustomButton(
-            modifier = Modifier
-                .fillMaxWidth(),
-            containerColor = MaterialTheme.colorScheme.primary,
-            textColor = MaterialTheme.colorScheme.onPrimary,
-            titulo = textoBotaoPositivo,
-            textStyle = MaterialTheme.typography.bodyLarge,
-            onClick = onAcaoPositivaClick
-        )
-        Spacer(modifier = Modifier.height(height = dimensionResource(id = R.dimen.normal)))
-        if (textoBotaoNegativo != null && onAcaoNegativaClick != null) {
-            CustomOutlinedButton(
+    CustomBottomSheetDialog(
+        onDismissRequest = onDismissRequest
+    ) {
+        Column(modifier = modifier
+            .padding(dimensionResource(id = R.dimen.medium))) {
+            Text(
+                text = titulo,
+                style = MaterialTheme.typography.headlineSmall
+            )
+            Spacer(modifier = Modifier.height(height = dimensionResource(id = R.dimen.medium)))
+            Text(
+                text = mensagem,
+                style = MaterialTheme.typography.bodyLarge
+            )
+            Spacer(modifier = Modifier.height(height = dimensionResource(id = R.dimen.big)))
+            CustomButton(
                 modifier = Modifier
                     .fillMaxWidth(),
-                borderColor = CoralRed,
-                textColor = CoralRed,
-                titulo = textoBotaoNegativo,
+                containerColor = MaterialTheme.colorScheme.primary,
+                textColor = MaterialTheme.colorScheme.onPrimary,
+                titulo = textoBotaoPositivo,
                 textStyle = MaterialTheme.typography.bodyLarge,
-                onClick = onAcaoNegativaClick
+                onClick = onAcaoPositivaClick
             )
+            Spacer(modifier = Modifier.height(height = dimensionResource(id = R.dimen.normal)))
+            if (textoBotaoNegativo != null && onAcaoNegativaClick != null) {
+                CustomOutlinedButton(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    borderColor = CoralRed,
+                    textColor = CoralRed,
+                    titulo = textoBotaoNegativo,
+                    textStyle = MaterialTheme.typography.bodyLarge,
+                    onClick = onAcaoNegativaClick
+                )
+            }
+            Spacer(modifier = Modifier.height(height = dimensionResource(id = R.dimen.medium)))
         }
-        Spacer(modifier = Modifier.height(height = dimensionResource(id = R.dimen.medium)))
     }
 }
 
@@ -106,9 +111,10 @@ fun CustomBottomSheetDialogContent(
 @Composable
 fun CustomBottomSheetDialogContentPreview() {
     ComparaPrecosTheme {
-        CustomBottomSheetDialogContent(
+        CustomBottomSheetDialogAviso(
             titulo = "Atenção",
             mensagem = LoremIpsum(25).values.first(),
+            onDismissRequest = {},
             onAcaoPositivaClick = { /*TODO*/ },
             textoBotaoPositivo = "Aceitar",
             onAcaoNegativaClick = { /*TODO*/ },

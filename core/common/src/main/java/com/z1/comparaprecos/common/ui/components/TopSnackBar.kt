@@ -49,7 +49,7 @@ enum class ETipoSnackbar {
 }
 
 data class Mensagem(
-    @StringRes val titulo: Int,
+    val titulo: String,
     val tipoMensagem: ETipoSnackbar,
     val id: Long = Instant.now().toEpochMilli()
 )
@@ -104,7 +104,7 @@ fun CustomSnackBar(
             ) {
                 Text(
                     modifier = Modifier,
-                    text = stringResource(id = mensagem.titulo),
+                    text = mensagem.titulo,
                     color = iconeTint,
                     style = MaterialTheme.typography.titleMedium
                 )
@@ -125,7 +125,7 @@ private fun PreviewCustomSnackbar() {
     ComparaPrecosTheme {
         CustomSnackBar(
             mensagem = Mensagem(
-                R.string.app_name,
+                "",
                 ETipoSnackbar.ERRO,
                 Instant.now().toEpochMilli()
             ),
