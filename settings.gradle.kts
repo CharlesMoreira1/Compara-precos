@@ -17,11 +17,10 @@ dependencyResolutionManagement {
     }
 }
 
-//enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
-
 rootProject.name = "Compara Precos"
 include(":app")
 include(":core:common")
+include(":core:testing")
 include(":feature:listacompra")
 include(":core:navigation")
 include(":feature:listaproduto")

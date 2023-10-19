@@ -10,7 +10,7 @@ android {
 
 dependencies {
 
-    api(project(":core:common"))
-    api(project(":core:database"))
-    api(project(":core:model"))
+    implementation(project(":core:common"))
+    implementation(project(":core:database"))
+//    implementation(project(":core:model"))
 }

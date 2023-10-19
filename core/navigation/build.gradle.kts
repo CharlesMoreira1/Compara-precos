@@ -5,19 +5,9 @@ plugins {
 
 android {
     namespace = "com.z1.comparaprecos.core.navigation"
-
-    android {
-
-//        compileSdk = 33
-//        defaultConfig {
-//            minSdk = 26
-//            targetSdk = 33
-//
-//        }
-    }
 }
 
 dependencies {
-    api(project(":feature:listacompra"))
-    api(project(":feature:listaproduto"))
+    implementation(project(":feature:listacompra"))
+    implementation(project(":feature:listaproduto"))
 }

@@ -27,8 +27,9 @@ dependencies {
     androidTestImplementation(libs.bundles.compose)
     debugImplementation(libs.bundles.compose)
 
-
+    implementation(project(":core:common"))
     implementation(project(":core:navigation"))
+    implementation(project(":core:testing"))
     implementation(project(":feature:listacompra"))
     implementation(project(":feature:listaproduto"))
 }

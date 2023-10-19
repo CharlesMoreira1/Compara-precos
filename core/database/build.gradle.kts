@@ -5,9 +5,6 @@ plugins {
 
 android {
     namespace = "com.z1.comparaprecos.feature.listacompra"
-
-    android {
-    }
 }
 
 dependencies {
