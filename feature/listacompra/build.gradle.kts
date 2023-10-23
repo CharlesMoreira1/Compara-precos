@@ -1,7 +1,7 @@
 plugins {
     id("comparaprecos.android.feature")
     id("comparaprecos.android.library.compose")
-
+    id("comparaprecos.android.library.jacoco")
 }
 
 android {

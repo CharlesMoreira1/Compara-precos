@@ -1,6 +1,7 @@
 plugins {
     id("comparaprecos.android.application")
     id("comparaprecos.android.application.compose")
+    id("comparaprecos.android.application.jacoco")
     id("comparaprecos.android.hilt")
 }
 
