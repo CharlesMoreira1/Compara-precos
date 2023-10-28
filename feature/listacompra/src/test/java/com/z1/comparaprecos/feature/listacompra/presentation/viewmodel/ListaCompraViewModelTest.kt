@@ -13,9 +13,7 @@ import com.z1.comparaprecos.testing.data.listaProdutoDataTest
 import io.mockk.clearAllMocks
 import io.mockk.coEvery
 import io.mockk.coVerify
-import io.mockk.every
 import io.mockk.mockk
-import io.mockk.verify
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import org.junit.After
@@ -201,7 +199,7 @@ class ListaCompraViewModelTest: BaseTest() {
     @Test
     fun `should return UiEvent_Deleted when delete a listaCompra`() {
         //Given - Dado
-        coEvery { usecase.deleteCompra(0) } returns R.string.label_lista_compra_excluida
+        coEvery { usecase.deleteListaCompra(0) } returns R.string.label_lista_compra_excluida
 
         //When - Entao
         viewModel.onEvent(OnEvent.Delete(0))
@@ -210,13 +208,13 @@ class ListaCompraViewModelTest: BaseTest() {
         //Then - Entao
         assertTrue(currentUiEvent is UiEvent.Deleted)
 
-        coVerify { usecase.deleteCompra(0) }
+        coVerify { usecase.deleteListaCompra(0) }
     }
 
     @Test
     fun `should return UiEvent_ShowSnackbar when some error occur deleting a listaCompra`() {
         //Given - Dado
-        coEvery { usecase.deleteCompra(0) } throws Exception()
+        coEvery { usecase.deleteListaCompra(0) } throws Exception()
 
         //When - Entao
         viewModel.onEvent(OnEvent.Delete(0))
@@ -225,7 +223,7 @@ class ListaCompraViewModelTest: BaseTest() {
         //Then - Entao
         assertTrue(currentUiEvent is UiEvent.ShowSnackbar)
 
-        coVerify { usecase.deleteCompra(0) }
+        coVerify { usecase.deleteListaCompra(0) }
     }
     //Delete item
 

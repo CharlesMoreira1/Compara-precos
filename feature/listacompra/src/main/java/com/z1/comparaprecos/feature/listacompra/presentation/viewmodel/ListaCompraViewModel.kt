@@ -129,7 +129,7 @@ class ListaCompraViewModel @Inject constructor(
     private fun deleteListaCompra(idListaCompra: Long) =
         viewModelScope.launch {
             try {
-                val resultMessage = listaCompraUseCase.deleteCompra(idListaCompra)
+                val resultMessage = listaCompraUseCase.deleteListaCompra(idListaCompra)
                 _uiEvent.send(UiEvent.Deleted(resultMessage))
             } catch (e: Exception) {
                 e.printStackTrace()
