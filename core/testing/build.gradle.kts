@@ -11,5 +11,8 @@ android {
 dependencies {
     api(libs.bundles.test)
     api(libs.bundles.android.test)
+    api(libs.bundles.mocck)
     debugApi(libs.bundles.debug.test)
+
+    implementation(project(":core:database"))
 }

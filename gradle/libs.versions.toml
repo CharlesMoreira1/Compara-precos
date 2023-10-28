@@ -25,6 +25,7 @@ androidx-test-core = "1.5.0"
 androidx-test-rules = "1.5.0"
 androidx-test-runner = "1.5.1"
 jacoco = "0.8.7"
+mockk = "1.13.8"
 
 #Work manager
 work-manager = "2.8.1"
@@ -100,6 +101,8 @@ androidx-test-core = { group = "androidx.test", name = "core", version.ref = "an
 androidx-test-rules = { group = "androidx.test", name = "rules", version.ref = "androidx-test-rules" }
 androidx-test-runner = { group = "androidx.test", name = "runner", version.ref = "androidx-test-runner" }
 kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }
+mockk-android = { group = "io.mockk", name = "mockk-android", version.ref = "mockk" }
+mockk-agent = { group = "io.mockk", name = "mockk-agent", version.ref = "mockk" }
 
 # Dependencies of the included build-logic
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "androidGradlePlugin" }
@@ -113,8 +116,9 @@ compose = ["activity-compose", "compose-material3", "navigation-compose", "compo
 dagger-hilt = ["dagger-hilt", "hilt-navigation"]
 room = ["androidx-room-runtime", "androidx-room-ktx"]
 kapt = ["kapt-dagger-hilt-compiler", "kapt-room-compiler"]
+mocck = ["mockk-android", "mockk-agent"]
 test = ["junit4", "kotlinx-coroutines-test"]
-android-test = ["androidx-test-ext", "androidx-test-espresso-core", "androidx-compose-ui-test-junit4", "androidx-test-core", "androidx-test-rules", "androidx-test-runner"]
+android-test = ["androidx-test-ext", "androidx-test-espresso-core", "androidx-compose-ui-test-junit4", "androidx-test-core", "androidx-test-rules", "androidx-test-runner", "mockk-android", "mockk-agent"]
 debug-test =["android-compose-ui-tooling", "android-compose-ui-test-manifest"]
 
 [plugins]

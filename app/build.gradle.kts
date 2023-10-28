@@ -18,15 +18,19 @@ android {
             useSupportLibrary = true
         }
     }
+
+    packagingOptions {
+        resources {
+            excludes += "/META-INF/{AL2.0,LGPL2.1}"
+            merges += "META-INF/LICENSE.md"
+            merges += "META-INF/LICENSE-notice.md"
+        }
+    }
 }
 
 dependencies {
     implementation(libs.bundles.androidx)
     implementation(libs.bundles.compose)
-
-    testImplementation(libs.bundles.compose)
-    androidTestImplementation(libs.bundles.compose)
-    debugImplementation(libs.bundles.compose)
 
     implementation(project(":core:common"))
     implementation(project(":core:navigation"))

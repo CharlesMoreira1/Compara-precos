@@ -64,7 +64,6 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -213,8 +212,8 @@ fun ListaCompraScreen(
                         dataCriacao = dataCriacao
                     )
                     val event = when {
-                        uiState.isRenomearListaCompra -> OnEvent.UpdateList(listaCompra)
-                        uiState.isDuplicarListaCompra -> OnEvent.DuplicateList(
+                        uiState.isRenomearListaCompra -> OnEvent.UpdateListaCompra(listaCompra)
+                        uiState.isDuplicarListaCompra -> OnEvent.DuplicateListaCompra(
                             listaCompra,
                             uiState.listaCompraSelecionada?.produtos ?: emptyList()
                         )
@@ -232,7 +231,7 @@ fun ListaCompraScreen(
             }
             ListaCompra(
                 uiState = uiState,
-                onClickNovaLista = { onEvent(OnEvent.UiCreateNewList) },
+                onClickNovaLista = { onEvent(OnEvent.UiCreateNewListaCompra) },
                 onListaCompraClick = { listaCompraSelecionada ->
                     onEvent(OnEvent.ListaCompraSelecionada(listaCompraSelecionada))
                 }
@@ -265,12 +264,12 @@ fun ListaCompraScreen(
 
                             //Duplicar lista
                             Icons.Rounded.ContentCopy -> {
-                                onEvent(OnEvent.UiDuplicateList)
+                                onEvent(OnEvent.UiDuplicateListaCompra)
                             }
 
                             //Editar lista
                             Icons.Rounded.Edit -> {
-                                onEvent(OnEvent.UiRenameList)
+                                onEvent(OnEvent.UiRenameListaCompra)
                             }
 
                             // Deletar lista

@@ -11,6 +11,9 @@ import org.gradle.testing.jacoco.plugins.JacocoTaskExtension
 import org.gradle.testing.jacoco.tasks.JacocoReport
 import java.util.Locale
 
+//Comando para toda a aplicacao ./gradlew jacocoTestReport
+//Comando para modulo indivudual ./gradlew :module:testDebugUnitTest
+
 private val coverageExclusions = listOf(
     // Android
     "**/R.class",
