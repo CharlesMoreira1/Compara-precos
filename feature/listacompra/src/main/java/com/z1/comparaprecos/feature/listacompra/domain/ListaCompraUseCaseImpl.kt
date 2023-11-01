@@ -16,7 +16,7 @@ class ListaCompraUseCaseImpl @Inject constructor(
     private val listaCompraRepository: ListaCompraRepository
 ) : ListaCompraUseCase {
 
-    override suspend fun getListaCompraWithProdutos(): Flow<List<ListaCompraWithProdutos>> =
+    override suspend fun getListaCompraWithProdutos() =
         listaCompraRepository.getListaCompraWithProdutos()
 
     override suspend fun insertNovaListaCompra(novaListaCompra: ListaCompra): Int {

@@ -249,7 +249,6 @@ fun ListaCompraScreen(
                             //Abrir lista
                             Icons.Rounded.ArrowForward -> {
                                 scope.launch {
-                                    delay(100)
                                     goToListaProduto(listaCompraSelecionada.detalhes.id, false)
                                 }
                             }
@@ -257,7 +256,6 @@ fun ListaCompraScreen(
                             //Abrir lista comparando
                             Icons.Rounded.CompareArrows -> {
                                 scope.launch {
-                                    delay(100)
                                     goToListaProduto(listaCompraSelecionada.detalhes.id, true)
                                 }
                             }
@@ -442,7 +440,8 @@ fun AddListaActionButton(
         onClick = onClick,
         containerColor = MaterialTheme.colorScheme.primary,
         iconTint = MaterialTheme.colorScheme.onPrimary,
-        imageVector = Icons.Rounded.Add
+        imageVector = Icons.Rounded.Add,
+        iconContentDescription = stringResource(id = string.label_criar_lista_compra)
     )
 }
 

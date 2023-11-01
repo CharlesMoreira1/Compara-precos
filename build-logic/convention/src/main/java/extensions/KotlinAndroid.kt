@@ -22,6 +22,14 @@ internal fun Project.configureKotlinAndroid(
             minSdk = Config.minSdkVersion
         }
 
+        packaging {
+            resources {
+                excludes += "/META-INF/*"
+                merges += "META-INF/LICENSE.md"
+                merges += "META-INF/LICENSE-notice.md"
+            }
+        }
+
         compileOptions {
             // Up to Java 11 APIs are available through desugaring
             // https://developer.android.com/studio/write/java11-minimal-support-table
