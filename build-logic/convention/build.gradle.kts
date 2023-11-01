@@ -61,5 +61,9 @@ gradlePlugin {
             id = "comparaprecos.android.room"
             implementationClass = "AndroidRoomConventionPlugin"
         }
+        register("androidFirebase") {
+            id = "comparaprecos.android.application.firebase"
+            implementationClass = "AndroidApplicationFirebaseConventionPlugin"
+        }
     }
 }

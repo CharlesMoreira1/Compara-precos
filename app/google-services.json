@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "180590868859",
+    "project_id": "compara-precos-7471c",
+    "storage_bucket": "compara-precos-7471c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:180590868859:android:b8ccb6aca6338ae90fe5de",
+        "android_client_info": {
+          "package_name": "com.z1.comparaprecos"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD7MZQ-MdBTOhtnehYVZZ5zUzfeMB1AMQc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

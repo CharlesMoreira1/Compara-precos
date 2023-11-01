@@ -31,5 +31,4 @@ class AndroidFeatureConventionPlugin : Plugin<Project> {
             }
         }
     }
-
 }

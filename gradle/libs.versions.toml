@@ -50,8 +50,14 @@ ksp = "1.9.0-1.0.11"
 androidGradlePlugin = "8.1.0"
 kotlin = "1.9.0"
 material = "1.10.0"
+firebaseCrashlyticsPlugin = "2.9.9"
+firebasePerfPlugin = "1.4.2"
 
 kotlinx-coroutines = "1.6.4"
+
+#firebase
+google-services = "4.4.0"
+firebase-bom = "32.5.0"
 
 
 [libraries]
@@ -88,6 +94,14 @@ kapt-room-compiler = { group = "androidx.room", name = "room-compiler", version.
 
 #gson
 gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
+
+#firebase
+firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebase-bom" }
+firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics-ktx" }
+firebase-cloud-messaging = { group = "com.google.firebase", name = "firebase-messaging-ktx" }
+firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics-ktx" }
+firebase-performance = { group = "com.google.firebase", name = "firebase-perf-ktx" }
+firebase-performance-gradle = { group = "com.google.firebase", name = "perf-plugin", version.ref = "firebasePerfPlugin" }
 
 #Test
 junit4 = { group = "junit", name = "junit", version.ref = "test_junit" }
@@ -128,3 +142,6 @@ kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 daggerHilt = { id = "com.google.dagger.hilt.android", version.ref = "dagger-hilt" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+gms = { id = "com.google.gms.google-services", version.ref = "google-services" }
+firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "firebaseCrashlyticsPlugin" }
+firebase-perf = { id = "com.google.firebase.firebase-perf", version.ref = "firebasePerfPlugin" }
