@@ -70,7 +70,6 @@ import com.z1.comparaprecos.common.ui.components.CustomFloatingActionButton
 import com.z1.comparaprecos.common.ui.components.CustomLoadingScreen
 import com.z1.comparaprecos.common.ui.components.CustomSnackBar
 import com.z1.comparaprecos.common.ui.components.CustomTopAppBar
-import com.z1.comparaprecos.common.ui.components.ETipoSnackbar
 import com.z1.comparaprecos.common.ui.components.Mensagem
 import com.z1.comparaprecos.common.ui.theme.MediumSeaGreen
 import com.z1.comparaprecos.core.common.R
@@ -237,7 +236,7 @@ fun ListaProdutoComparadaScreen(
                                     if (uiState.listaCompraComparada.produtos.isEmpty()) Icons.Rounded.Add
                                     else Icons.Rounded.Edit,
                                     onClick = {
-                                        onEvent(OnEvent.GetAllListaCompra)
+                                        onEvent(OnEvent.GetListaCompraOptions)
                                     }
                                 )
                             }
@@ -282,7 +281,7 @@ fun ListaProdutoComparadaScreen(
     when(uiEvent) {
         is UiEvent.ShowAlertDialog -> {
             AlertDialogListaCompra(
-                allListaCompra = uiState.allListaCompra,
+                allListaCompra = uiState.listaCompraOptions,
                 onEvent = onEvent
             )
         }

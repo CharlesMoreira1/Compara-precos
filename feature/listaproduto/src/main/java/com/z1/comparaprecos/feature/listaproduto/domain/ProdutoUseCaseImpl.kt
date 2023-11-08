@@ -28,7 +28,7 @@ class ProdutoUseCaseImpl(
     override suspend fun getListaCompra(idListaCompra: Long) =
         produtoRepository.getListaCompra(idListaCompra)
 
-    override suspend fun getAllListaCompra(idListaCompraAtual: Long): List<Pair<String, Long>> {
+    override suspend fun getListaCompraOptions(idListaCompraAtual: Long): List<Pair<String, Long>> {
         val listaCompra = produtoRepository.getAllListaCompra()
         if (listaCompra.isEmpty()) throw ErrorEmptyList()
 
