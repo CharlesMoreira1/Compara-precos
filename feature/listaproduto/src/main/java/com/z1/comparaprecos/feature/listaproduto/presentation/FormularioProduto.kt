@@ -2,7 +2,6 @@
 
 package com.z1.comparaprecos.feature.listaproduto.presentation
 
-import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.expandVertically
@@ -38,7 +37,6 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
@@ -188,7 +186,8 @@ fun FormularioProduto(
                                 onCancelarEdicaoProduto()
                              },
                             iconImageVector = Icons.Rounded.Close,
-                            iconTint = MaterialTheme.colorScheme.onSurface
+                            iconTint = MaterialTheme.colorScheme.onSurface,
+                            iconContentDescription = "Cancelar edicao"
                         )
                         Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.normal)))
                         Text(

@@ -114,7 +114,8 @@ fun CustomOutlinedTextInputQuantidade(
                     onQuantidadeChange(quantidade.toString())
                 },
                 iconImageVector = Icons.Rounded.RemoveCircleOutline,
-                iconTint = CoralRed
+                iconTint = CoralRed,
+                iconContentDescription = "Remover quantidade"
             )
 
             Row(modifier = Modifier
@@ -138,7 +139,8 @@ fun CustomOutlinedTextInputQuantidade(
                     onQuantidadeChange(quantidade.toString())
                 },
                 iconImageVector = Icons.Rounded.AddCircleOutline,
-                iconTint = MediumSeaGreen
+                iconTint = MediumSeaGreen,
+                iconContentDescription = "Adicionar quantidade"
             )
         }
     }

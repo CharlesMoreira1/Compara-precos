@@ -17,23 +17,21 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.z1.comparaprecos.common.extensions.getPercentageDifference
 import com.z1.comparaprecos.common.extensions.toMoedaLocal
 import com.z1.comparaprecos.common.ui.components.CustomCard
 import com.z1.comparaprecos.common.ui.components.CustomDivider
 import com.z1.comparaprecos.common.ui.theme.CelticBlue
-import com.z1.comparaprecos.common.ui.theme.ComparaPrecosTheme
 import com.z1.comparaprecos.common.ui.theme.CoralRed
 import com.z1.comparaprecos.common.ui.theme.MediumSeaGreen
-import com.z1.comparaprecos.core.model.Produto
 import com.z1.comparaprecos.core.common.R
+import com.z1.comparaprecos.core.model.Produto
 import java.math.BigDecimal
 
 @Composable

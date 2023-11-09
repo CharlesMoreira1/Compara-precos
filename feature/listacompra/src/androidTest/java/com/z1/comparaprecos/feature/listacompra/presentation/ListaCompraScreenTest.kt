@@ -1,26 +1,15 @@
 package com.z1.comparaprecos.feature.listacompra.presentation
 
-import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsNotDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
-import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
-import androidx.compose.ui.test.performClick
 import com.z1.comparaprecos.common.ui.theme.ComparaPrecosTheme
 import com.z1.comparaprecos.core.common.R
-import com.z1.comparaprecos.feature.listacompra.presentation.viewmodel.OnEvent
 import com.z1.comparaprecos.testing.data.listaCompraWithProductTestData
 import io.mockk.mockk
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.test.runTest
 import org.junit.Rule
 import org.junit.Test
-import java.util.concurrent.TimeUnit
 
 class ListaCompraScreenTest {
 
