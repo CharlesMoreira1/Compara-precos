@@ -14,6 +14,12 @@ import java.util.Locale
 //Comando para toda a aplicacao ./gradlew jacocoTestReport
 //Comando para modulo indivudual ./gradlew :module:testDebugUnitTest
 
+/**
+ * ./gradlew connectedCheck testar toda a aplicacao
+ * ./gradlew testDebugUnitTest testar testes de unidade
+ * ./gradlew connectedDebugAndroidTest testar testes instrumentados
+ */
+
 private val coverageExclusions = listOf(
     // Android
     "**/R.class",
@@ -35,10 +41,10 @@ internal fun Project.configureJacoco(
         val jacocoTestReport = tasks.create("jacocoTestReport")
 
         androidComponentsExtension.onVariants { variant ->
-            val testTaskName = "test${variant.name.capitalize()}UnitTest"
+            val unitTestTaskName = "test${variant.name.capitalize()}UnitTest"
 
-            val reportTask = tasks.register("jacoco${testTaskName.capitalize()}Report", JacocoReport::class) {
-                dependsOn(testTaskName)
+            val reportTask = tasks.register("jacoco${unitTestTaskName.capitalize()}Report", JacocoReport::class) {
+                dependsOn(unitTestTaskName)
 
                 reports {
                     xml.required.set(true)
@@ -52,10 +58,33 @@ internal fun Project.configureJacoco(
                 )
 
                 sourceDirectories.setFrom(files("$projectDir/src/main/java", "$projectDir/src/main/kotlin"))
-                executionData.setFrom(file("$buildDir/jacoco/$testTaskName.exec"))
+                executionData.setFrom(file("$buildDir/jacoco/$unitTestTaskName.exec"))
             }
 
-            jacocoTestReport.dependsOn(reportTask)
+//            jacocoTestReport.dependsOn(reportTask)
+
+            // Configuração para testes de UI (Connected Android Tests)
+            val uiTestTaskName = "connectedAndroidTest"
+
+            val uiReportTask = tasks.register("jacoco${variant.name.capitalize()}Report", JacocoReport::class) {
+                dependsOn(uiTestTaskName)
+
+                reports {
+                    xml.required.set(true)
+                    html.required.set(true)
+                }
+
+                classDirectories.setFrom(
+                    fileTree("$buildDir/tmp/kotlin-classes/${variant.name}") {
+                        exclude(coverageExclusions)
+                    }
+                )
+
+                sourceDirectories.setFrom(files("$projectDir/src/main/java", "$projectDir/src/main/kotlin"))
+                executionData.setFrom(file("$buildDir/jacoco/$uiTestTaskName.exec"))
+            }
+
+            jacocoTestReport.dependsOn(reportTask, uiReportTask)
         }
 
         tasks.withType<Test>().configureEach {

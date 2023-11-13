@@ -9,6 +9,7 @@ import com.z1.comparaprecos.core.model.exceptions.ErrorEmptyList
 import com.z1.comparaprecos.core.model.exceptions.ErrorInsert
 import com.z1.comparaprecos.core.model.exceptions.ErrorProductData
 import com.z1.comparaprecos.core.model.exceptions.ErrorProductExists
+import com.z1.comparaprecos.core.model.exceptions.ErrorUpdate
 
 class ProdutoUseCaseImpl(
     private val produtoRepository: ProdutoRepository
@@ -48,7 +49,7 @@ class ProdutoUseCaseImpl(
     override suspend fun updateProduto(produto: Produto): Int {
         val isUpdated = produtoRepository.updateProduto(produto) > 0
         return if (isUpdated) R.string.label_produto_editado
-        else throw ErrorInsert()
+        else throw ErrorUpdate()
     }
 
     override suspend fun deleteProduto(produto: Produto): Int {
@@ -59,8 +60,7 @@ class ProdutoUseCaseImpl(
 
     private fun isDadosProdutoCorreto(produto: Produto): Pair<Boolean, Int?> {
         return when {
-            produto.idListaCompra <= -1 -> false to R.string.label_informe_nome_produto
-            produto.nomeProduto.isBlank() -> false to R.string.label_peso
+            produto.nomeProduto.isBlank() -> false to R.string.label_informe_nome_produto
             produto.quantidade.toDouble() <= 0.0 -> false to R.string.label_quantidade_invalida
             else -> true to null
         }
