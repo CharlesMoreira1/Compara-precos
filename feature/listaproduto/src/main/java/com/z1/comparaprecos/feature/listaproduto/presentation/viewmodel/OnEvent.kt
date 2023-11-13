@@ -1,7 +1,7 @@
 package com.z1.comparaprecos.feature.listaproduto.presentation.viewmodel
 
 import com.z1.comparaprecos.core.model.Produto
-import com.z1.comparaprecos.feature.listaproduto.presentation.UiEvent
+import com.z1.comparaprecos.feature.listaproduto.presentation.state.UiEvent
 
 sealed class OnEvent {
     data class GetListaCompra(val idListaCompra: Long): OnEvent()

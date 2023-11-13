@@ -1,4 +1,4 @@
-package com.z1.comparaprecos.feature.listaproduto.presentation
+package com.z1.comparaprecos.feature.listaproduto.presentation.state
 
 import com.z1.comparaprecos.common.ui.components.ETipoSnackbar
 import com.z1.comparaprecos.common.util.UiText

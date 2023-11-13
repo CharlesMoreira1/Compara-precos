@@ -1,4 +1,4 @@
-package com.z1.comparaprecos.feature.listaproduto.presentation
+package com.z1.comparaprecos.feature.listaproduto.presentation.components
 
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
@@ -7,6 +7,7 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import com.z1.comparaprecos.common.ui.theme.ComparaPrecosTheme
 import com.z1.comparaprecos.core.model.Produto
+import com.z1.comparaprecos.feature.listaproduto.presentation.components.FormularioProduto
 import com.z1.comparaprecos.testing.data.listaProdutoDataTest
 import org.junit.Rule
 import org.junit.Test

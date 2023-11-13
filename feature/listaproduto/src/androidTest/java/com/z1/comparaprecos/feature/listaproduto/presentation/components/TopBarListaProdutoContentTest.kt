@@ -1,19 +1,13 @@
-package com.z1.comparaprecos.feature.listaproduto.presentation
+package com.z1.comparaprecos.feature.listaproduto.presentation.components
 
 import androidx.compose.ui.test.assertIsDisplayed
-import androidx.compose.ui.test.isRoot
 import androidx.compose.ui.test.junit4.createComposeRule
-import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onNodeWithText
-import androidx.compose.ui.test.onRoot
-import androidx.compose.ui.test.printToLog
 import com.z1.comparaprecos.common.ui.theme.ComparaPrecosTheme
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.test.runTest
+import com.z1.comparaprecos.feature.listaproduto.presentation.components.TituloListaProduto
 import org.junit.Rule
 import org.junit.Test
 import java.math.BigDecimal
-import java.util.concurrent.TimeUnit
 
 class TopBarListaProdutoContentTest {
     @get:Rule

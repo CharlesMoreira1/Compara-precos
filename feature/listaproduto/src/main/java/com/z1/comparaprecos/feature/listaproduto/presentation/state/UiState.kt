@@ -1,4 +1,4 @@
-package com.z1.comparaprecos.feature.listaproduto.presentation
+package com.z1.comparaprecos.feature.listaproduto.presentation.state
 
 import com.z1.comparaprecos.core.model.ListaCompra
 import com.z1.comparaprecos.core.model.ListaCompraWithProdutos

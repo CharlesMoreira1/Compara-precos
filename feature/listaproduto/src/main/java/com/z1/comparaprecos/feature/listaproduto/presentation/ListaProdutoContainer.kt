@@ -15,6 +15,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.z1.comparaprecos.common.ui.components.CustomLoadingScreen
 import com.z1.comparaprecos.core.common.R
+import com.z1.comparaprecos.feature.listaproduto.presentation.screen.ListaProdutoComparadaScreen
+import com.z1.comparaprecos.feature.listaproduto.presentation.screen.ListaProdutoScreen
+import com.z1.comparaprecos.feature.listaproduto.presentation.state.UiEvent
 import com.z1.comparaprecos.feature.listaproduto.presentation.viewmodel.OnEvent
 import com.z1.comparaprecos.feature.listaproduto.presentation.viewmodel.ProdutoViewModel
 

@@ -18,6 +18,17 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+
+        buildTypes {
+            debug{
+                enableUnitTestCoverage =  true
+                enableAndroidTestCoverage = true
+            }
+            release {
+                enableUnitTestCoverage =  true
+                enableAndroidTestCoverage = true
+            }
+        }
     }
 }
 

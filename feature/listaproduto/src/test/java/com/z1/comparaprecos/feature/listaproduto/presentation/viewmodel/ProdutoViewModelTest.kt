@@ -7,14 +7,13 @@ import com.z1.comparaprecos.core.model.exceptions.ErrorEmptyList
 import com.z1.comparaprecos.core.model.exceptions.ErrorProductData
 import com.z1.comparaprecos.core.model.exceptions.ErrorProductExists
 import com.z1.comparaprecos.feature.listaproduto.domain.ProdutoUseCase
-import com.z1.comparaprecos.feature.listaproduto.presentation.UiEvent
+import com.z1.comparaprecos.feature.listaproduto.presentation.state.UiEvent
 import com.z1.comparaprecos.testing.BaseTest
 import com.z1.comparaprecos.testing.data.listaCompraOptionsDataTest
 import com.z1.comparaprecos.testing.data.listaCompraWithProductTestData
 import com.z1.comparaprecos.testing.data.listaProdutoDataTest
 import io.mockk.clearAllMocks
 import io.mockk.coEvery
-import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
@@ -291,8 +290,8 @@ class ProdutoViewModelTest: BaseTest() {
 
         coEvery { useCase.getListaCompra(0) } returns listaCompraWithProductTestData[0].detalhes
         coEvery { useCase.getListaProduto(0) } returns flowOf(listaProdutoDataTest)
-        coEvery { useCase.updateProduto(produto.copy(quantidade = "2.0")) } coAnswers {
-            produto = listaProdutoDataTest[0].copy(quantidade = "2.0")
+        coEvery { useCase.updateProduto(produto.copy(quantidade = "2")) } coAnswers {
+            produto = listaProdutoDataTest[0].copy(quantidade = "2")
             0
         }
 
@@ -301,7 +300,7 @@ class ProdutoViewModelTest: BaseTest() {
         viewModel.onEvent(OnEvent.UpdateQuantidadeProdutoExistente(produto))
 
         //Then - Entao
-        assertEquals("2.0", produto.quantidade)
+        assertEquals("2", produto.quantidade)
     }
 
     @Test

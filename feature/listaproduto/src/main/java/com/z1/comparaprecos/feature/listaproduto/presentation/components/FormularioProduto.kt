@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalComposeUiApi::class)
 
-package com.z1.comparaprecos.feature.listaproduto.presentation
+package com.z1.comparaprecos.feature.listaproduto.presentation.components
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState

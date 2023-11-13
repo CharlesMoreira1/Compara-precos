@@ -12,8 +12,8 @@ import com.z1.comparaprecos.core.model.Produto
 import com.z1.comparaprecos.core.model.exceptions.ErrorProductData
 import com.z1.comparaprecos.core.model.exceptions.ErrorProductExists
 import com.z1.comparaprecos.feature.listaproduto.domain.ProdutoUseCase
-import com.z1.comparaprecos.feature.listaproduto.presentation.UiEvent
-import com.z1.comparaprecos.feature.listaproduto.presentation.UiState
+import com.z1.comparaprecos.feature.listaproduto.presentation.state.UiEvent
+import com.z1.comparaprecos.feature.listaproduto.presentation.state.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow

@@ -2,10 +2,15 @@ plugins {
     id("comparaprecos.android.library")
     id("comparaprecos.android.library.compose")
     id("comparaprecos.android.hilt")
+    id("comparaprecos.android.library.jacoco")
 }
 
 android {
     namespace = "com.z1.comparaprecos.testing"
+
+    defaultConfig {
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
 }
 
 dependencies {

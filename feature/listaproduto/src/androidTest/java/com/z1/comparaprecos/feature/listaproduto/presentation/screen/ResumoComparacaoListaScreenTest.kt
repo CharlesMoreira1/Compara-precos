@@ -1,4 +1,4 @@
-package com.z1.comparaprecos.feature.listaproduto.presentation
+package com.z1.comparaprecos.feature.listaproduto.presentation.screen
 
 import androidx.activity.ComponentActivity
 import androidx.compose.ui.test.assertIsDisplayed
@@ -7,6 +7,7 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.onRoot
 import androidx.compose.ui.test.performTouchInput
 import androidx.compose.ui.test.swipeUp
+import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.z1.comparaprecos.common.ui.theme.ComparaPrecosTheme
 import com.z1.comparaprecos.common.ui.theme.CoralRed
 import com.z1.comparaprecos.common.ui.theme.MediumSeaGreen
@@ -16,7 +17,9 @@ import com.z1.comparaprecos.testing.data.listaProdutoDataTest
 import com.z1.comparaprecos.testing.data.listaProdutoDataTest2
 import org.junit.Rule
 import org.junit.Test
+import org.junit.runner.RunWith
 
+@RunWith(AndroidJUnit4::class)
 class ResumoComparacaoListaScreenTest {
     @get:Rule
     val composeTestRule = createAndroidComposeRule<ComponentActivity>()

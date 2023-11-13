@@ -81,7 +81,33 @@
             </AndroidTestResultsTableState>
           </value>
         </entry>
+        <entry key="-1373303888">
+          <value>
+            <AndroidTestResultsTableState>
+              <option name="preferredColumnWidths">
+                <map>
+                  <entry key="Android_13_Tela_5.0_1" value="120" />
+                  <entry key="Duration" value="90" />
+                  <entry key="Tests" value="360" />
+                </map>
+              </option>
+            </AndroidTestResultsTableState>
+          </value>
+        </entry>
         <entry key="-1263278878">
+          <value>
+            <AndroidTestResultsTableState>
+              <option name="preferredColumnWidths">
+                <map>
+                  <entry key="Android_13_Tela_5.0_1" value="120" />
+                  <entry key="Duration" value="90" />
+                  <entry key="Tests" value="360" />
+                </map>
+              </option>
+            </AndroidTestResultsTableState>
+          </value>
+        </entry>
+        <entry key="-1233395715">
           <value>
             <AndroidTestResultsTableState>
               <option name="preferredColumnWidths">
@@ -200,6 +226,33 @@
             </AndroidTestResultsTableState>
           </value>
         </entry>
+        <entry key="-616863779">
+          <value>
+            <AndroidTestResultsTableState>
+              <option name="preferredColumnWidths">
+                <map>
+                  <entry key="Android_13_Tela_5.0_1" value="120" />
+                  <entry key="Duration" value="90" />
+                  <entry key="Tests" value="360" />
+                  <entry key="Xiaomi Redmi Note 9S" value="120" />
+                </map>
+              </option>
+            </AndroidTestResultsTableState>
+          </value>
+        </entry>
+        <entry key="-557011126">
+          <value>
+            <AndroidTestResultsTableState>
+              <option name="preferredColumnWidths">
+                <map>
+                  <entry key="Android_13_Tela_5.0_1" value="120" />
+                  <entry key="Duration" value="90" />
+                  <entry key="Tests" value="360" />
+                </map>
+              </option>
+            </AndroidTestResultsTableState>
+          </value>
+        </entry>
         <entry key="-429110124">
           <value>
             <AndroidTestResultsTableState>
@@ -241,6 +294,19 @@
           </value>
         </entry>
         <entry key="2775275">
+          <value>
+            <AndroidTestResultsTableState>
+              <option name="preferredColumnWidths">
+                <map>
+                  <entry key="Android_13_Tela_5.0_1" value="120" />
+                  <entry key="Duration" value="90" />
+                  <entry key="Tests" value="360" />
+                </map>
+              </option>
+            </AndroidTestResultsTableState>
+          </value>
+        </entry>
+        <entry key="28629151">
           <value>
             <AndroidTestResultsTableState>
               <option name="preferredColumnWidths">
@@ -332,6 +398,20 @@
             </AndroidTestResultsTableState>
           </value>
         </entry>
+        <entry key="733152890">
+          <value>
+            <AndroidTestResultsTableState>
+              <option name="preferredColumnWidths">
+                <map>
+                  <entry key="Android_13_Tela_5.0_1" value="120" />
+                  <entry key="Duration" value="90" />
+                  <entry key="Tests" value="360" />
+                  <entry key="Xiaomi Redmi Note 9S" value="120" />
+                </map>
+              </option>
+            </AndroidTestResultsTableState>
+          </value>
+        </entry>
         <entry key="742220512">
           <value>
             <AndroidTestResultsTableState>
@@ -371,6 +451,19 @@
             </AndroidTestResultsTableState>
           </value>
         </entry>
+        <entry key="1327916719">
+          <value>
+            <AndroidTestResultsTableState>
+              <option name="preferredColumnWidths">
+                <map>
+                  <entry key="Android_13_Tela_5.0_1" value="120" />
+                  <entry key="Duration" value="90" />
+                  <entry key="Tests" value="360" />
+                </map>
+              </option>
+            </AndroidTestResultsTableState>
+          </value>
+        </entry>
         <entry key="1365841917">
           <value>
             <AndroidTestResultsTableState>
@@ -397,7 +490,33 @@
             </AndroidTestResultsTableState>
           </value>
         </entry>
+        <entry key="1761263364">
+          <value>
+            <AndroidTestResultsTableState>
+              <option name="preferredColumnWidths">
+                <map>
+                  <entry key="Android_13_Tela_5.0_1" value="120" />
+                  <entry key="Duration" value="90" />
+                  <entry key="Tests" value="360" />
+                </map>
+              </option>
+            </AndroidTestResultsTableState>
+          </value>
+        </entry>
         <entry key="1794852945">
+          <value>
+            <AndroidTestResultsTableState>
+              <option name="preferredColumnWidths">
+                <map>
+                  <entry key="Android_13_Tela_5.0_1" value="120" />
+                  <entry key="Duration" value="90" />
+                  <entry key="Tests" value="360" />
+                </map>
+              </option>
+            </AndroidTestResultsTableState>
+          </value>
+        </entry>
+        <entry key="1827433076">
           <value>
             <AndroidTestResultsTableState>
               <option name="preferredColumnWidths">
@@ -423,7 +542,33 @@
             </AndroidTestResultsTableState>
           </value>
         </entry>
+        <entry key="1935929841">
+          <value>
+            <AndroidTestResultsTableState>
+              <option name="preferredColumnWidths">
+                <map>
+                  <entry key="Android_13_Tela_5.0_1" value="120" />
+                  <entry key="Duration" value="90" />
+                  <entry key="Tests" value="360" />
+                </map>
+              </option>
+            </AndroidTestResultsTableState>
+          </value>
+        </entry>
         <entry key="1997418662">
+          <value>
+            <AndroidTestResultsTableState>
+              <option name="preferredColumnWidths">
+                <map>
+                  <entry key="Android_13_Tela_5.0_1" value="120" />
+                  <entry key="Duration" value="90" />
+                  <entry key="Tests" value="360" />
+                </map>
+              </option>
+            </AndroidTestResultsTableState>
+          </value>
+        </entry>
+        <entry key="2032003254">
           <value>
             <AndroidTestResultsTableState>
               <option name="preferredColumnWidths">

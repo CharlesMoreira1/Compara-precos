@@ -3,7 +3,7 @@
     ExperimentalFoundationApi::class
 )
 
-package com.z1.comparaprecos.feature.listaproduto.presentation
+package com.z1.comparaprecos.feature.listaproduto.presentation.screen
 
 import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedVisibility
@@ -73,6 +73,11 @@ import com.z1.comparaprecos.common.ui.components.CustomTopAppBar
 import com.z1.comparaprecos.common.ui.components.Mensagem
 import com.z1.comparaprecos.common.ui.theme.MediumSeaGreen
 import com.z1.comparaprecos.core.common.R
+import com.z1.comparaprecos.feature.listaproduto.presentation.components.FormularioProduto
+import com.z1.comparaprecos.feature.listaproduto.presentation.components.ListaProduto
+import com.z1.comparaprecos.feature.listaproduto.presentation.components.TituloListaProduto
+import com.z1.comparaprecos.feature.listaproduto.presentation.state.UiEvent
+import com.z1.comparaprecos.feature.listaproduto.presentation.state.UiState
 import com.z1.comparaprecos.feature.listaproduto.presentation.viewmodel.OnEvent
 import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
@@ -200,6 +205,7 @@ fun ListaProdutoComparadaScreen(
                                         modifier = Modifier.align(Alignment.BottomEnd),
                                         containerColor = MediumSeaGreen,
                                         icon = Icons.Rounded.ShoppingCartCheckout,
+                                        contentDescription = "Pesquisar produto",
                                         onClick = {}
                                     )
                                 }
@@ -235,6 +241,7 @@ fun ListaProdutoComparadaScreen(
                                     icon =
                                     if (uiState.listaCompraComparada.produtos.isEmpty()) Icons.Rounded.Add
                                     else Icons.Rounded.Edit,
+                                    contentDescription = stringResource(id = R.string.description_adicionar_lista_to_comparar),
                                     onClick = {
                                         onEvent(OnEvent.GetListaCompraOptions)
                                     }
@@ -249,6 +256,7 @@ fun ListaProdutoComparadaScreen(
                                     FloatingActionButton(
                                         modifier = Modifier.align(Alignment.BottomEnd),
                                         icon = Icons.Rounded.Share,
+                                        contentDescription = stringResource(id = R.string.description_compartilhar_resumo),
                                         onClick = {}
                                     )
                                 } else {
@@ -327,7 +335,7 @@ fun AlertDialogListaCompra(
             Text(
                 modifier = Modifier
                     .padding(dimensionResource(id = R.dimen.big)),
-                text = "Selecione uma lista de compra",
+                text = stringResource(id = R.string.label_selecione_lista_to_comparar),
                 style = MaterialTheme.typography.titleLarge
             )
             CustomDivider()
@@ -409,6 +417,7 @@ fun FloatingActionButton(
     modifier: Modifier = Modifier,
     containerColor: Color = MaterialTheme.colorScheme.primary,
     icon: ImageVector,
+    contentDescription: String,
     onClick: () -> Unit
 ) {
     CustomFloatingActionButton(
@@ -417,6 +426,7 @@ fun FloatingActionButton(
         onClick = onClick,
         containerColor = containerColor,
         iconTint = MaterialTheme.colorScheme.onPrimary,
-        imageVector = icon
+        imageVector = icon,
+        iconContentDescription = contentDescription
     )
 }
