@@ -19,5 +19,5 @@ dependencies {
     api(libs.bundles.mocck)
     debugApi(libs.bundles.debug.test)
 
-    implementation(project(":core:database"))
+    implementation(project(":core:model"))
 }
