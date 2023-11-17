@@ -31,6 +31,7 @@
             <option value="$PROJECT_DIR$/core/database" />
             <option value="$PROJECT_DIR$/core/model" />
             <option value="$PROJECT_DIR$/core/navigation" />
+            <option value="$PROJECT_DIR$/core/testing" />
             <option value="$PROJECT_DIR$/feature" />
             <option value="$PROJECT_DIR$/feature/listacompra" />
             <option value="$PROJECT_DIR$/feature/listaproduto" />

@@ -78,6 +78,7 @@
     <string name="label_desc_erro_listas_to_comparar">Não ha listas para comparar</string>
     <string name="label_desc_erro_buscar_listas_compra">Não ha listas para comparar</string>
     <string name="label_desc_adicionar_lista_to_comparar">Adicione uma lista com produtos para começar a comparar.</string>
+    <string name="label_selecione_lista_to_comparar">Selecione uma lista de compra</string>
     <string name="label_desc_necessario_duas_listas_to_comparar">Para ver o resumo, você deve adicionar uma lista para comparar.</string>
     <string name="label_erro_generico">alguma coisa deu errado</string>
     <string name="label_desc_resumo_economizou_mesmos_produtos">Você economizou em relação a lista comparada somando somente os mesmos produtos. Parabéns!</string>
@@ -89,6 +90,11 @@
     <string name="label_desc_somando_todos_produtos">Somando todos os produtos da lista</string>
     <string name="label_desc_somando_produtos_nas_listas">Produtos que estão nas duas listas: %d</string>
 <!--    Label com frases-->
+
+<!--    Label content description-->
+    <string name="description_adicionar_lista_to_comparar">Adicionar lista para comparar</string>
+    <string name="description_compartilhar_resumo">Compartilhar resumo</string>
+<!--    Label content description-->
 
 
 <!--    Label plural-->

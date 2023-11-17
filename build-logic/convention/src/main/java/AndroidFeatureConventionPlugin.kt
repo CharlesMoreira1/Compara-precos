@@ -26,11 +26,9 @@ class AndroidFeatureConventionPlugin : Plugin<Project> {
                 add("implementation", bundles.findBundle("compose").get())
                 add("implementation", libs.findLibrary("gson").get())
 
-                add("testImplementation", bundles.findBundle("test").get())
-                add("androidTestImplementation", bundles.findBundle("android-test").get())
-                add("debugImplementation", bundles.findBundle("debug-test").get())
+                add("testImplementation", project(":core:testing"))
+                add("androidTestImplementation", project(":core:testing"))
             }
         }
     }
-
 }

@@ -1,7 +1,9 @@
 plugins {
     id("comparaprecos.android.application")
     id("comparaprecos.android.application.compose")
+    id("comparaprecos.android.application.jacoco")
     id("comparaprecos.android.hilt")
+    id("comparaprecos.android.application.firebase")
 }
 
 android {
@@ -16,6 +18,17 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+
+        buildTypes {
+            debug{
+                enableUnitTestCoverage =  true
+                enableAndroidTestCoverage = true
+            }
+            release {
+                enableUnitTestCoverage =  true
+                enableAndroidTestCoverage = true
+            }
+        }
     }
 }
 
@@ -23,12 +36,9 @@ dependencies {
     implementation(libs.bundles.androidx)
     implementation(libs.bundles.compose)
 
-    testImplementation(libs.bundles.compose)
-    androidTestImplementation(libs.bundles.compose)
-    debugImplementation(libs.bundles.compose)
-
-
+    implementation(project(":core:common"))
     implementation(project(":core:navigation"))
+    implementation(project(":core:testing"))
     implementation(project(":feature:listacompra"))
     implementation(project(":feature:listaproduto"))
 }

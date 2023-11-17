@@ -1,5 +1,6 @@
 package com.z1.comparaprecos.feature.listaproduto.presentation.viewmodel
 
+import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.z1.comparaprecos.common.ui.components.ETipoSnackbar
@@ -11,11 +12,10 @@ import com.z1.comparaprecos.core.model.Produto
 import com.z1.comparaprecos.core.model.exceptions.ErrorProductData
 import com.z1.comparaprecos.core.model.exceptions.ErrorProductExists
 import com.z1.comparaprecos.feature.listaproduto.domain.ProdutoUseCase
-import com.z1.comparaprecos.feature.listaproduto.presentation.UiEvent
-import com.z1.comparaprecos.feature.listaproduto.presentation.UiState
+import com.z1.comparaprecos.feature.listaproduto.presentation.state.UiEvent
+import com.z1.comparaprecos.feature.listaproduto.presentation.state.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.catch
@@ -23,8 +23,8 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import java.math.BigDecimal
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 @HiltViewModel
@@ -46,7 +46,7 @@ class ProdutoViewModel @Inject constructor(
         when (event) {
             is OnEvent.GetListaCompra -> getListaCompra(event.idListaCompra)
             is OnEvent.GetListaCompraToComparar -> getListaCompraToComparar(event.idListaCompra)
-            is OnEvent.GetAllListaCompra -> getAllListaCompra()
+            is OnEvent.GetListaCompraOptions -> getListaCompraOptions()
             is OnEvent.InsertProduto -> insertProduto(event.produto)
             is OnEvent.UpdateProduto -> updateProduto(event.produto)
             is OnEvent.DeleteProduto -> deleteProduto(event.produto)
@@ -103,7 +103,6 @@ class ProdutoViewModel @Inject constructor(
     //Get
     private fun getListaCompra(idListaCompra: Long) =
         viewModelScope.launch {
-            delay(TimeUnit.SECONDS.toMillis(2))
             val listaCompra = try {
                 produtoUseCase.getListaCompra(idListaCompra)
             } catch (e: Exception) {
@@ -132,12 +131,12 @@ class ProdutoViewModel @Inject constructor(
                 }
         }
 
-    private fun getAllListaCompra() =
+    private fun getListaCompraOptions() =
         viewModelScope.launch {
             try {
-                if (_uiState.value.allListaCompra.isEmpty()) {
+                if (_uiState.value.listaCompraOptions.isEmpty()) {
                     val listaCompraOpcoes =
-                        produtoUseCase.getAllListaCompra(_uiState.value.listaCompra.id)
+                        produtoUseCase.getListaCompraOptions(_uiState.value.listaCompra.id)
                     setAllListaCompra(listaCompraOpcoes)
                 }
                 updateUiEvent(UiEvent.ShowAlertDialog)
@@ -219,9 +218,11 @@ class ProdutoViewModel @Inject constructor(
                 )
             } catch (e: Exception) {
                 e.printStackTrace()
-                UiEvent.ShowSnackbar(
-                    UiText.StringResource(R.string.label_desc_erro_excluir_produto),
-                    ETipoSnackbar.ERRO
+                _uiEvent.send(
+                    UiEvent.ShowSnackbar(
+                        UiText.StringResource(R.string.label_desc_erro_excluir_produto),
+                        ETipoSnackbar.ERRO
+                    )
                 )
             }
         }
@@ -253,7 +254,7 @@ class ProdutoViewModel @Inject constructor(
     private fun setAllListaCompra(allListaCompra: List<Pair<String, Long>>) {
         _uiState.update { currentState ->
             currentState.copy(
-                allListaCompra = allListaCompra
+                listaCompraOptions = allListaCompra
             )
         }
     }
@@ -279,4 +280,7 @@ class ProdutoViewModel @Inject constructor(
         }
     }
     //UISTATE
+
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    fun collectUiEvent() = runBlocking { _uiEvent.receive() }
 }

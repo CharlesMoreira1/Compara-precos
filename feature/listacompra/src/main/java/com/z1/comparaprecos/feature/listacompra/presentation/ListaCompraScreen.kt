@@ -64,7 +64,6 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -213,8 +212,8 @@ fun ListaCompraScreen(
                         dataCriacao = dataCriacao
                     )
                     val event = when {
-                        uiState.isRenomearListaCompra -> OnEvent.UpdateList(listaCompra)
-                        uiState.isDuplicarListaCompra -> OnEvent.DuplicateList(
+                        uiState.isRenomearListaCompra -> OnEvent.UpdateListaCompra(listaCompra)
+                        uiState.isDuplicarListaCompra -> OnEvent.DuplicateListaCompra(
                             listaCompra,
                             uiState.listaCompraSelecionada?.produtos ?: emptyList()
                         )
@@ -232,7 +231,7 @@ fun ListaCompraScreen(
             }
             ListaCompra(
                 uiState = uiState,
-                onClickNovaLista = { onEvent(OnEvent.UiCreateNewList) },
+                onClickNovaLista = { onEvent(OnEvent.UiCreateNewListaCompra) },
                 onListaCompraClick = { listaCompraSelecionada ->
                     onEvent(OnEvent.ListaCompraSelecionada(listaCompraSelecionada))
                 }
@@ -250,7 +249,6 @@ fun ListaCompraScreen(
                             //Abrir lista
                             Icons.Rounded.ArrowForward -> {
                                 scope.launch {
-                                    delay(100)
                                     goToListaProduto(listaCompraSelecionada.detalhes.id, false)
                                 }
                             }
@@ -258,19 +256,18 @@ fun ListaCompraScreen(
                             //Abrir lista comparando
                             Icons.Rounded.CompareArrows -> {
                                 scope.launch {
-                                    delay(100)
                                     goToListaProduto(listaCompraSelecionada.detalhes.id, true)
                                 }
                             }
 
                             //Duplicar lista
                             Icons.Rounded.ContentCopy -> {
-                                onEvent(OnEvent.UiDuplicateList)
+                                onEvent(OnEvent.UiDuplicateListaCompra)
                             }
 
                             //Editar lista
                             Icons.Rounded.Edit -> {
-                                onEvent(OnEvent.UiRenameList)
+                                onEvent(OnEvent.UiRenameListaCompra)
                             }
 
                             // Deletar lista
@@ -443,7 +440,8 @@ fun AddListaActionButton(
         onClick = onClick,
         containerColor = MaterialTheme.colorScheme.primary,
         iconTint = MaterialTheme.colorScheme.onPrimary,
-        imageVector = Icons.Rounded.Add
+        imageVector = Icons.Rounded.Add,
+        iconContentDescription = stringResource(id = string.label_criar_lista_compra)
     )
 }
 

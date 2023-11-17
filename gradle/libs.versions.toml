@@ -21,6 +21,11 @@ compose-icons = "1.4.3"
 test_junit = "4.13.2"
 android-test = "1.1.5"
 espresso = "3.5.1"
+androidx-test-core = "1.5.0"
+androidx-test-rules = "1.5.0"
+androidx-test-runner = "1.5.1"
+jacoco = "0.8.7"
+mockk = "1.13.8"
 
 #Work manager
 work-manager = "2.8.1"
@@ -44,6 +49,15 @@ ksp = "1.9.0-1.0.11"
 #Plugins versions
 androidGradlePlugin = "8.1.0"
 kotlin = "1.9.0"
+material = "1.10.0"
+firebaseCrashlyticsPlugin = "2.9.9"
+firebasePerfPlugin = "1.4.2"
+
+kotlinx-coroutines = "1.6.4"
+
+#firebase
+google-services = "4.4.0"
+firebase-bom = "32.5.0"
 
 
 [libraries]
@@ -68,6 +82,7 @@ compose-icons = { group = "androidx.compose.material", name = "material-icons-ex
 dagger-hilt = { group = "com.google.dagger", name = "hilt-android", version.ref = "dagger-hilt" }
 hilt-navigation = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hilt-navigation" }
 kapt-dagger-hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "dagger-hilt" }
+hilt-android-testing = { group = "com.google.dagger", name = "hilt-android-testing", version.ref = "dagger-hilt" }
 
 #Workmanager
 androidx-work-runtime-ktx = { group = "androidx.work", name = "work-runtime-ktx", version.ref = "work-manager" }
@@ -80,19 +95,34 @@ kapt-room-compiler = { group = "androidx.room", name = "room-compiler", version.
 #gson
 gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
 
+#firebase
+firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebase-bom" }
+firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics-ktx" }
+firebase-cloud-messaging = { group = "com.google.firebase", name = "firebase-messaging-ktx" }
+firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics-ktx" }
+firebase-performance = { group = "com.google.firebase", name = "firebase-perf-ktx" }
+firebase-performance-gradle = { group = "com.google.firebase", name = "perf-plugin", version.ref = "firebasePerfPlugin" }
+
 #Test
-junit = { group = "junit", name = "junit", version.ref = "test_junit" }
+junit4 = { group = "junit", name = "junit", version.ref = "test_junit" }
 androidx-test-ext = { group = "androidx.test.ext", name = "junit", version.ref = "android-test" }
 androidx-test-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espresso" }
 androidx-compose-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4", version.ref = "compose-ui" }
 androidx-work-testing = { group = "androidx.work", name = "work-testing", version.ref = "work-manager" }
 android-compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling", version.ref = "compose-ui" }
 android-compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest", version.ref = "compose-ui" }
+androidx-test-core = { group = "androidx.test", name = "core", version.ref = "androidx-test-core" }
+androidx-test-rules = { group = "androidx.test", name = "rules", version.ref = "androidx-test-rules" }
+androidx-test-runner = { group = "androidx.test", name = "runner", version.ref = "androidx-test-runner" }
+kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }
+mockk-android = { group = "io.mockk", name = "mockk-android", version.ref = "mockk" }
+mockk-agent = { group = "io.mockk", name = "mockk-agent", version.ref = "mockk" }
 
 # Dependencies of the included build-logic
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "androidGradlePlugin" }
 kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
 ksp-gradlePlugin = { group = "com.google.devtools.ksp", name = "com.google.devtools.ksp.gradle.plugin", version.ref = "ksp" }
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 
 [bundles]
 androidx = ["androidx-core", "androidx-lifecycle", "androidx-appcompat"]
@@ -100,8 +130,9 @@ compose = ["activity-compose", "compose-material3", "navigation-compose", "compo
 dagger-hilt = ["dagger-hilt", "hilt-navigation"]
 room = ["androidx-room-runtime", "androidx-room-ktx"]
 kapt = ["kapt-dagger-hilt-compiler", "kapt-room-compiler"]
-test = ["junit"]
-android-test = ["androidx-test-ext", "androidx-test-espresso-core", "androidx-compose-ui-test-junit4"]
+mocck = ["mockk-android", "mockk-agent"]
+test = ["junit4", "kotlinx-coroutines-test"]
+android-test = ["androidx-test-ext", "androidx-test-espresso-core", "androidx-compose-ui-test-junit4", "androidx-test-core", "androidx-test-rules", "androidx-test-runner", "mockk-android", "mockk-agent"]
 debug-test =["android-compose-ui-tooling", "android-compose-ui-test-manifest"]
 
 [plugins]
@@ -111,3 +142,6 @@ kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 daggerHilt = { id = "com.google.dagger.hilt.android", version.ref = "dagger-hilt" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+gms = { id = "com.google.gms.google-services", version.ref = "google-services" }
+firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "firebaseCrashlyticsPlugin" }
+firebase-perf = { id = "com.google.firebase.firebase-perf", version.ref = "firebasePerfPlugin" }

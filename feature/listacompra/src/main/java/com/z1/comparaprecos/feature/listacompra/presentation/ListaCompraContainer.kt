@@ -17,9 +17,10 @@ import com.z1.comparaprecos.feature.listacompra.presentation.viewmodel.ListaComp
 
 @Composable
 fun ListaCompraContainer(
-    goToListaProduto: (Long, Boolean) -> Unit
+    goToListaProduto: (Long, Boolean) -> Unit,
+    viewModel: ListaCompraViewModel = hiltViewModel()
 ) {
-    val viewModel: ListaCompraViewModel = hiltViewModel()
+
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val uiEvent = viewModel.uiEvent.collectAsStateWithLifecycle(initialValue = UiEvent.Default)
     

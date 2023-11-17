@@ -12,11 +12,9 @@ data class Produto(
     val isMedidaPeso: Boolean,
 ) {
     fun valorProduto(): BigDecimal =
-        precoUnitario.multiply(
-            BigDecimal(quantidade)
-                .setScale(3, RoundingMode.HALF_UP)
-                .setScale(2, RoundingMode.FLOOR)
-        )
+        precoUnitario.multiply(BigDecimal(quantidade))
+            .setScale(3, RoundingMode.HALF_UP)
+            .setScale(2, RoundingMode.FLOOR)
     fun compararPreco(valorProdutoComparado: BigDecimal): BigDecimal {
         val diferenca = precoUnitario.minus(valorProdutoComparado)
         if (diferenca.toDouble() == 0.0) return BigDecimal("0.00")

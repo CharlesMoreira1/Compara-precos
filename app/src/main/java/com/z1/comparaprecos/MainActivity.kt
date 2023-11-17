@@ -8,9 +8,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.core.view.WindowCompat
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.z1.comparaprecos.common.ui.theme.ComparaPrecosTheme
 import com.z1.comparaprecos.core.navigation.NavigationGraph
 import dagger.hilt.android.AndroidEntryPoint
@@ -27,8 +24,6 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-//                    val repository: BlurImageRepository = WorkManagerBlurImageRepository(applicationContext)
-//                    repository.applyBlur(drawable.bg_1)
                     ComparaPrecosApp()
                 }
             }

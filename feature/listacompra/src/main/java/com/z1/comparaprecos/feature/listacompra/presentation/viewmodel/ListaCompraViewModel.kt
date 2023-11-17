@@ -1,5 +1,6 @@
 package com.z1.comparaprecos.feature.listacompra.presentation.viewmodel
 
+import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.z1.comparaprecos.common.ui.components.ETipoSnackbar
@@ -20,6 +21,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 @HiltViewModel
@@ -40,16 +42,16 @@ class ListaCompraViewModel @Inject constructor(
     fun onEvent(event: OnEvent) {
         when (event) {
             is OnEvent.Insert -> insertListaCompra(event.novaListaCompra)
-            is OnEvent.DuplicateList -> duplicateListaCompra(
+            is OnEvent.DuplicateListaCompra -> duplicateListaCompra(
                 event.novaListaCompra,
                 event.listaProdutoListaCompraSelecionada
             )
 
-            is OnEvent.UpdateList -> listaCompraCarregada(event.novaListaCompra)
+            is OnEvent.UpdateListaCompra -> listaCompraCarregada(event.novaListaCompra)
             is OnEvent.Delete -> deleteListaCompra(event.idListaCompra)
-            is OnEvent.UiCreateNewList -> uiCreateNewList()
-            is OnEvent.UiDuplicateList -> uiDuplicateList()
-            is OnEvent.UiRenameList -> uiRenameList()
+            is OnEvent.UiCreateNewListaCompra -> uiCreateNewListaCompra()
+            is OnEvent.UiDuplicateListaCompra -> uiDuplicateListaCompra()
+            is OnEvent.UiRenameListaCompra -> uiRenameListaCompra()
             is OnEvent.UpdateTituloListaCompra -> updateTituloListaCompra(event.titulo)
             is OnEvent.ListaCompraSelecionada -> setListaCompraSelecionada(event.listaCompra)
             is OnEvent.Reset -> resetUiState()
@@ -127,7 +129,7 @@ class ListaCompraViewModel @Inject constructor(
     private fun deleteListaCompra(idListaCompra: Long) =
         viewModelScope.launch {
             try {
-                val resultMessage = listaCompraUseCase.deleteCompra(idListaCompra)
+                val resultMessage = listaCompraUseCase.deleteListaCompra(idListaCompra)
                 _uiEvent.send(UiEvent.Deleted(resultMessage))
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -148,7 +150,7 @@ class ListaCompraViewModel @Inject constructor(
             _uiEvent.send(uiEvent)
         }
 
-    private fun uiCreateNewList() =
+    private fun uiCreateNewListaCompra() =
         viewModelScope.launch {
             _uiState.update { currentState ->
                 currentState.copy(
@@ -161,7 +163,7 @@ class ListaCompraViewModel @Inject constructor(
             _uiEvent.send(UiEvent.ShowBottomSheet)
         }
 
-    private fun uiDuplicateList() =
+    private fun uiDuplicateListaCompra() =
         viewModelScope.launch {
             _uiState.update { currentState ->
                 currentState.copy(
@@ -175,7 +177,7 @@ class ListaCompraViewModel @Inject constructor(
             _uiEvent.send(UiEvent.ShowBottomSheet)
         }
 
-    private fun uiRenameList() =
+    private fun uiRenameListaCompra() =
         viewModelScope.launch {
             _uiState.update { currentState ->
                 currentState.copy(
@@ -235,4 +237,11 @@ class ListaCompraViewModel @Inject constructor(
     }
 
     //UISTATE
+
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    fun collectUiEvent(): UiEvent {
+        return runBlocking {
+            _uiEvent.receive()
+        }
+    }
 }

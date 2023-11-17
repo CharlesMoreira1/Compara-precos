@@ -33,6 +33,10 @@ gradlePlugin {
             id = "comparaprecos.android.application"
             implementationClass = "AndroidApplicationConventionPlugin"
         }
+        register("androidApplicationJacoco") {
+            id = "comparaprecos.android.application.jacoco"
+            implementationClass = "AndroidApplicationJacocoConventionPlugin"
+        }
         register("androidLibraryCompose") {
             id = "comparaprecos.android.library.compose"
             implementationClass = "AndroidLibraryComposeConventionPlugin"
@@ -40,6 +44,10 @@ gradlePlugin {
         register("androidLibrary") {
             id = "comparaprecos.android.library"
             implementationClass = "AndroidLibraryConventionPlugin"
+        }
+        register("androidLibraryJacoco") {
+            id = "comparaprecos.android.library.jacoco"
+            implementationClass = "AndroidLibraryJacocoConventionPlugin"
         }
         register("androidFeature") {
             id = "comparaprecos.android.feature"
@@ -52,6 +60,10 @@ gradlePlugin {
         register("androidRoom") {
             id = "comparaprecos.android.room"
             implementationClass = "AndroidRoomConventionPlugin"
+        }
+        register("androidFirebase") {
+            id = "comparaprecos.android.application.firebase"
+            implementationClass = "AndroidApplicationFirebaseConventionPlugin"
         }
     }
 }

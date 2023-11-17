@@ -16,9 +16,7 @@ class ListaCompraUseCaseImpl @Inject constructor(
     private val listaCompraRepository: ListaCompraRepository
 ) : ListaCompraUseCase {
 
-    override suspend fun getListaCompra(): Flow<List<ListaCompra>> = listaCompraRepository.getListaCompra()
-
-    override suspend fun getListaCompraWithProdutos(): Flow<List<ListaCompraWithProdutos>> =
+    override suspend fun getListaCompraWithProdutos() =
         listaCompraRepository.getListaCompraWithProdutos()
 
     override suspend fun insertNovaListaCompra(novaListaCompra: ListaCompra): Int {
@@ -48,7 +46,7 @@ class ListaCompraUseCaseImpl @Inject constructor(
     }
 
 
-    override suspend fun deleteCompra(idListaCompra: Long): Int {
+    override suspend fun deleteListaCompra(idListaCompra: Long): Int {
         val isDeleted = listaCompraRepository.deleteListaCompra(idListaCompra) > 0
         return if (isDeleted) R.string.label_lista_compra_excluida
         else throw ErrorDelete()
