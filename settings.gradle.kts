@@ -1,4 +1,7 @@
 @file:Suppress("UnstableApiUsage")
+
+include(":core:datastore")
+
 pluginManagement {
     includeBuild("build-logic")
     repositories {

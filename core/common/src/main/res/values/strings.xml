@@ -17,6 +17,12 @@
     <string name="label_entendi">Entendi</string>
     <string name="label_atual">Atual</string>
     <string name="label_comparada">Comparada</string>
+    <string name="label_temas">Temas</string>
+    <string name="label_ok">OK</string>
+    <string name="label_cancelar">Cancelar</string>
+    <string name="label_default">Padrão</string>
+    <string name="label_claro">Claro</string>
+    <string name="label_escuro">Escuro</string>
 <!--    Label com uma palavra-->
 
 <!--    Label com duas palavras-->
@@ -37,6 +43,13 @@
     <string name="label_editando_produto">Editando produto</string>
     <string name="label_quantidade_invalida">Quantidade inválida</string>
     <string name="label_produto_adicionado">Produto adicionado</string>
+    <string name="label_verde_eucalipto">Verde eucalipto</string>
+    <string name="label_uva_roxa">Uva roxa</string>
+    <string name="label_rosa_suave">Rosa suave</string>
+    <string name="label_verao_laranja">Verão laranja</string>
+    <string name="label_doce_rubi">Doce rubi</string>
+    <string name="label_opera_cafe">Opera café</string>
+    <string name="label_padrao_sistema">Padrão sistema</string>
 <!--    Label com duas palavras-->
 
 
@@ -52,6 +65,8 @@
     <string name="label_lista_compra_excluida">Lista de compra excluída</string>
     <string name="label_erro_excluir_lista_compra">Erro ao excluir lista</string>
     <string name="label_informe_nome_produto">Informe o nome do produto</string>
+    <string name="label_usar_tema_dinamico">Usar Tema dinâmico</string>
+    <string name="label_preferencia_modo_noturno">Preferência modo noturno</string>
 <!--    Label com tres palavras-->
 
 <!--    Label com frases-->

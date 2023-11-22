@@ -1,4 +1,4 @@
-package com.z1.comparaprecos.feature.listacompra.presentation
+package com.z1.comparaprecos.feature.listacompra.presentation.state
 
 import androidx.annotation.StringRes
 import com.z1.comparaprecos.common.ui.components.ETipoSnackbar
@@ -15,4 +15,5 @@ sealed class UiEvent {
     data object HideBottomSheet: UiEvent()
     data object ShowBottomSheetOptions: UiEvent()
     data object HideBottomSheetOptions: UiEvent()
+    data object ShowDialogTemas: UiEvent()
 }

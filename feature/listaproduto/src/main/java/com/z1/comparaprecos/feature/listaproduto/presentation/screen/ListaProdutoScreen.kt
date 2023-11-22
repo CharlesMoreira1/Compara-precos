@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material.icons.rounded.ShoppingCartCheckout
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -76,8 +77,8 @@ fun ListaProdutoScreen(
             },
             floatingActionButton = {
                 if (uiState.listaProduto.isNotEmpty()) {
-                    FimListaActionButton {
-                        onEvent(OnEvent.UpdateUiEvent(UiEvent.Finished))
+                    PesquisarProdutoActionButton {
+
                     }
                 }
             }
@@ -147,38 +148,21 @@ fun ListaProdutoScreen(
                 }
             )
         }
-        is UiEvent.Finished -> {
-            CustomBottomSheetDialogAviso(
-                titulo = stringResource(id = R.string.label_atencao),
-                mensagem = stringResource(id = R.string.label_desc_finalizar_lista),
-                textoBotaoPositivo = stringResource(id = R.string.label_sim),
-                onAcaoPositivaClick = {
-                    onEvent(OnEvent.UpdateUiEvent(UiEvent.NavigateUp))
-                },
-                onDismissRequest = {
-                    onEvent(OnEvent.UpdateQuantidadeProdutoExistente(null))
-                },
-                textoBotaoNegativo = stringResource(id = R.string.label_nao),
-                onAcaoNegativaClick = {
-                    onEvent(OnEvent.UpdateUiEvent(UiEvent.Default))
-                }
-            )
-        }
         is UiEvent.NavigateUp -> navigateUp()
         else -> Unit
     }
 }
 
 @Composable
-private fun FimListaActionButton(
+private fun PesquisarProdutoActionButton(
     modifier: Modifier = Modifier,
     onClick: () -> Unit
 ) {
     CustomFloatingActionButton(
         modifier = modifier,
         onClick = onClick,
-        containerColor = MediumSeaGreen,
-        iconTint = MaterialTheme.colorScheme.onPrimary,
-        imageVector = Icons.Rounded.ShoppingCartCheckout
+        containerColor = MaterialTheme.colorScheme.secondary,
+        iconTint = MaterialTheme.colorScheme.onSecondary,
+        imageVector = Icons.Rounded.Search
     )
 }

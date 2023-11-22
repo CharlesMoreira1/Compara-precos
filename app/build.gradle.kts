@@ -37,6 +37,8 @@ dependencies {
     implementation(libs.bundles.compose)
 
     implementation(project(":core:common"))
+    implementation(project(":core:datastore"))
+    implementation(project(":core:model"))
     implementation(project(":core:navigation"))
     implementation(project(":core:testing"))
     implementation(project(":feature:listacompra"))

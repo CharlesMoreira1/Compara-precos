@@ -3,7 +3,7 @@ package com.z1.comparaprecos.feature.listacompra.presentation.viewmodel
 import com.z1.comparaprecos.core.model.ListaCompra
 import com.z1.comparaprecos.core.model.ListaCompraWithProdutos
 import com.z1.comparaprecos.core.model.Produto
-import com.z1.comparaprecos.feature.listacompra.presentation.UiEvent
+import com.z1.comparaprecos.feature.listacompra.presentation.state.UiEvent
 
 sealed class OnEvent {
     data class Insert(val novaListaCompra: ListaCompra): OnEvent()
@@ -16,5 +16,8 @@ sealed class OnEvent {
     data class ListaCompraSelecionada(val listaCompra: ListaCompraWithProdutos?): OnEvent()
     data class UpdateTituloListaCompra(val titulo: String): OnEvent()
     data object Reset: OnEvent()
+    data class ChangeTheme(val themeId: Long): OnEvent()
+    data class ChangeDynamicColor(val useDynamicColor: Long): OnEvent()
+    data class ChangeDarkThemeMode(val darkThemeMode: Long): OnEvent()
     data class UpdateUiEvent(val uiEvent: UiEvent): OnEvent()
 }
