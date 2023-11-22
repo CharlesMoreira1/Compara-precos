@@ -10,6 +10,14 @@
 /build
 /build-logic/build
 /build-logic/convention/build
+/core/common/build
+/core/database/build
+/core/datastore/build
+/core/model/build
+/core/navigation/build
+/core/testing/build
+/feature/listacompra/build
+/feature/listaproduto/build
 /.gradle
 /build-logic/.gradle
 /captures
