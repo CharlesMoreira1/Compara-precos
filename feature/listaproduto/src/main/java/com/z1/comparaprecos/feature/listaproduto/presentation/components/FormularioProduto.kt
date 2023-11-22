@@ -2,11 +2,13 @@
 
 package com.z1.comparaprecos.feature.listaproduto.presentation.components
 
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -36,6 +38,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.pluralStringResource
@@ -55,6 +58,7 @@ import com.z1.comparaprecos.common.ui.components.mask.MascaraPeso
 import com.z1.comparaprecos.common.ui.components.mask.MascaraPreco
 import com.z1.comparaprecos.common.ui.theme.ComparaPrecosTheme
 import com.z1.comparaprecos.common.ui.theme.CoolMint
+import com.z1.comparaprecos.common.ui.theme.WhiteSmoke
 import com.z1.comparaprecos.core.common.R
 import com.z1.comparaprecos.core.model.Produto
 import java.math.BigDecimal
@@ -72,10 +76,7 @@ fun FormularioProduto(
     val focusManager = LocalFocusManager.current
 
     val containerColor by animateColorAsState(
-        when (produtoSelecionado) {
-            null -> MaterialTheme.colorScheme.surface
-            else -> CoolMint
-        },
+        MaterialTheme.colorScheme.tertiary,
         label = "backgroundcolor formulario"
     )
 
@@ -129,7 +130,9 @@ fun FormularioProduto(
             valueNomeProduto = nomeProduto
             valueIsPeso = isMedidaPeso
             isResetQuantidade = false
-            valueQuantidade = quantidade.replace(".", "")
+            valueQuantidade =
+                if (isMedidaPeso) quantidade.removeZerosFromLeft()
+                else quantidade.replace(".", "")
             valuePreco = precoUnitario.removeZerosFromLeft()
             isErrorNomeProduto = false
             isErrorPreco = false
@@ -149,7 +152,7 @@ fun FormularioProduto(
                 )
             ),
         colors = CardDefaults.cardColors(
-            containerColor = containerColor
+            containerColor = MaterialTheme.colorScheme.surface
         ),
         shape = RoundedCornerShape(
             topStart = dimensionResource(id = R.dimen.big),
@@ -170,6 +173,7 @@ fun FormularioProduto(
             ) {
                 Row(
                     modifier = Modifier
+                        .background(containerColor)
                         .padding(
                             vertical = dimensionResource(id = R.dimen.normal)
                         )
@@ -186,14 +190,14 @@ fun FormularioProduto(
                                 onCancelarEdicaoProduto()
                              },
                             iconImageVector = Icons.Rounded.Close,
-                            iconTint = MaterialTheme.colorScheme.onSurface,
+                            iconTint = MaterialTheme.colorScheme.onTertiary,
                             iconContentDescription = "Cancelar edicao"
                         )
                         Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.normal)))
                         Text(
                             text = stringResource(id = R.string.label_editando_produto),
                             style = MaterialTheme.typography.titleMedium,
-                            color = MaterialTheme.colorScheme.onSurface
+                            color = MaterialTheme.colorScheme.onTertiary
                         )
                     }
                     CustomIconButton(
@@ -204,7 +208,7 @@ fun FormularioProduto(
                             onCancelarEdicaoProduto()
                         },
                         iconImageVector = Icons.Rounded.DeleteOutline,
-                        iconTint = MaterialTheme.colorScheme.onSurface
+                        iconTint = MaterialTheme.colorScheme.onTertiary
                     )
                 }
             }
@@ -213,7 +217,9 @@ fun FormularioProduto(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(
-                        horizontal = dimensionResource(id = R.dimen.medium)
+                        start = dimensionResource(id = R.dimen.medium),
+                        end = dimensionResource(id = R.dimen.medium),
+                        top = dimensionResource(id = R.dimen.medium)
                     ),
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -368,10 +374,24 @@ fun FormularioProduto(
 
 @Preview
 @Composable
-fun CustomProdutoInsertPreview() {
+fun CustomProdutoSelecionadoPreview() {
     ComparaPrecosTheme {
         FormularioProduto(
             produtoSelecionado = Produto(-1, -1, "", "", BigDecimal.ZERO, false),
+            idListaCompra = -1,
+            onAdicionarProdutoClick = { produto -> },
+            onCancelarEdicaoProduto = {},
+            onDeletarProdutoClick = {produto ->  }
+        )
+    }
+}
+
+@Preview
+@Composable
+fun CustomProdutoInsertPreview() {
+    ComparaPrecosTheme {
+        FormularioProduto(
+            produtoSelecionado = null,
             idListaCompra = -1,
             onAdicionarProdutoClick = { produto -> },
             onCancelarEdicaoProduto = {},

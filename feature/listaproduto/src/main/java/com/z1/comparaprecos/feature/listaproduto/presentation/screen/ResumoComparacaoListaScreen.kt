@@ -14,6 +14,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -27,7 +28,6 @@ import com.z1.comparaprecos.common.extensions.toMoedaLocal
 import com.z1.comparaprecos.common.ui.components.CustomCard
 import com.z1.comparaprecos.common.ui.components.CustomDivider
 import com.z1.comparaprecos.common.ui.theme.CelticBlue
-import com.z1.comparaprecos.common.ui.theme.CoralRed
 import com.z1.comparaprecos.common.ui.theme.MediumSeaGreen
 import com.z1.comparaprecos.core.common.R
 import com.z1.comparaprecos.core.model.Produto
@@ -215,7 +215,7 @@ fun ListaComparadaCom(
         Text(
             modifier = Modifier
                 .width(150.dp)
-                .background(MaterialTheme.colorScheme.surface),
+                .background(MaterialTheme.colorScheme.surfaceColorAtElevation(1.dp)),
             text = stringResource(id = R.string.label_lista_comparada_com),
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.70f),
@@ -322,7 +322,7 @@ fun SomaProdutosQueEstaoNasDuasListas(
                 val color = when {
                     diferencaPreco < BigDecimal.ZERO -> MediumSeaGreen
                     diferencaPreco.toDouble() == 0.0 -> CelticBlue
-                    else -> CoralRed
+                    else -> MaterialTheme.colorScheme.error
                 }
                 Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.normal)))
                 Text(
@@ -432,7 +432,7 @@ fun SomaTotal(
                 val color = when {
                     diferencaPreco < BigDecimal.ZERO -> MediumSeaGreen
                     diferencaPreco.toDouble() == 0.0 -> CelticBlue
-                    else -> CoralRed
+                    else -> MaterialTheme.colorScheme.error
                 }
                 Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.normal)))
                 Text(

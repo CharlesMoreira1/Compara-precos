@@ -9,16 +9,23 @@ import com.z1.comparaprecos.core.common.R
 import com.z1.comparaprecos.core.model.ListaCompra
 import com.z1.comparaprecos.core.model.ListaCompraWithProdutos
 import com.z1.comparaprecos.core.model.Produto
+import com.z1.comparaprecos.core.model.UserData
 import com.z1.comparaprecos.core.model.exceptions.ErrorEmptyTitle
 import com.z1.comparaprecos.feature.listacompra.domain.ListaCompraUseCase
-import com.z1.comparaprecos.feature.listacompra.presentation.UiEvent
-import com.z1.comparaprecos.feature.listacompra.presentation.UiState
+import com.z1.comparaprecos.feature.listacompra.presentation.state.UiEvent
+import com.z1.comparaprecos.feature.listacompra.presentation.state.UiState
+import com.z1.core.datastore.repository.UserPreferencesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -27,6 +34,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ListaCompraViewModel @Inject constructor(
     private val listaCompraUseCase: ListaCompraUseCase,
+    private val userPreferencesRepository: UserPreferencesRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(UiState())
@@ -37,6 +45,7 @@ class ListaCompraViewModel @Inject constructor(
 
     init {
         getListaCompra()
+        getUserPreferences()
     }
 
     fun onEvent(event: OnEvent) {
@@ -55,6 +64,9 @@ class ListaCompraViewModel @Inject constructor(
             is OnEvent.UpdateTituloListaCompra -> updateTituloListaCompra(event.titulo)
             is OnEvent.ListaCompraSelecionada -> setListaCompraSelecionada(event.listaCompra)
             is OnEvent.Reset -> resetUiState()
+            is OnEvent.ChangeTheme -> changeTheme(event.themeId)
+            is OnEvent.ChangeDynamicColor -> changeDynamicColor(event.useDynamicColor)
+            is OnEvent.ChangeDarkThemeMode -> changeDarkThemeMode(event.darkThemeMode)
             is OnEvent.UpdateUiEvent -> updateUiEvent(event.uiEvent)
         }
     }
@@ -235,6 +247,30 @@ class ListaCompraViewModel @Inject constructor(
             )
         }
     }
+
+    private fun getUserPreferences() =
+        viewModelScope.launch {
+            userPreferencesRepository.userData.collect {
+                _uiState.update { currentState ->
+                    currentState.copy(userData = it)
+                }
+            }
+        }
+
+    private fun changeTheme(themeId: Long) =
+        viewModelScope.launch {
+            userPreferencesRepository.putSelectedTheme(themeId)
+        }
+
+    private fun changeDynamicColor(useDynamicColor: Long) =
+        viewModelScope.launch {
+            userPreferencesRepository.putUseDynamicColor(useDynamicColor)
+        }
+
+    private fun changeDarkThemeMode(darkThemeMode: Long) =
+        viewModelScope.launch {
+            userPreferencesRepository.putDarkThemeMode(darkThemeMode)
+        }
 
     //UISTATE
 

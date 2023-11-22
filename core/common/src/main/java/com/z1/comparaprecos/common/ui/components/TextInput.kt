@@ -12,6 +12,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.AddCircleOutline
 import androidx.compose.material.icons.rounded.RemoveCircleOutline
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
@@ -114,7 +115,7 @@ fun CustomOutlinedTextInputQuantidade(
                     onQuantidadeChange(quantidade.toString())
                 },
                 iconImageVector = Icons.Rounded.RemoveCircleOutline,
-                iconTint = CoralRed,
+                iconTint = MaterialTheme.colorScheme.error,
                 iconContentDescription = "Remover quantidade"
             )
 

@@ -28,6 +28,7 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
@@ -36,8 +37,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.Edit
+import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material.icons.rounded.Share
-import androidx.compose.material.icons.rounded.ShoppingCartCheckout
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -62,16 +63,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.z1.comparaprecos.common.ui.components.CustomDivider
 import com.z1.comparaprecos.common.ui.components.CustomFloatingActionButton
 import com.z1.comparaprecos.common.ui.components.CustomLoadingScreen
+import com.z1.comparaprecos.common.ui.components.CustomRadioButton
 import com.z1.comparaprecos.common.ui.components.CustomSnackBar
 import com.z1.comparaprecos.common.ui.components.CustomTopAppBar
 import com.z1.comparaprecos.common.ui.components.Mensagem
-import com.z1.comparaprecos.common.ui.theme.MediumSeaGreen
 import com.z1.comparaprecos.core.common.R
 import com.z1.comparaprecos.feature.listaproduto.presentation.components.FormularioProduto
 import com.z1.comparaprecos.feature.listaproduto.presentation.components.ListaProduto
@@ -203,8 +205,8 @@ fun ListaProdutoComparadaScreen(
                                 if (uiState.listaProduto.isNotEmpty()) {
                                     FloatingActionButton(
                                         modifier = Modifier.align(Alignment.BottomEnd),
-                                        containerColor = MediumSeaGreen,
-                                        icon = Icons.Rounded.ShoppingCartCheckout,
+                                        containerColor = MaterialTheme.colorScheme.secondary,
+                                        icon = Icons.Rounded.Search,
                                         contentDescription = "Pesquisar produto",
                                         onClick = {}
                                     )
@@ -317,105 +319,65 @@ fun AlertDialogListaCompra(
     allListaCompra: List<Pair<String, Long>>,
     onEvent: (OnEvent) -> Unit
 ) {
+    val configuration = LocalConfiguration.current
+
     var idListaCompraSelecionada by remember {
         mutableLongStateOf(-1)
     }
 
     AlertDialog(
-        modifier = modifier,
+        modifier = modifier.widthIn(max = configuration.screenWidthDp.dp - 80.dp),
         onDismissRequest = { },
-    ) {
-        Column(
-            modifier = Modifier
-                .background(
-                    MaterialTheme.colorScheme.surface,
-                    RoundedCornerShape(dimensionResource(id = R.dimen.big))
-                )
-        ) {
+        title = {
             Text(
-                modifier = Modifier
-                    .padding(dimensionResource(id = R.dimen.big)),
                 text = stringResource(id = R.string.label_selecione_lista_to_comparar),
                 style = MaterialTheme.typography.titleLarge
             )
-            CustomDivider()
-            LazyColumn(
-                modifier = Modifier
-                    .heightIn(min = 150.dp, max = 250.dp)
-            ) {
-                items(allListaCompra) { item ->
-                    ListaCompraOpcoes(item, idListaCompraSelecionada) {
-                        idListaCompraSelecionada = it
+        },
+        text = {
+            Column {
+                CustomDivider()
+                LazyColumn(
+                    modifier = Modifier
+                        .heightIn(min = 150.dp, max = 250.dp)
+                ) {
+                    items(allListaCompra) { item ->
+                        CustomRadioButton(
+                            item = item,
+                            selectedOption = idListaCompraSelecionada,
+                        ) {
+                            idListaCompraSelecionada = it
+                        }
                     }
                 }
+                CustomDivider()
             }
-            CustomDivider()
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(dimensionResource(id = R.dimen.big)),
-                horizontalArrangement = Arrangement.End
+        },
+        confirmButton = {
+            TextButton(onClick = { onEvent(OnEvent.GetListaCompraToComparar(idListaCompraSelecionada)) }
             ) {
-                TextButton(onClick = { onEvent(OnEvent.UpdateUiEvent(UiEvent.Default)) }
-                ) {
-                    Text(
-                        text = "Cancelar",
-                        style = MaterialTheme.typography.titleMedium
-                    )
-                }
-
-                TextButton(onClick = { onEvent(OnEvent.GetListaCompraToComparar(idListaCompraSelecionada)) }
-                ) {
-                    Text(
-                        text = "OK",
-                        style = MaterialTheme.typography.titleMedium
-                    )
-                }
+                Text(
+                    text = stringResource(id = R.string.label_ok),
+                    style = MaterialTheme.typography.titleMedium
+                )
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = { onEvent(OnEvent.UpdateUiEvent(UiEvent.Default)) }
+            ) {
+                Text(
+                    text = stringResource(id = R.string.label_cancelar),
+                    style = MaterialTheme.typography.titleMedium
+                )
             }
         }
-    }
-}
-
-@Composable
-fun ListaCompraOpcoes(
-    item: Pair<String, Long>,
-    listaCompraSelecionada: Long,
-    onClickListener: (Long) -> Unit
-) {
-    Row(
-        modifier = Modifier
-            .clickable {
-                onClickListener(item.second)
-            }
-            .fillMaxWidth()
-            .padding(
-                horizontal = dimensionResource(id = R.dimen.big),
-                vertical = dimensionResource(id = R.dimen.normal)
-            ),
-
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.medium))
-    ) {
-        RadioButton(
-            modifier = Modifier.size(24.dp),
-            selected = (item.second == listaCompraSelecionada),
-            onClick = {
-                onClickListener(item.second)
-            }
-        )
-
-        Text(
-            item.first,
-            style = MaterialTheme.typography.bodySmall,
-        )
-    }
+    )
 }
 
 @Composable
 fun FloatingActionButton(
     modifier: Modifier = Modifier,
-    containerColor: Color = MaterialTheme.colorScheme.primary,
+    containerColor: Color = MaterialTheme.colorScheme.secondary,
     icon: ImageVector,
     contentDescription: String,
     onClick: () -> Unit

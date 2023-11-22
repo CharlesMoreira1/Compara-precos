@@ -6,6 +6,9 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import com.z1.comparaprecos.common.ui.theme.ComparaPrecosTheme
 import com.z1.comparaprecos.core.common.R
+import com.z1.comparaprecos.feature.listacompra.presentation.screen.ListaCompraScreen
+import com.z1.comparaprecos.feature.listacompra.presentation.state.UiEvent
+import com.z1.comparaprecos.feature.listacompra.presentation.state.UiState
 import com.z1.comparaprecos.testing.data.listaCompraWithProductTestData
 import io.mockk.mockk
 import org.junit.Rule

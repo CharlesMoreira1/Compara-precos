@@ -5,8 +5,8 @@ import com.z1.comparaprecos.core.model.ListaCompra
 import com.z1.comparaprecos.core.model.exceptions.ErrorEmptyTitle
 import com.z1.comparaprecos.core.model.exceptions.ErrorInsert
 import com.z1.comparaprecos.feature.listacompra.domain.ListaCompraUseCase
-import com.z1.comparaprecos.feature.listacompra.presentation.UiEvent
-import com.z1.comparaprecos.feature.listacompra.presentation.UiState
+import com.z1.comparaprecos.feature.listacompra.presentation.state.UiEvent
+import com.z1.comparaprecos.feature.listacompra.presentation.state.UiState
 import com.z1.comparaprecos.testing.BaseTest
 import com.z1.comparaprecos.testing.data.listaCompraWithProductTestData
 import com.z1.comparaprecos.testing.data.listaProdutoDataTest

@@ -53,3 +53,18 @@ fun BigDecimal.removeZerosFromLeft(): String {
     }
     return if (valor.toInt() == 0) "" else valor.substring(startIndex)
 }
+
+fun String.removeZerosFromLeft(): String {
+    val formato = DecimalFormat("0.000")
+    val valorFormatado = formato.format(this.toDouble())
+    val valor = valorFormatado.toString().replace(",", "")
+    val array = valor.toCharArray()
+    var startIndex = 0
+    for (i in array.indices) {
+        if (valor[i] != '0') {
+            startIndex = i
+            break
+        }
+    }
+    return if (valor.toInt() == 0) "" else valor.substring(startIndex)
+}

@@ -48,7 +48,6 @@ import androidx.compose.ui.unit.sp
 import com.z1.comparaprecos.common.extensions.toMoedaLocal
 import com.z1.comparaprecos.common.ui.components.CustomCard
 import com.z1.comparaprecos.common.ui.theme.CelticBlue
-import com.z1.comparaprecos.common.ui.theme.CoralRed
 import com.z1.comparaprecos.common.ui.theme.MediumSeaGreen
 import com.z1.comparaprecos.core.common.R
 import com.z1.comparaprecos.core.model.Produto
@@ -262,7 +261,7 @@ fun CardConteudoProduto(
                                         color = when {
                                             diferencaPreco < BigDecimal.ZERO -> MediumSeaGreen
                                             diferencaPreco == BigDecimal("0.00") -> CelticBlue
-                                            else -> CoralRed
+                                            else -> MaterialTheme.colorScheme.error
                                         },
                                         shape = RoundedCornerShape(9.dp)
                                     )
