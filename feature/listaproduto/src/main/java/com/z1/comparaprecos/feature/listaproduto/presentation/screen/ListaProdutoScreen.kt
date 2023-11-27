@@ -28,12 +28,14 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.z1.comparaprecos.common.ui.components.CustomBottomSheetDialogAviso
+import com.z1.comparaprecos.common.ui.components.CustomDialogOpcoes
 import com.z1.comparaprecos.common.ui.components.CustomFloatingActionButton
 import com.z1.comparaprecos.common.ui.components.CustomSnackBar
 import com.z1.comparaprecos.common.ui.components.CustomTopAppBar
 import com.z1.comparaprecos.common.ui.components.ETipoSnackbar
 import com.z1.comparaprecos.common.ui.components.Mensagem
 import com.z1.comparaprecos.common.ui.theme.MediumSeaGreen
+import com.z1.comparaprecos.common.util.ordenacaoOptions
 import com.z1.comparaprecos.core.common.R
 import com.z1.comparaprecos.feature.listaproduto.presentation.components.FormularioProduto
 import com.z1.comparaprecos.feature.listaproduto.presentation.components.ListaProduto
@@ -71,7 +73,10 @@ fun ListaProdutoScreen(
                 ) {
                     TituloListaProduto(
                         titulo = uiState.listaCompra.titulo,
-                        valorLista = uiState.listaProduto.sumOf { (it.valorProduto()) }
+                        valorLista = uiState.listaProduto.sumOf { (it.valorProduto()) },
+                        onOrdenarListaClick = {
+                            onEvent(OnEvent.UpdateUiEvent(UiEvent.ShowDialogOrdenarLista))
+                        }
                     )
                 }
             },
@@ -145,6 +150,16 @@ fun ListaProdutoScreen(
                 duracao = TimeUnit.SECONDS.toMillis(2),
                 onFimShowMensagem = {
                     onEvent(OnEvent.UpdateUiEvent(UiEvent.Default))
+                }
+            )
+        }
+        is UiEvent.ShowDialogOrdenarLista -> {
+            CustomDialogOpcoes(
+                title = stringResource(id = R.string.label_ordenacao_lista),
+                optionList = ordenacaoOptions,
+                atualSelectedOption = uiState.ordenacaoSelecionada.id,
+                onAtualSelectedOptionClick = {
+                    onEvent(OnEvent.ChangeOrdenacaoLista(it))
                 }
             )
         }

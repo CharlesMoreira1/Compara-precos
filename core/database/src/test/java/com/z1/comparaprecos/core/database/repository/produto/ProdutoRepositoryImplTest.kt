@@ -13,6 +13,7 @@ import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
 import kotlin.test.assertEquals
@@ -79,18 +80,76 @@ class ProdutoRepositoryImplTest: BaseTest() {
         //Then - Entao
         assertEquals(result.detalhes.titulo, listaCompraEntity.detalhes.titulo)
     }
-
     @Test
-    fun `should return a list of Produto`() = runTest {
+    fun `should return a list of Produto ordered by A to Z`() = runTest {
         //Given - Dado
         val listaProdutoEntity = produtoMapper.mapModelListToEntityList(listaProdutoDataTest)
-        coEvery { produtoDao.getListaProduto(any()) } returns flowOf(listaProdutoEntity)
+        coEvery { produtoDao.getListaProduto(any()) } returns
+                flowOf(listaProdutoEntity.sortedBy { it.nomeProduto })
 
         //When - Quando
-        val result = repository.getListaProduto(0)
+        val currentList = repository.getListaProduto(0, "").first()
+        val firstItem = currentList.first()
+        val lastItem = currentList.last()
 
         //Then - Entao
-        assertTrue(result.first().size == 3)
+        assertTrue(currentList.size == 3)
+        assertTrue(firstItem.nomeProduto == "Arroz")
+        assertTrue(lastItem.nomeProduto == "Feijao")
+    }
+
+    @Test
+    fun `should return a list of Produto ordered by Z to A`() = runTest {
+        //Given - Dado
+        val listaProdutoEntity = produtoMapper.mapModelListToEntityList(listaProdutoDataTest)
+        coEvery { produtoDao.getListaProduto(any()) } returns
+                flowOf(listaProdutoEntity.sortedByDescending { it.nomeProduto })
+
+        //When - Quando
+        val currentList = repository.getListaProduto(0, "").first()
+        val firstItem = currentList.first()
+        val lastItem = currentList.last()
+
+        //Then - Entao
+        assertTrue(currentList.size == 3)
+        assertTrue(firstItem.nomeProduto == "Feijao")
+        assertTrue(lastItem.nomeProduto == "Arroz")
+    }
+
+    @Test
+    fun `should return a list of Produto ordered by ADICIONADO PRIMEIRO`() = runTest {
+        //Given - Dado
+        val listaProdutoEntity = produtoMapper.mapModelListToEntityList(listaProdutoDataTest)
+        coEvery { produtoDao.getListaProduto(any()) } returns
+                flowOf(listaProdutoEntity.sortedByDescending { it.id })
+
+        //When - Quando
+        val currentList = repository.getListaProduto(0, "").first()
+        val firstItem = currentList.first()
+        val lastItem = currentList.last()
+
+        //Then - Entao
+        assertTrue(currentList.size == 3)
+        assertTrue(firstItem.nomeProduto == "Banana")
+        assertTrue(lastItem.nomeProduto == "Arroz")
+    }
+
+    @Test
+    fun `should return a list of Produto oredered by ADICIONADO ULTIMO`() = runTest {
+        //Given - Dado
+        val listaProdutoEntity = produtoMapper.mapModelListToEntityList(listaProdutoDataTest)
+        coEvery { produtoDao.getListaProduto(any()) } returns
+                flowOf(listaProdutoEntity.sortedBy { it.id })
+
+        //When - Quando
+        val currentList = repository.getListaProduto(0, "").first()
+        val firstItem = currentList.first()
+        val lastItem = currentList.last()
+
+        //Then - Entao
+        assertTrue(currentList.size == 3)
+        assertTrue(firstItem.nomeProduto == "Arroz")
+        assertTrue(lastItem.nomeProduto == "Banana")
     }
 
     @Test

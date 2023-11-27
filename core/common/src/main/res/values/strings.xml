@@ -67,6 +67,7 @@
     <string name="label_informe_nome_produto">Informe o nome do produto</string>
     <string name="label_usar_tema_dinamico">Usar Tema dinâmico</string>
     <string name="label_preferencia_modo_noturno">Preferência modo noturno</string>
+    <string name="label_ordenacao_lista">Ordenação da lista</string>
 <!--    Label com tres palavras-->
 
 <!--    Label com frases-->
@@ -105,6 +106,13 @@
     <string name="label_desc_somando_todos_produtos">Somando todos os produtos da lista</string>
     <string name="label_desc_somando_produtos_nas_listas">Produtos que estão nas duas listas: %d</string>
 <!--    Label com frases-->
+
+    <!--    Label organizacao lista-->
+    <string name="label_de_a_z">De Aa-Zz</string>
+    <string name="label_de_z_a">De Zz-Aa</string>
+    <string name="label_adicionado_primeiro">Adicionado primeiro</string>
+    <string name="label_adicionado_ultimo">Adicionado por último</string>
+    <!--    Label organizacao lista-->
 
 <!--    Label content description-->
     <string name="description_adicionar_lista_to_comparar">Adicionar lista para comparar</string>

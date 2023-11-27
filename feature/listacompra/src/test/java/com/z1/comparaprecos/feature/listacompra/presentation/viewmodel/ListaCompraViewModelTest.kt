@@ -10,6 +10,7 @@ import com.z1.comparaprecos.feature.listacompra.presentation.state.UiState
 import com.z1.comparaprecos.testing.BaseTest
 import com.z1.comparaprecos.testing.data.listaCompraWithProductTestData
 import com.z1.comparaprecos.testing.data.listaProdutoDataTest
+import com.z1.core.datastore.repository.UserPreferencesRepository
 import io.mockk.clearAllMocks
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -28,11 +29,12 @@ class ListaCompraViewModelTest: BaseTest() {
     private lateinit var viewModel: ListaCompraViewModel
     private lateinit var listaCompra: ListaCompra
     private val usecase: ListaCompraUseCase = mockk(relaxed = true)
+    private val userPreferencesRepository: UserPreferencesRepository = mockk(relaxed = true)
 
     @Before
     override fun beforeEach() {
         super.beforeEach()
-        viewModel = ListaCompraViewModel(usecase)
+        viewModel = ListaCompraViewModel(usecase, userPreferencesRepository)
         listaCompra = ListaCompra(0, "Teste", 0L)
     }
 
@@ -49,7 +51,7 @@ class ListaCompraViewModelTest: BaseTest() {
         coEvery { usecase.getListaCompraWithProdutos() } returns flowOf(listaCompraWithProductTestData)
 
         //When - Quando
-        viewModel = ListaCompraViewModel(usecase)
+        viewModel = ListaCompraViewModel(usecase, userPreferencesRepository)
         val currentList = viewModel.uiState.value.listaCompra
 
         //Then - Entao
@@ -63,7 +65,7 @@ class ListaCompraViewModelTest: BaseTest() {
         coEvery { usecase.getListaCompraWithProdutos() } returns flowOf(emptyList())
 
         //When - Quando
-        viewModel = ListaCompraViewModel(usecase)
+        viewModel = ListaCompraViewModel(usecase, userPreferencesRepository)
         val currentList = viewModel.uiState.value.listaCompra
 
         //Then - Entao
@@ -78,7 +80,7 @@ class ListaCompraViewModelTest: BaseTest() {
         coEvery { usecase.getListaCompraWithProdutos() } returns  flow { throw Exception() }
 
         //When - Quando
-        viewModel = ListaCompraViewModel(usecase)
+        viewModel = ListaCompraViewModel(usecase, userPreferencesRepository)
         val currentUiEvent = viewModel.collectUiEvent()
 
         //Then - Entao

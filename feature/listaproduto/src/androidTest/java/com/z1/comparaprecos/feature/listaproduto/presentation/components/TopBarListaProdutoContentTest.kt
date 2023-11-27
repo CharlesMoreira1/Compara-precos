@@ -18,7 +18,8 @@ class TopBarListaProdutoContentTest {
             ComparaPrecosTheme {
                 TituloListaProduto(
                     titulo = "Test",
-                    valorLista = BigDecimal("109.34")
+                    valorLista = BigDecimal("109.34"),
+                    onOrdenarListaClick = {}
                 )
             }
         }

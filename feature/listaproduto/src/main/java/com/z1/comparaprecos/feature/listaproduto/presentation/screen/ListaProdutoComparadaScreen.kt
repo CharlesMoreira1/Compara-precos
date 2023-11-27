@@ -152,7 +152,8 @@ fun ListaProdutoComparadaScreen(
                         0 -> uiState.listaProduto.sumOf { (it.valorProduto()) }
                         1 -> uiState.listaCompraComparada.produtos.sumOf { (it.valorProduto()) }
                         else -> null
-                    }
+                    },
+                    onOrdenarListaClick = {}
                 )
             }
         },

@@ -9,7 +9,7 @@ interface ProdutoRepository {
     suspend fun getListaCompra(idListaCompra: Long): ListaCompra
     suspend fun getAllListaCompra(): List<ListaCompra>
     suspend fun getListaCompraComparada(idListaCompra: Long): ListaCompraWithProdutos
-    fun getListaProduto(idListaCompra: Long): Flow<List<Produto>>
+    fun getListaProduto(idListaCompra: Long, orderBy: String): Flow<List<Produto>>
     suspend fun insertProduto(novoProduto: Produto): Long
     suspend fun updateProduto(produto: Produto): Int
     suspend fun deleteProduto(produto: Produto): Int

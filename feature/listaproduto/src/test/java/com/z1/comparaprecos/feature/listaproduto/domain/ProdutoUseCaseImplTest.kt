@@ -1,5 +1,6 @@
 package com.z1.comparaprecos.feature.listaproduto.domain
 
+import com.z1.comparaprecos.common.util.ListOrder
 import com.z1.comparaprecos.core.database.repository.produto.ProdutoRepository
 import com.z1.comparaprecos.core.model.ListaCompra
 import com.z1.comparaprecos.core.model.Produto
@@ -160,17 +161,79 @@ class ProdutoUseCaseImplTest: BaseTest() {
     }
 
     @Test
-    fun `should return a list of Produto when have data in database`() = runTest {
+    fun `should return a list of Produto ordered by A to Z when have data in database`() = runTest {
         //Given - Dado
         val listaProduto = listaProdutoDataTest
-        coEvery { repository.getListaProduto(0) } returns flowOf(listaProduto)
+        coEvery { repository.getListaProduto(0, any()) } returns
+                flowOf(listaProduto.sortedBy { it.nomeProduto })
 
         //When - Quando
-        val result = useCase.getListaProduto(0)
+        val currentList = useCase.getListaProduto(  0, ListOrder.A_Z).first()
+        val firtItem = currentList.first()
+        val lastItem = currentList.last()
 
         //Then - Entao
-        assertTrue(result.first().isNotEmpty())
-        assertTrue(result.first().size == 3)
+        assertTrue(currentList.isNotEmpty())
+        assertTrue(currentList.size == 3)
+        assertTrue(firtItem.nomeProduto == "Arroz")
+        assertTrue(lastItem.nomeProduto == "Feijao")
+    }
+
+    @Test
+    fun `should return a list of Produto ordered by Z to A when have data in database`() = runTest {
+        //Given - Dado
+        val listaProduto = listaProdutoDataTest
+        coEvery { repository.getListaProduto(0, any()) } returns
+                flowOf(listaProduto.sortedByDescending { it.nomeProduto })
+
+        //When - Quando
+        val currentList = useCase.getListaProduto(  0, ListOrder.Z_A).first()
+        val firtItem = currentList.first()
+        val lastItem = currentList.last()
+
+        //Then - Entao
+        assertTrue(currentList.isNotEmpty())
+        assertTrue(currentList.size == 3)
+        assertTrue(firtItem.nomeProduto == "Feijao")
+        assertTrue(lastItem.nomeProduto == "Arroz")
+    }
+
+    @Test
+    fun `should return a list of Produto ordered by ADICIONADO PRIMEIRO when have data in database`() = runTest {
+        //Given - Dado
+        val listaProduto = listaProdutoDataTest
+        coEvery { repository.getListaProduto(0, any()) } returns
+                flowOf(listaProduto.sortedByDescending { it.id })
+
+        //When - Quando
+        val currentList = useCase.getListaProduto(  0, ListOrder.ADICIONADO_PRIMEIRO).first()
+        val firtItem = currentList.first()
+        val lastItem = currentList.last()
+
+        //Then - Entao
+        assertTrue(currentList.isNotEmpty())
+        assertTrue(currentList.size == 3)
+        assertTrue(firtItem.nomeProduto == "Banana")
+        assertTrue(lastItem.nomeProduto == "Arroz")
+    }
+
+    @Test
+    fun `should return a list of Produto ordered by ADICIONADO ULTIMO when have data in database`() = runTest {
+        //Given - Dado
+        val listaProduto = listaProdutoDataTest
+        coEvery { repository.getListaProduto(0, any()) } returns
+                flowOf(listaProduto.sortedBy { it.id })
+
+        //When - Quando
+        val currentList = useCase.getListaProduto(  0, ListOrder.ADICIONADO_ULTIMO).first()
+        val firtItem = currentList.first()
+        val lastItem = currentList.last()
+
+        //Then - Entao
+        assertTrue(currentList.isNotEmpty())
+        assertTrue(currentList.size == 3)
+        assertTrue(firtItem.nomeProduto == "Arroz")
+        assertTrue(lastItem.nomeProduto == "Banana")
     }
 
     @Test
