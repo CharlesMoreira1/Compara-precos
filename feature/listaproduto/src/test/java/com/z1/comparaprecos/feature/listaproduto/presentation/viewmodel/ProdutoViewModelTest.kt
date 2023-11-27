@@ -1,5 +1,6 @@
 package com.z1.comparaprecos.feature.listaproduto.presentation.viewmodel
 
+import com.z1.comparaprecos.common.util.ListOrder
 import com.z1.comparaprecos.core.common.R
 import com.z1.comparaprecos.core.model.Produto
 import com.z1.comparaprecos.core.model.exceptions.ErrorDelete
@@ -12,26 +13,29 @@ import com.z1.comparaprecos.testing.BaseTest
 import com.z1.comparaprecos.testing.data.listaCompraOptionsDataTest
 import com.z1.comparaprecos.testing.data.listaCompraWithProductTestData
 import com.z1.comparaprecos.testing.data.listaProdutoDataTest
+import com.z1.core.datastore.repository.UserPreferencesRepository
 import io.mockk.clearAllMocks
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import org.junit.After
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import java.math.BigDecimal
 
-class ProdutoViewModelTest: BaseTest() {
+class ProdutoViewModelTest : BaseTest() {
     private lateinit var viewModel: ProdutoViewModel
     private lateinit var produto: Produto
     private val useCase: ProdutoUseCase = mockk()
+    private val userPreferencesRepository: UserPreferencesRepository = mockk(relaxed = true)
 
     @Before
     override fun beforeEach() {
         super.beforeEach()
-        viewModel = ProdutoViewModel(useCase)
+        viewModel = ProdutoViewModel(useCase, userPreferencesRepository)
         produto = Produto(
             0L,
             0,
@@ -133,24 +137,104 @@ class ProdutoViewModelTest: BaseTest() {
 
     //Get list
     @Test
-    fun `should return a list of Produto when find a listaCompra`() {
+    fun `should return a list of Produto ordered by A to Z when find a listaCompra`() {
         //Given - Dado
         coEvery { useCase.getListaCompra(0) } returns listaCompraWithProductTestData[0].detalhes
-        coEvery { useCase.getListaProduto(0) } returns flowOf(listaProdutoDataTest)
+        coEvery { userPreferencesRepository.listOfProdutoOrdenation } returns flowOf(ListOrder.A_Z.id)
+        coEvery {
+            useCase.getListaProduto(
+                0,
+                ListOrder.A_Z
+            )
+        } returns flowOf(listaProdutoDataTest.sortedBy { it.nomeProduto })
 
         //When - Quando
         viewModel.onEvent(OnEvent.GetListaCompra(0))
         val currentList = viewModel.uiState.value.listaProduto
+        val firstItem = currentList.first()
+        val lastItem = currentList.last()
 
         //Then - Entao
         assertTrue(currentList.isNotEmpty())
+        assertTrue(firstItem.nomeProduto == "Arroz")
+        assertTrue(lastItem.nomeProduto == "Feijao")
+    }
+
+    @Test
+    fun `should return a list of Produto ordered by Z to A when find a listaCompra`() {
+        //Given - Dado
+        coEvery { useCase.getListaCompra(0) } returns listaCompraWithProductTestData[0].detalhes
+        coEvery { userPreferencesRepository.listOfProdutoOrdenation } returns flowOf(ListOrder.Z_A.id)
+        coEvery {
+            useCase.getListaProduto(
+                0,
+                ListOrder.Z_A
+            )
+        } returns flowOf(listaProdutoDataTest.sortedByDescending { it.nomeProduto })
+
+        //When - Quando
+        viewModel.onEvent(OnEvent.GetListaCompra(0))
+        val currentList = viewModel.uiState.value.listaProduto
+        val firstItem = currentList.first()
+        val lastItem = currentList.last()
+
+        //Then - Entao
+        assertTrue(currentList.isNotEmpty())
+        assertTrue(firstItem.nomeProduto == "Feijao")
+        assertTrue(lastItem.nomeProduto == "Arroz")
+    }
+
+    @Test
+    fun `should return a list of Produto ordered by ADICIONADO PRIMEIRO when find a listaCompra`() {
+        //Given - Dado
+        coEvery { useCase.getListaCompra(0) } returns listaCompraWithProductTestData[0].detalhes
+        coEvery { userPreferencesRepository.listOfProdutoOrdenation } returns flowOf(ListOrder.ADICIONADO_PRIMEIRO.id)
+        coEvery { useCase.getListaProduto(0, ListOrder.ADICIONADO_PRIMEIRO) } returns flowOf(
+            listaProdutoDataTest.sortedByDescending { it.id })
+
+        //When - Quando
+        viewModel.onEvent(OnEvent.GetListaCompra(0))
+        val currentList = viewModel.uiState.value.listaProduto
+        val firstItem = currentList.first()
+        val lastItem = currentList.last()
+
+        //Then - Entao
+        assertTrue(currentList.isNotEmpty())
+        assertTrue(firstItem.nomeProduto == "Banana")
+        assertTrue(lastItem.nomeProduto == "Arroz")
+    }
+
+    @Test
+    fun `should return a list of Produto ordered by ADICIONADO ULTIMO when find a listaCompra`() {
+        //Given - Dado
+        coEvery { useCase.getListaCompra(0) } returns listaCompraWithProductTestData[0].detalhes
+        coEvery { userPreferencesRepository.listOfProdutoOrdenation } returns flowOf(ListOrder.ADICIONADO_ULTIMO.id)
+        coEvery { useCase.getListaProduto(0, ListOrder.ADICIONADO_ULTIMO) } returns flowOf(
+            listaProdutoDataTest.sortedBy { it.id })
+
+        //When - Quando
+        viewModel.onEvent(OnEvent.GetListaCompra(0))
+        val currentList = viewModel.uiState.value.listaProduto
+        val firstItem = currentList.first()
+        val lastItem = currentList.last()
+
+        //Then - Entao
+        assertTrue(currentList.isNotEmpty())
+        assertTrue(firstItem.nomeProduto == "Arroz")
+        assertTrue(lastItem.nomeProduto == "Banana")
     }
 
     @Test
     fun `should return UiEvent_Error when some error occur getting list of Produto`() {
         //Given - Dado
         coEvery { useCase.getListaCompra(0) } returns listaCompraWithProductTestData[0].detalhes
-        coEvery { useCase.getListaProduto(0) } returns flow { throw Exception() }
+        coEvery { userPreferencesRepository.listOfProdutoOrdenation } returns flowOf(ListOrder.ADICIONADO_PRIMEIRO.id)
+        coEvery {
+            useCase.getListaProduto(
+                0,
+                ListOrder.ADICIONADO_PRIMEIRO
+            )
+        } returns flow { throw Exception() }
 
         //When - Quando
         viewModel.onEvent(OnEvent.GetListaCompra(0))
@@ -191,7 +275,12 @@ class ProdutoViewModelTest: BaseTest() {
     @Test
     fun `should return ErrorProductData when user try add a Product with incorrect data`() {
         //Given - Dado
-        coEvery { useCase.insertProduto(produto, emptyList()) } throws ErrorProductData(uiMessageId = R.string.label_informe_nome_produto)
+        coEvery {
+            useCase.insertProduto(
+                produto,
+                emptyList()
+            )
+        } throws ErrorProductData(uiMessageId = R.string.label_informe_nome_produto)
 
         //When - Quando
         viewModel.onEvent(OnEvent.InsertProduto(produto))
@@ -289,7 +378,10 @@ class ProdutoViewModelTest: BaseTest() {
         var produto = listaProdutoDataTest[0]
 
         coEvery { useCase.getListaCompra(0) } returns listaCompraWithProductTestData[0].detalhes
-        coEvery { useCase.getListaProduto(0) } returns flowOf(listaProdutoDataTest)
+        coEvery { userPreferencesRepository.listOfProdutoOrdenation } returns flowOf(ListOrder.ADICIONADO_PRIMEIRO.id)
+        coEvery { useCase.getListaProduto(0, ListOrder.ADICIONADO_PRIMEIRO) } returns flowOf(
+            listaProdutoDataTest
+        )
         coEvery { useCase.updateProduto(produto.copy(quantidade = "2")) } coAnswers {
             produto = listaProdutoDataTest[0].copy(quantidade = "2")
             0
@@ -307,10 +399,22 @@ class ProdutoViewModelTest: BaseTest() {
     fun `should return UiEvent_Default when user cancel bottomsheetdialog about existing product`() {
         //Given - Dado
         coEvery { useCase.getListaCompra(0) } returns listaCompraWithProductTestData[0].detalhes
-        coEvery { useCase.getListaProduto(0) } returns flowOf(listaProdutoDataTest)
+        coEvery { useCase.getListaProduto(0, ListOrder.ADICIONADO_PRIMEIRO) } returns flowOf(
+            listaProdutoDataTest
+        )
 
         //When - Quando
         viewModel.onEvent(OnEvent.UpdateQuantidadeProdutoExistente(null))
+        val currentUiEvent = viewModel.collectUiEvent()
+
+        //Then - Entao
+        assertTrue(currentUiEvent is UiEvent.Default)
+    }
+
+    @Test
+    fun `should return UiEvent_Default when change ordered list`() {
+        //When - Quando
+        viewModel.onEvent(OnEvent.ChangeOrdenacaoLista(ListOrder.A_Z.id))
         val currentUiEvent = viewModel.collectUiEvent()
 
         //Then - Entao

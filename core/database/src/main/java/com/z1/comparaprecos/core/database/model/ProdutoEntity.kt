@@ -27,4 +27,11 @@ data class ProdutoEntity(
     val precoUnitario: Double,
     @ColumnInfo(name = "is_medida_peso")
     val isMedidaPeso: Boolean
-)
+) {
+    companion object {
+        const val TABLE = "tb_produtos"
+        const val COLUMN_ID_LISTA_COMPRA = "id_lista_compra"
+        val COLUMN_NOME_PRODUTO = "nome_produto"
+        const val COLUMN_ID = "id"
+    }
+}

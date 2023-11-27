@@ -10,5 +10,5 @@ sealed class UiEvent {
     data object NavigateUp: UiEvent()
     data class ShowSnackbar(val message: UiText, val tipoMensagem: ETipoSnackbar): UiEvent()
     data object ShowAlertDialog: UiEvent()
-    data object Finished: UiEvent()
+    data object ShowDialogOrdenarLista: UiEvent()
 }

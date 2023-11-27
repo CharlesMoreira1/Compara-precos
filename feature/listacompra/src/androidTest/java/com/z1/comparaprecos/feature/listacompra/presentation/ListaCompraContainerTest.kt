@@ -17,6 +17,7 @@ import com.z1.comparaprecos.feature.listacompra.domain.ListaCompraUseCase
 import com.z1.comparaprecos.feature.listacompra.presentation.viewmodel.ListaCompraViewModel
 import com.z1.comparaprecos.feature.listacompra.presentation.viewmodel.OnEvent
 import com.z1.comparaprecos.testing.data.listaCompraWithProductTestData
+import com.z1.core.datastore.repository.UserPreferencesRepository
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.delay
@@ -38,9 +39,10 @@ class ListaCompraContainerTest {
     private val usecase: ListaCompraUseCase = mockk(relaxed = true)
     private lateinit var viewModel: ListaCompraViewModel
     private val goToListaProduto: (Long, Boolean) -> Unit = mockk(relaxed = true)
+    private val userPreferencesRepository: UserPreferencesRepository = mockk(relaxed = true)
 
     private fun init() {
-        viewModel = ListaCompraViewModel(usecase)
+        viewModel = ListaCompraViewModel(usecase, userPreferencesRepository)
         composeTestRule.setContent {
             ComparaPrecosTheme {
                 ListaCompraContainer(

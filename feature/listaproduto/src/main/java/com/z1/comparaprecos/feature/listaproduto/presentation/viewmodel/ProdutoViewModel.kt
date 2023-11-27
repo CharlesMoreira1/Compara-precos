@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.z1.comparaprecos.common.ui.components.ETipoSnackbar
 import com.z1.comparaprecos.common.util.UiText
+import com.z1.comparaprecos.common.util.findListOrderById
 import com.z1.comparaprecos.core.common.R
 import com.z1.comparaprecos.core.model.ListaCompra
 import com.z1.comparaprecos.core.model.ListaCompraWithProdutos
@@ -14,6 +15,7 @@ import com.z1.comparaprecos.core.model.exceptions.ErrorProductExists
 import com.z1.comparaprecos.feature.listaproduto.domain.ProdutoUseCase
 import com.z1.comparaprecos.feature.listaproduto.presentation.state.UiEvent
 import com.z1.comparaprecos.feature.listaproduto.presentation.state.UiState
+import com.z1.core.datastore.repository.UserPreferencesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -29,7 +31,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ProdutoViewModel @Inject constructor(
-    private val produtoUseCase: ProdutoUseCase
+    private val produtoUseCase: ProdutoUseCase,
+    private val userPreferencesRepository: UserPreferencesRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(UiState())
@@ -52,6 +55,7 @@ class ProdutoViewModel @Inject constructor(
             is OnEvent.DeleteProduto -> deleteProduto(event.produto)
             is OnEvent.ProdutoSelecionado -> updateProdutoSelecionado(event.produto)
             is OnEvent.UpdateQuantidadeProdutoExistente -> updateProdutoExistente(event.produto)
+            is OnEvent.ChangeOrdenacaoLista -> changeOrdenacaoLista(event.idOrdenacao)
             is OnEvent.UpdateUiEvent -> updateUiEvent(event.uiEvent)
         }
     }
@@ -112,7 +116,6 @@ class ProdutoViewModel @Inject constructor(
 
             listaCompra?.let {
                 setListaCompra(it)
-                getListaProduto(it.id)
             } ?: _uiEvent.send(
                 UiEvent.Error(
                     UiText.StringResource(R.string.label_lista_compra_nao_encontrada)
@@ -120,9 +123,9 @@ class ProdutoViewModel @Inject constructor(
             )
         }
 
-    private fun getListaProduto(idListaCompra: Long) =
+    private fun getListaProduto(idListaCompra: Long, ordenacaoId: Long) =
         viewModelScope.launch {
-            produtoUseCase.getListaProduto(idListaCompra)
+            produtoUseCase.getListaProduto(idListaCompra, findListOrderById(ordenacaoId))
                 .catch {
                     _uiEvent.send(UiEvent.Error(UiText.DynamicString(it.message ?: "")))
                 }
@@ -240,6 +243,7 @@ class ProdutoViewModel @Inject constructor(
                 listaCompra = listaCompra
             )
         }
+        getListOfProdutoOrdenation(listaCompra.id)
     }
 
     private fun setListaProduto(listaProduto: List<Produto>) {
@@ -279,6 +283,25 @@ class ProdutoViewModel @Inject constructor(
             currentState.copy(listaCompraComparada = listaCompra)
         }
     }
+
+    private fun getListOfProdutoOrdenation(idListaCompra: Long) =
+        viewModelScope.launch {
+            userPreferencesRepository.listOfProdutoOrdenation.collect { ordenationId ->
+                _uiState.update { currentState ->
+                    currentState.copy(ordenacaoSelecionada = findListOrderById(ordenationId))
+                }
+                getListaProduto(idListaCompra, ordenationId)
+            }
+        }
+
+    private fun changeOrdenacaoLista(ordenacaoId: Long) =
+        viewModelScope.launch {
+            userPreferencesRepository.putListOfProdutoOrdenation(ordenacaoId)
+            _uiState.update { currentState ->
+                currentState.copy(ordenacaoSelecionada = findListOrderById(ordenacaoId))
+            }
+            updateUiEvent(UiEvent.Default)
+        }
     //UISTATE
 
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)

@@ -123,7 +123,7 @@ fun ListaProduto(
                                 stiffness = Spring.StiffnessLow
                             )
                         ),
-                    produto = produto,
+                    produto = produto.copy(nomeProduto = "${index + 1}º ${produto.nomeProduto}"),
                     listaProdutoComparada = listaProdutoComparada,
                     shape = shape,
                     onProdutoClick = { onProdutoClick(produto) }
