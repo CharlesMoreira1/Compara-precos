@@ -123,7 +123,8 @@ fun ListaProduto(
                                 stiffness = Spring.StiffnessLow
                             )
                         ),
-                    produto = produto.copy(nomeProduto = "${index + 1}º ${produto.nomeProduto}"),
+                    produto = produto,
+                    index = index,
                     listaProdutoComparada = listaProdutoComparada,
                     shape = shape,
                     onProdutoClick = { onProdutoClick(produto) }
@@ -166,23 +167,7 @@ fun ListaProdutoVazia(
 fun CardItem(
     modifier: Modifier = Modifier,
     produto: Produto,
-    listaProdutoComparada: List<Produto>,
-    shape: RoundedCornerShape,
-    onProdutoClick: () -> Unit
-) {
-    CardConteudoProduto(
-        modifier = modifier,
-        produto = produto,
-        listaProdutoComparada = listaProdutoComparada,
-        shape = shape,
-        onProdutoClick = onProdutoClick
-    )
-}
-
-@Composable
-fun CardConteudoProduto(
-    modifier: Modifier = Modifier,
-    produto: Produto,
+    index: Int,
     listaProdutoComparada: List<Produto>,
     shape: RoundedCornerShape,
     onProdutoClick: () -> Unit
@@ -210,7 +195,7 @@ fun CardConteudoProduto(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = produto.nomeProduto,
+                    text =  "${index + 1}º ${produto.nomeProduto}",
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
                     style = MaterialTheme.typography.bodySmall

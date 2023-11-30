@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 interface ProdutoRepository {
     suspend fun getListaCompra(idListaCompra: Long): ListaCompra
     suspend fun getAllListaCompra(): List<ListaCompra>
-    suspend fun getListaCompraComparada(idListaCompra: Long): ListaCompraWithProdutos
+    suspend fun getListaCompraComparada(idListaCompra: Long, orderBy: String): ListaCompraWithProdutos
     fun getListaProduto(idListaCompra: Long, orderBy: String): Flow<List<Produto>>
     suspend fun insertProduto(novoProduto: Produto): Long
     suspend fun updateProduto(produto: Produto): Int

@@ -4,6 +4,7 @@ import com.z1.comparaprecos.common.util.ListOrder
 import com.z1.comparaprecos.core.common.R
 import com.z1.comparaprecos.core.database.model.ProdutoEntity
 import com.z1.comparaprecos.core.database.repository.produto.ProdutoRepository
+import com.z1.comparaprecos.core.model.ListaCompraWithProdutos
 import com.z1.comparaprecos.core.model.Produto
 import com.z1.comparaprecos.core.model.exceptions.ErrorDelete
 import com.z1.comparaprecos.core.model.exceptions.ErrorEmptyList
@@ -42,18 +43,13 @@ class ProdutoUseCaseImpl(
         }
     }
 
-    override suspend fun getListaCompraComparada(idListaCompra: Long) =
-        produtoRepository.getListaCompraComparada(idListaCompra)
+    override suspend fun getListaCompraComparada(idListaCompra: Long, listOrder: ListOrder) =
+        produtoRepository.getListaCompraComparada(idListaCompra, getOrderByListOfProduto(listOrder))
 
-    override suspend fun getListaProduto(idListaCompra: Long, listOrder: ListOrder): Flow<List<Produto>> {
-        val orderBy = when (listOrder) {
-            ListOrder.A_Z -> "${ProdutoEntity.COLUMN_NOME_PRODUTO} ASC"
-            ListOrder.Z_A -> "${ProdutoEntity.COLUMN_NOME_PRODUTO} DESC"
-            ListOrder.ADICIONADO_PRIMEIRO -> "${ProdutoEntity.COLUMN_ID} DESC"
-            ListOrder.ADICIONADO_ULTIMO -> "${ProdutoEntity.COLUMN_ID} ASC"
-        }
-        return produtoRepository.getListaProduto(idListaCompra, orderBy)
-    }
+
+    override suspend fun getListaProduto(idListaCompra: Long, listOrder: ListOrder) =
+        produtoRepository.getListaProduto(idListaCompra, getOrderByListOfProduto(listOrder))
+
 
 
     override suspend fun updateProduto(produto: Produto): Int {
@@ -75,4 +71,12 @@ class ProdutoUseCaseImpl(
             else -> true to null
         }
     }
+
+    private fun getOrderByListOfProduto(listOrder: ListOrder) =
+        when (listOrder) {
+            ListOrder.A_Z -> "${ProdutoEntity.COLUMN_NOME_PRODUTO} ASC"
+            ListOrder.Z_A -> "${ProdutoEntity.COLUMN_NOME_PRODUTO} DESC"
+            ListOrder.ADICIONADO_PRIMEIRO -> "${ProdutoEntity.COLUMN_ID} DESC"
+            ListOrder.ADICIONADO_ULTIMO -> "${ProdutoEntity.COLUMN_ID} ASC"
+        }
 }

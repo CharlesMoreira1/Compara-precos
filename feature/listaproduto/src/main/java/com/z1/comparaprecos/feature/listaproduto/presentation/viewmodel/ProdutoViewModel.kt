@@ -158,7 +158,7 @@ class ProdutoViewModel @Inject constructor(
     private fun getListaCompraToComparar(idListaCompraComparada: Long) =
         viewModelScope.launch {
             val listaCompra = try {
-                produtoUseCase.getListaCompraComparada(idListaCompraComparada)
+                produtoUseCase.getListaCompraComparada(idListaCompraComparada, _uiState.value.ordenacaoSelecionada)
             } catch (e: Exception) {
                 e.printStackTrace()
                 null
@@ -291,6 +291,9 @@ class ProdutoViewModel @Inject constructor(
                     currentState.copy(ordenacaoSelecionada = findListOrderById(ordenationId))
                 }
                 getListaProduto(idListaCompra, ordenationId)
+                if (_uiState.value.listaCompraComparada.detalhes.id != -1L) {
+                    getListaCompraToComparar(_uiState.value.listaCompraComparada.detalhes.id)
+                }
             }
         }
 
