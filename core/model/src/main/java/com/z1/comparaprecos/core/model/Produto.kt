@@ -10,6 +10,7 @@ data class Produto(
     val quantidade: String,
     val precoUnitario: BigDecimal,
     val isMedidaPeso: Boolean,
+    val isAlterado: Boolean
 ) {
     fun valorProduto(): BigDecimal =
         precoUnitario.multiply(BigDecimal(quantidade))

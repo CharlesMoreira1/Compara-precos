@@ -36,7 +36,7 @@ class ListaCompraRepositoryImpl @Inject constructor(
                 val idListaCompra =
                     listaCompraDao.insertListaCompra(listaCompraMapper.mapModelToEntity(listaCompra))
                 val novaListaProduto =
-                    listaProduto.map { it.copy(id = 0, idListaCompra = idListaCompra) }
+                    listaProduto.map { it.copy(id = 0, idListaCompra = idListaCompra, isAlterado = false) }
                 produtoDao.insertListaProduto(
                     produtoMapper.mapModelListToEntityList(
                         novaListaProduto

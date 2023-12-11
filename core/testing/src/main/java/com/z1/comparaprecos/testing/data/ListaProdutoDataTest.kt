@@ -10,7 +10,8 @@ val listaProdutoDataTest = listOf(
         nomeProduto = "Arroz",
         quantidade = "1",
         precoUnitario = BigDecimal("23.69"),
-        isMedidaPeso = false
+        isMedidaPeso = false,
+        isAlterado = true
     ),
     Produto(
         id = 1,
@@ -18,7 +19,8 @@ val listaProdutoDataTest = listOf(
         nomeProduto = "Feijao",
         quantidade = "5",
         precoUnitario = BigDecimal("8.49"),
-        isMedidaPeso = false
+        isMedidaPeso = false,
+        isAlterado = true
     ),
     Produto(
         id = 2,
@@ -26,7 +28,8 @@ val listaProdutoDataTest = listOf(
         nomeProduto = "Banana",
         quantidade = "0.700",
         precoUnitario = BigDecimal("2.09"),
-        isMedidaPeso = true
+        isMedidaPeso = true,
+        isAlterado = true
     ),
 )
 
@@ -37,7 +40,8 @@ val listaProdutoDataTest2 = listOf(
         nomeProduto = "Arroz",
         quantidade = "2",
         precoUnitario = BigDecimal("22.69"),
-        isMedidaPeso = false
+        isMedidaPeso = false,
+        isAlterado = true
     ),
     Produto(
         id = 1,
@@ -45,7 +49,8 @@ val listaProdutoDataTest2 = listOf(
         nomeProduto = "Feijao",
         quantidade = "2",
         precoUnitario = BigDecimal("6.49"),
-        isMedidaPeso = false
+        isMedidaPeso = false,
+        isAlterado = true
     ),
     Produto(
         id = 2,
@@ -53,7 +58,8 @@ val listaProdutoDataTest2 = listOf(
         nomeProduto = "Açucar",
         quantidade = "3",
         precoUnitario = BigDecimal("3.49"),
-        isMedidaPeso = false
+        isMedidaPeso = false,
+        isAlterado = true
     ),
     Produto(
         id = 3,
@@ -61,6 +67,7 @@ val listaProdutoDataTest2 = listOf(
         nomeProduto = "Banana",
         quantidade = "0.200",
         precoUnitario = BigDecimal("3.09"),
-        isMedidaPeso = true
+        isMedidaPeso = true,
+        isAlterado = true
     ),
 )

@@ -13,7 +13,8 @@ class ProdutoMapper : BaseMapper<Produto, ProdutoEntity>() {
                 nomeProduto = nomeProduto,
                 quantidade = quantidade,
                 precoUnitario = BigDecimal.valueOf(precoUnitario),
-                isMedidaPeso = isMedidaPeso
+                isMedidaPeso = isMedidaPeso,
+                isAlterado = isAlterado
             )
         }
 
@@ -25,7 +26,8 @@ class ProdutoMapper : BaseMapper<Produto, ProdutoEntity>() {
                 nomeProduto = nomeProduto,
                 quantidade = quantidade,
                 precoUnitario = precoUnitario.toDouble(),
-                isMedidaPeso = isMedidaPeso
+                isMedidaPeso = isMedidaPeso,
+                isAlterado = isAlterado
             )
         }
 }
