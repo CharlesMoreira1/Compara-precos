@@ -42,7 +42,7 @@ val Isabelline = Color(0xFFF6EAEE)
 val EggShell = Color(0xFFE8E6D1)
 val Black = Color(0xFF000000)
 val LanguidLavender = Color(0xFFE6D1E8)
-val CoolMint = Color(0xFFD1E8E6)
+val CoolMint = Color(0xFFb3d9d6)
 
 //Tema dark
 val MediumSlateBlue = Color(0xFF7474FE)

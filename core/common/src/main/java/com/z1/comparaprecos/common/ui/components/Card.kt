@@ -20,7 +20,7 @@ import com.z1.comparaprecos.core.common.R
 fun CustomCard(
     modifier: Modifier = Modifier,
     shape: Shape = RoundedCornerShape(dimensionResource(id = R.dimen.big)),
-    containerColor: Color = MaterialTheme.colorScheme.surfaceColorAtElevation(1.dp),
+    containerColor: Color = MaterialTheme.colorScheme.surface,
     onCardClick: () -> Unit,
     content: @Composable () -> Unit
 ) {

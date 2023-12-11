@@ -215,7 +215,7 @@ fun ListaComparadaCom(
         Text(
             modifier = Modifier
                 .width(150.dp)
-                .background(MaterialTheme.colorScheme.surfaceColorAtElevation(1.dp)),
+                .background(MaterialTheme.colorScheme.surface),
             text = stringResource(id = R.string.label_lista_comparada_com),
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.70f),

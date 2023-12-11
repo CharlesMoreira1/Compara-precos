@@ -26,7 +26,9 @@ data class ProdutoEntity(
     @ColumnInfo(name = "preco_unitario")
     val precoUnitario: Double,
     @ColumnInfo(name = "is_medida_peso")
-    val isMedidaPeso: Boolean
+    val isMedidaPeso: Boolean,
+    @ColumnInfo(name = "is_alterado")
+    val isAlterado: Boolean
 ) {
     companion object {
         const val TABLE = "tb_produtos"

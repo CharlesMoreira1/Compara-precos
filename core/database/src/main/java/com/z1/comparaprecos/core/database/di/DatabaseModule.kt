@@ -3,6 +3,7 @@ package com.z1.comparaprecos.core.database.di
 import android.content.Context
 import androidx.room.Room
 import com.z1.comparaprecos.core.database.AppDatabase
+import com.z1.comparaprecos.core.database.migrations.DatabaseMigration.MIGRATION_1_TO_2
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -29,8 +30,8 @@ object DatabaseModule {
             appContext,
             AppDatabase::class.java,
             "db.compara_precos"
-        ).addMigrations(
-
+        ).addMigrations( //DatabaseMigration file
+            MIGRATION_1_TO_2
         ).build()
     }
 }

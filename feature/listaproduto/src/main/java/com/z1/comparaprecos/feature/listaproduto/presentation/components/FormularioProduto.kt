@@ -361,7 +361,8 @@ fun FormularioProduto(
                                 quantidade =
                                 if (valueIsPeso) BigDecimal(valueQuantidade).movePointLeft(3).toString()
                                 else BigDecimal(valueQuantidade).toString(),
-                                isMedidaPeso = valueIsPeso
+                                isMedidaPeso = valueIsPeso,
+                                isAlterado = true
                             )
                         )
                         resetFormulario()
@@ -377,7 +378,7 @@ fun FormularioProduto(
 fun CustomProdutoSelecionadoPreview() {
     ComparaPrecosTheme {
         FormularioProduto(
-            produtoSelecionado = Produto(-1, -1, "", "", BigDecimal.ZERO, false),
+            produtoSelecionado = Produto(-1, -1, "", "", BigDecimal.ZERO, false, true),
             idListaCompra = -1,
             onAdicionarProdutoClick = { produto -> },
             onCancelarEdicaoProduto = {},

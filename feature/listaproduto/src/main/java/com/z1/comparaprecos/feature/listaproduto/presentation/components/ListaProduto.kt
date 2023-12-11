@@ -3,6 +3,7 @@
 package com.z1.comparaprecos.feature.listaproduto.presentation.components
 
 import androidx.annotation.StringRes
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -28,6 +29,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
@@ -172,9 +174,15 @@ fun CardItem(
     shape: RoundedCornerShape,
     onProdutoClick: () -> Unit
 ) {
+    val containerColor by animateColorAsState(
+        if (produto.isAlterado || listaProdutoComparada.isEmpty()) MaterialTheme.colorScheme.surface
+        else MaterialTheme.colorScheme.tertiary.copy(alpha = 0.4f),
+        label = "backgroundcolor formulario"
+    )
     CustomCard(
         modifier = modifier,
         shape = shape,
+        containerColor = containerColor,
         onCardClick = onProdutoClick
     ) {
         Row(
