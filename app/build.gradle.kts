@@ -1,3 +1,6 @@
+import java.io.FileInputStream
+import java.util.Properties
+
 plugins {
     id("comparaprecos.android.application")
     id("comparaprecos.android.application.compose")
@@ -19,22 +22,39 @@ android {
             useSupportLibrary = true
         }
 
-        buildTypes {
-            debug{
-                enableUnitTestCoverage =  true
-                enableAndroidTestCoverage = true
-            }
-            release {
-                enableUnitTestCoverage =  true
-                enableAndroidTestCoverage = true
-            }
+        buildConfigField("String", "DEVICE_TEST_AD_ID", getProperties("DEVICE_TEST_AD_ID"))
+    }
+
+    buildTypes {
+        debug{
+            buildConfigField("String", "ADMOB_OPEN_APP_ID", getProperties("ADMOB_OPEN_APP_TEST_ID"))
+            enableUnitTestCoverage = true
+            enableAndroidTestCoverage = true
+        }
+        release {
+            buildConfigField("String", "ADMOB_OPEN_APP_ID", getProperties("ADMOB_OPEN_APP_ID"))
+            enableUnitTestCoverage = true
+            enableAndroidTestCoverage = true
+            signingConfig = signingConfigs.getByName("debug")
         }
     }
+
+    buildFeatures {
+        buildConfig = true
+    }
+
+//    configurations {
+//        debugImplementation.configure {
+//            exclude(group = "junit", module = "junit")
+//        }
+//    }
 }
 
 dependencies {
     implementation(libs.bundles.androidx)
     implementation(libs.bundles.compose)
+    implementation(libs.play.services.ads)
+//    implementation(libs.leak.canary)
 
     implementation(project(":core:common"))
     implementation(project(":core:datastore"))
@@ -43,4 +63,14 @@ dependencies {
     implementation(project(":core:testing"))
     implementation(project(":feature:listacompra"))
     implementation(project(":feature:listaproduto"))
+}
+
+fun getProperties(propertiesName: String): String {
+    val propsFile = rootProject.file("local.properties")
+    if (propsFile.exists()) {
+        val properties = Properties()
+        properties.load(FileInputStream(propsFile))
+        return properties.getProperty(propertiesName)
+    }
+    return ""
 }

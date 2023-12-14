@@ -18,7 +18,7 @@ import androidx.room.PrimaryKey
 data class ProdutoEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long,
-    @ColumnInfo(name = "id_lista_compra")
+    @ColumnInfo(name = "id_lista_compra", index = true)
     val idListaCompra: Long,
     @ColumnInfo(name = "nome_produto")
     val nomeProduto: String,

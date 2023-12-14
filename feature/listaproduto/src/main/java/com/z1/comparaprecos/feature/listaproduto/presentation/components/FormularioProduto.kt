@@ -380,9 +380,9 @@ fun CustomProdutoSelecionadoPreview() {
         FormularioProduto(
             produtoSelecionado = Produto(-1, -1, "", "", BigDecimal.ZERO, false, true),
             idListaCompra = -1,
-            onAdicionarProdutoClick = { produto -> },
+            onAdicionarProdutoClick = { _ -> },
             onCancelarEdicaoProduto = {},
-            onDeletarProdutoClick = {produto ->  }
+            onDeletarProdutoClick = {_ ->  }
         )
     }
 }
@@ -394,9 +394,9 @@ fun CustomProdutoInsertPreview() {
         FormularioProduto(
             produtoSelecionado = null,
             idListaCompra = -1,
-            onAdicionarProdutoClick = { produto -> },
+            onAdicionarProdutoClick = { _ -> },
             onCancelarEdicaoProduto = {},
-            onDeletarProdutoClick = {produto ->  }
+            onDeletarProdutoClick = {_ ->  }
         )
     }
 }

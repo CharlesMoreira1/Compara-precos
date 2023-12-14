@@ -18,10 +18,16 @@ object DatabaseMigration {
     const val FALSE = 0
 
     val MIGRATION_1_TO_2 = object : Migration(1, 2) {
-        override fun migrate(database: SupportSQLiteDatabase) {
-            database.execSQL(
+        override fun migrate(db: SupportSQLiteDatabase) {
+            db.execSQL(
                 "ALTER TABLE tb_produtos ADD COLUMN is_alterado INTEGER DEFAULT $TRUE NOT NULL"
             )
+        }
+    }
+
+    val MIGRATION_2_TO_3 = object : Migration(2, 3) {
+        override fun migrate(db: SupportSQLiteDatabase) {
+            db.execSQL("CREATE INDEX IF NOT EXISTS index_id_lista_compra ON tb_produtos (id_lista_compra)")
         }
     }
 

@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 2,
-    "identityHash": "c717994c61753afa35427c619fe6a764",
+    "identityHash": "b0fe677e2ab58cbe2739b58d26f8ce0e",
     "entities": [
       {
         "tableName": "tb_lista_compra",
@@ -89,7 +89,17 @@
             "id"
           ]
         },
-        "indices": [],
+        "indices": [
+          {
+            "name": "index_tb_produtos_id_lista_compra",
+            "unique": false,
+            "columnNames": [
+              "id_lista_compra"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_tb_produtos_id_lista_compra` ON `${TABLE_NAME}` (`id_lista_compra`)"
+          }
+        ],
         "foreignKeys": [
           {
             "table": "tb_lista_compra",
@@ -108,7 +118,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'c717994c61753afa35427c619fe6a764')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'b0fe677e2ab58cbe2739b58d26f8ce0e')"
     ]
   }
 }

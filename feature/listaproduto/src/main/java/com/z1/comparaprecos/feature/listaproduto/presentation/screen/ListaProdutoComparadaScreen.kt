@@ -98,8 +98,8 @@ fun ListaProdutoComparadaScreen(
     onEvent: (OnEvent) -> Unit
 ) {
     val scope = rememberCoroutineScope()
-    val appBarState = rememberTopAppBarState()
-    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(appBarState)
+//    val appBarState = rememberTopAppBarState()
+//    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(appBarState)
     val elevateTopAppBar by remember { mutableStateOf(false) }
 
     val tabItems by remember {
@@ -221,7 +221,8 @@ fun ListaProdutoComparadaScreen(
                                 this@Column.AnimatedVisibility(
                                     visible = uiState.listaCompraComparada.produtos.isNotEmpty(),
                                     enter = scaleIn(animationSpec = tween(300, easing = LinearEasing)) + fadeIn(),
-                                    exit = scaleOut(animationSpec = tween(300, easing = LinearEasing)) + fadeOut()
+                                    exit = scaleOut(animationSpec = tween(300, easing = LinearEasing)) + fadeOut(),
+                                    label = "lista_produto"
                                 ) {
                                     ListaProduto(
                                         listaProduto = uiState.listaCompraComparada.produtos,
@@ -234,7 +235,8 @@ fun ListaProdutoComparadaScreen(
                                 this@Column.AnimatedVisibility(
                                     visible = uiState.listaCompraComparada.produtos.isEmpty(),
                                     enter = slideInVertically(animationSpec = tween(500, easing = LinearEasing)) { it },
-                                    exit = slideOutVertically(animationSpec = tween(500, easing = LinearEasing)) { it }
+                                    exit = slideOutVertically(animationSpec = tween(500, easing = LinearEasing)) { it },
+                                    label = "loading_screen"
                                 ) {
                                     CustomLoadingScreen(
                                         titulo =
