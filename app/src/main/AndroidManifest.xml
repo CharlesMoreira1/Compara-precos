@@ -13,6 +13,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ComparaPrecos"
         tools:targetApi="33">
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-8710078732554281~6592315155"/>
         <activity
             android:name=".MainActivity"
             android:exported="true"

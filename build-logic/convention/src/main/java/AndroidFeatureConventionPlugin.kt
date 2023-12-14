@@ -25,9 +25,12 @@ class AndroidFeatureConventionPlugin : Plugin<Project> {
                 add("implementation", bundles.findBundle("androidx").get())
                 add("implementation", bundles.findBundle("compose").get())
                 add("implementation", libs.findLibrary("gson").get())
+//                add("implementation", libs.findLibrary("play-services-ads").get())
 
                 add("testImplementation", project(":core:testing"))
                 add("androidTestImplementation", project(":core:testing"))
+
+                add("debugImplementation", project(":core:testing"))
             }
         }
     }

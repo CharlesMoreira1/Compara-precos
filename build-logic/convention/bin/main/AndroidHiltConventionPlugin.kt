@@ -14,9 +14,9 @@ class AndroidHiltConventionPlugin : Plugin<Project> {
             }
 
             dependencies {
-                "implementation"(libs.findLibrary("dagger-hilt").get())
-                "implementation"(libs.findLibrary("hilt-navigation").get())
-                "kapt"(libs.findLibrary("kapt-dagger-hilt-compiler").get())
+                add("implementation", libs.findLibrary("dagger-hilt").get())
+                add("implementation", libs.findLibrary("hilt-navigation").get())
+                add("kapt", libs.findLibrary("kapt-dagger-hilt-compiler").get())
             }
 
         }

@@ -9,7 +9,7 @@ import com.z1.comparaprecos.core.database.model.ProdutoEntity
 
 @Database(
     entities = [ListaCompraEntity::class, ProdutoEntity::class],
-    version = 2,
+    version = 3,
     autoMigrations = [] //DatabaseAutoMigration class
 )
 abstract class AppDatabase: RoomDatabase() {

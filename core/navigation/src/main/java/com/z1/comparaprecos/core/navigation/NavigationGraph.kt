@@ -23,7 +23,7 @@ fun NavigationGraph(
     modifier: Modifier = Modifier
 ) {
     val navController = rememberNavController()
-    val pilhaDeTela by navController.currentBackStackEntryAsState()
+//    val pilhaDeTela by navController.currentBackStackEntryAsState()
 //    val telaAtual = ComparaPrecosTelas.valueOf(
 //        pilhaDeTela?.destination?.route ?: ComparaPrecosTelas.ListaCompra.name
 //    )

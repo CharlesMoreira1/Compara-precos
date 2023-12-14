@@ -6,6 +6,14 @@ plugins {
 
 android {
     namespace = "com.z1.comparaprecos.core.database"
+
+    defaultConfig {
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments["room.schemaLocation"] = "$projectDir/schemas"
+            }
+        }
+    }
 }
 
 dependencies {

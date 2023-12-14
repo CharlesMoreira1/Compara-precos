@@ -22,8 +22,9 @@ import com.z1.comparaprecos.common.util.ThemeOptions
 import com.z1.comparaprecos.common.util.findThemeById
 import com.z1.comparaprecos.core.navigation.NavigationGraph
 import com.z1.comparaprecos.viewmodel.MainViewModel
-import com.z1.comparaprecos.viewmodel.MainViewModel.*
-import com.z1.comparaprecos.viewmodel.MainViewModel.MainActivityUiState.*
+import com.z1.comparaprecos.viewmodel.MainViewModel.MainActivityUiState
+import com.z1.comparaprecos.viewmodel.MainViewModel.MainActivityUiState.Loading
+import com.z1.comparaprecos.viewmodel.MainViewModel.MainActivityUiState.Success
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
