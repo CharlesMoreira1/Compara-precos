@@ -61,6 +61,8 @@ dependencies {
     implementation(project(":core:model"))
     implementation(project(":core:navigation"))
     implementation(project(":core:testing"))
+
+//    implementation(project(":feature:onboarding"))
     implementation(project(":feature:listacompra"))
     implementation(project(":feature:listaproduto"))
 }

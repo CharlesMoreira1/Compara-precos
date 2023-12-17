@@ -114,6 +114,18 @@
     <string name="label_adicionado_ultimo">Adicionado por último</string>
     <!--    Label organizacao lista-->
 
+<!--    Label onboarding -->
+    <string name="label_onboarding_0_title">Bem vindo ao Compara preços</string>
+    <string name="label_onboarding_1_title">Crie suas listas de compras</string>
+    <string name="label_onboarding_2_title">Adicione produtos e compare com outras listas.</string>
+    <string name="label_onboarding_3_title">Veja o resumo da comparação.</string>
+
+    <string name="label_onboarding_0_subtitle">Que bom ver você por aqui, vamos conhecer um pouco sobre o app?.</string>
+    <string name="label_onboarding_1_subtitle">Aqui você pode criar, renomear, duplicar e apagar quantas listas quiser…</string>
+    <string name="label_onboarding_2_subtitle">Você podem comparar as listas depois de adicionar alguns produtos nelas…</string>
+    <string name="label_onboarding_3_subtitle">Aqui você vê o resumo da sua comparação. Bem simples né? Bora começar?</string>
+<!--    Label onboarding -->
+
 <!--    Label content description-->
     <string name="description_adicionar_lista_to_comparar">Adicionar lista para comparar</string>
     <string name="description_compartilhar_resumo">Compartilhar resumo</string>

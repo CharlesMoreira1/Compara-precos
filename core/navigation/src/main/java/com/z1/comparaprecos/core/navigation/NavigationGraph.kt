@@ -11,8 +11,10 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.z1.comparaprecos.feature.listacompra.presentation.ListaCompraContainer
 import com.z1.comparaprecos.feature.listaproduto.presentation.ListaProdutoContainer
+import com.z1.feature.onboarding.presentation.OnboardingContainer
 
 enum class ComparaPrecosTelas(val titulo: String) {
+    OnboardingScreen("Apresentação"),
     ListaCompra("Lista de Compras"),
     NovaListaCompra("Nova Lista"),
     NovaListaCompraComparada("Lista de compra com comparação")
@@ -23,15 +25,22 @@ fun NavigationGraph(
     modifier: Modifier = Modifier
 ) {
     val navController = rememberNavController()
-//    val pilhaDeTela by navController.currentBackStackEntryAsState()
-//    val telaAtual = ComparaPrecosTelas.valueOf(
-//        pilhaDeTela?.destination?.route ?: ComparaPrecosTelas.ListaCompra.name
-//    )
+
     NavHost(
         modifier = modifier,
         navController = navController,
-        startDestination = ComparaPrecosTelas.ListaCompra.name
+        startDestination = ComparaPrecosTelas.OnboardingScreen.name
     ) {
+        composable(route = ComparaPrecosTelas.OnboardingScreen.name) {
+            OnboardingContainer(
+                goToListaCompras = {
+                    navController.navigate(ComparaPrecosTelas.ListaCompra.name) {
+                        popUpTo(0) { inclusive = false }
+                    }
+                }
+            )
+        }
+
         composable(route = ComparaPrecosTelas.ListaCompra.name) {
             ListaCompraContainer(
                 goToListaProduto = { idListaCompra, isComparar ->

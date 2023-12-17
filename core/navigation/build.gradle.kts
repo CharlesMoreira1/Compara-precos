@@ -8,6 +8,7 @@ android {
 }
 
 dependencies {
+    implementation(project(":feature:onboarding"))
     implementation(project(":feature:listacompra"))
     implementation(project(":feature:listaproduto"))
 }

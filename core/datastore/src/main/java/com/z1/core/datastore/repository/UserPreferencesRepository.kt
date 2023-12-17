@@ -11,4 +11,6 @@ interface UserPreferencesRepository {
     suspend fun putUseDynamicColor(useDynamicColor: Long)
     suspend fun putDarkThemeMode(darkThemeMode: Long)
     suspend fun putListOfProdutoOrdenation(ordenationId: Long)
+
+    suspend fun putShowedOnboarding(showedOnboarding: Boolean)
 }
