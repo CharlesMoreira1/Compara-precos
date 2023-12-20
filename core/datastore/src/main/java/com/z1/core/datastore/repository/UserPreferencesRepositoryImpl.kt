@@ -20,7 +20,7 @@ class UserPreferencesRepositoryImpl @Inject constructor(
                 themeId = preferences[longPreferencesKey(ThemeKeys.SELECTED_THEME)] ?: 0L,
                 useDynamicColor = preferences[longPreferencesKey(ThemeKeys.USE_DYNAMIC_COLOR)] ?: 0L,
                 darkThemeMode = preferences[longPreferencesKey(ThemeKeys.DARK_THEME_MODE)] ?: 0L,
-                showedOnboarding = preferences[booleanPreferencesKey(Keys.SHOWED_ONBOARDING)] ?: false
+                onboarded = preferences[booleanPreferencesKey(Keys.ONBOARDED)] ?: false
             )
         }
 
@@ -53,9 +53,9 @@ class UserPreferencesRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun putShowedOnboarding(showedOnboarding: Boolean) {
+    override suspend fun putOnboarded(onboarded: Boolean) {
         dataStore.edit { preference ->
-            preference[booleanPreferencesKey(Keys.SHOWED_ONBOARDING)] = showedOnboarding
+            preference[booleanPreferencesKey(Keys.ONBOARDED)] = onboarded
         }
     }
 }

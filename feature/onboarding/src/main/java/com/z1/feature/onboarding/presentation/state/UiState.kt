@@ -1,3 +1,3 @@
 package com.z1.feature.onboarding.presentation.state
 
-data class UiState(val finishedOnboarding: Boolean = false)
+data class UiState(val onboarded: Boolean = false)

@@ -103,8 +103,10 @@ fun OnboardingScreen(
         label = "background color indicator"
     )
 
-    LaunchedEffect(uiState.finishedOnboarding) {
-        if (uiState.finishedOnboarding) goToListaCompras()
+    LaunchedEffect(uiState.onboarded) {
+        if (uiState.onboarded) {
+            goToListaCompras()
+        }
     }
 
     LaunchedEffect(horizontalState.currentPage) {
@@ -113,7 +115,9 @@ fun OnboardingScreen(
         }
     }
 
-    Column {
+    Column(
+        modifier = modifier
+    ) {
 
         TitleHorizontalPager(
             modifier = Modifier
@@ -162,10 +166,9 @@ fun OnboardingScreen(
                 titulo = "Começar",
                 textStyle = MaterialTheme.typography.bodyLarge,
                 onClick = {
-                    onEvent(OnEvent.ShowedOnboarding(true))
+                    onEvent(OnEvent.Onboarded(true))
                 }
             )
-
         }
     }
 }

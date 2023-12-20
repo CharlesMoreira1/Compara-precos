@@ -104,6 +104,7 @@ import com.z1.comparaprecos.common.ui.components.CustomCard
 import com.z1.comparaprecos.common.ui.components.CustomDivider
 import com.z1.comparaprecos.common.ui.components.CustomFloatingActionButton
 import com.z1.comparaprecos.common.ui.components.CustomIconButton
+import com.z1.comparaprecos.common.ui.components.CustomProgressDialog
 import com.z1.comparaprecos.common.ui.components.CustomRadioButton
 import com.z1.comparaprecos.common.ui.components.CustomSnackBar
 import com.z1.comparaprecos.common.ui.components.ETipoSnackbar
@@ -203,6 +204,13 @@ fun ListaCompraScreen(
 
             else -> Unit
         }
+    }
+
+    AnimatedVisibility(visible = !uiState.isListaCompraCarregada) {
+        CustomProgressDialog(
+            onDismiss = {},
+            titulo = string.label_desc_carregando_listas
+        )
     }
 
     CustomBottomSheet(

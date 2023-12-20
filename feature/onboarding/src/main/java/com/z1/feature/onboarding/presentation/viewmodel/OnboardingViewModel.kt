@@ -25,16 +25,16 @@ class OnboardingViewModel @Inject constructor(
     )
 
     fun onEvent(onEvent: OnEvent) {
-        if (onEvent is OnEvent.ShowedOnboarding) {
-            updateShowedOnboarding()
+        if (onEvent is OnEvent.Onboarded) {
+            updateOnboarding(onEvent.onboarded)
         }
     }
 
-    private fun updateShowedOnboarding() =
+    private fun updateOnboarding(onboarded: Boolean) =
         viewModelScope.launch {
-            userPreferencesRepository.putShowedOnboarding(true)
+            userPreferencesRepository.putOnboarded(onboarded)
             _uiState.update {
-                it.copy(finishedOnboarding = true)
+                it.copy(onboarded = onboarded)
             }
         }
 }

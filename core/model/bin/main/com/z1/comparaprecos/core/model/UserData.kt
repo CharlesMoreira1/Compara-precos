@@ -4,5 +4,5 @@ data class UserData(
     val themeId: Long = 0L,
     val useDynamicColor: Long = 0L,
     val darkThemeMode: Long = 0L,
-    val showedOnboarding: Boolean = false
+    val onboarded: Boolean = false
 )
