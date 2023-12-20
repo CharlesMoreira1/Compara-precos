@@ -34,6 +34,7 @@
             <option value="$PROJECT_DIR$/feature" />
             <option value="$PROJECT_DIR$/feature/listacompra" />
             <option value="$PROJECT_DIR$/feature/listaproduto" />
+            <option value="$PROJECT_DIR$/feature/onboarding" />
           </set>
         </option>
         <option name="resolveExternalAnnotations" value="false" />

@@ -1,5 +1,8 @@
 @file:Suppress("UnstableApiUsage")
 
+include(":feature:onboarding")
+
+
 include(":core:datastore")
 
 pluginManagement {

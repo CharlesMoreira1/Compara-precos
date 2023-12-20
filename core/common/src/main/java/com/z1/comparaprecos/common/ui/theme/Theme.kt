@@ -23,6 +23,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 import com.z1.comparaprecos.common.util.ThemeOptions
+import com.z1.comparaprecos.common.util.supportsDynamicTheming
 import java.util.Collections.copy
 
 private val DarkColorScheme = darkColorScheme(
@@ -169,9 +170,6 @@ fun ComparaPrecosTheme(
         content = content
     )
 }
-
-@ChecksSdkIntAtLeast(api = Build.VERSION_CODES.S)
-fun supportsDynamicTheming() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
 
 @Composable
 fun animatedColor(targetValue: Color) =

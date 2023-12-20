@@ -6,6 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.z1.comparaprecos.core.model.UserData
+import com.z1.comparaprecos.core.navigation.navgraph.FeatureNavigationGraph
 import com.z1.core.datastore.repository.UserPreferencesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
@@ -16,11 +17,12 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    userPreferencesRepository: UserPreferencesRepository
+    userPreferencesRepository: UserPreferencesRepository,
+    featureNavigationGraph: FeatureNavigationGraph
 ): ViewModel() {
 
     val uiState: StateFlow<MainActivityUiState> = userPreferencesRepository.userData.map {
-        MainActivityUiState.Success(it)
+        MainActivityUiState.Success(it, featureNavigationGraph)
     }.stateIn(
         scope = viewModelScope,
         initialValue = MainActivityUiState.Loading,
@@ -29,6 +31,6 @@ class MainViewModel @Inject constructor(
 
     sealed interface MainActivityUiState {
         data object Loading : MainActivityUiState
-        data class Success(val userData: UserData) : MainActivityUiState
+        data class Success(val userData: UserData, val featureNavigationGraph: FeatureNavigationGraph) : MainActivityUiState
     }
 }

@@ -39,7 +39,7 @@ val Typography = Typography(
     ),
     headlineLarge = TextStyle(
         fontFamily = Outfit,
-        fontWeight = FontWeight.Light,
+        fontWeight = FontWeight.Normal,
         fontSize = 32.sp,
         lineHeight = 40.sp,
         letterSpacing = 0.sp

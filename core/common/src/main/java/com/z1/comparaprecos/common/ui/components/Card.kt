@@ -16,12 +16,13 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.dp
 import com.z1.comparaprecos.core.common.R
 
+
 @Composable
 fun CustomCard(
     modifier: Modifier = Modifier,
     shape: Shape = RoundedCornerShape(dimensionResource(id = R.dimen.big)),
     containerColor: Color = MaterialTheme.colorScheme.surface,
-    onCardClick: () -> Unit,
+    onCardClick: () -> Unit = {},
     content: @Composable () -> Unit
 ) {
     Card(

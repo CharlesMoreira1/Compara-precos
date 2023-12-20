@@ -61,8 +61,7 @@ dependencies {
     implementation(project(":core:model"))
     implementation(project(":core:navigation"))
     implementation(project(":core:testing"))
-    implementation(project(":feature:listacompra"))
-    implementation(project(":feature:listaproduto"))
+
 }
 
 fun getProperties(propertiesName: String): String {

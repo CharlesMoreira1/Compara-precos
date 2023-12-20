@@ -104,11 +104,11 @@ import com.z1.comparaprecos.common.ui.components.CustomCard
 import com.z1.comparaprecos.common.ui.components.CustomDivider
 import com.z1.comparaprecos.common.ui.components.CustomFloatingActionButton
 import com.z1.comparaprecos.common.ui.components.CustomIconButton
+import com.z1.comparaprecos.common.ui.components.CustomProgressDialog
 import com.z1.comparaprecos.common.ui.components.CustomRadioButton
 import com.z1.comparaprecos.common.ui.components.CustomSnackBar
 import com.z1.comparaprecos.common.ui.components.ETipoSnackbar
 import com.z1.comparaprecos.common.ui.components.Mensagem
-import com.z1.comparaprecos.common.ui.theme.supportsDynamicTheming
 import com.z1.comparaprecos.common.util.ThemeOptions
 import com.z1.comparaprecos.common.util.UiText
 import com.z1.comparaprecos.core.common.R
@@ -120,6 +120,7 @@ import com.z1.comparaprecos.feature.listacompra.model.OpcoesItem
 import com.z1.comparaprecos.feature.listacompra.presentation.state.UiEvent
 import com.z1.comparaprecos.feature.listacompra.presentation.state.UiState
 import com.z1.comparaprecos.common.util.listaTemas
+import com.z1.comparaprecos.common.util.supportsDynamicTheming
 import com.z1.comparaprecos.feature.listacompra.presentation.viewmodel.OnEvent
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -203,6 +204,13 @@ fun ListaCompraScreen(
 
             else -> Unit
         }
+    }
+
+    AnimatedVisibility(visible = !uiState.isListaCompraCarregada) {
+        CustomProgressDialog(
+            onDismiss = {},
+            titulo = string.label_desc_carregando_listas
+        )
     }
 
     CustomBottomSheet(

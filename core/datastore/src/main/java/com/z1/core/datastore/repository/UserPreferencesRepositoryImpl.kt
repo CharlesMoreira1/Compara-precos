@@ -2,6 +2,7 @@ package com.z1.core.datastore.repository
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.longPreferencesKey
 import com.z1.comparaprecos.core.model.UserData
@@ -18,7 +19,8 @@ class UserPreferencesRepositoryImpl @Inject constructor(
             UserData(
                 themeId = preferences[longPreferencesKey(ThemeKeys.SELECTED_THEME)] ?: 0L,
                 useDynamicColor = preferences[longPreferencesKey(ThemeKeys.USE_DYNAMIC_COLOR)] ?: 0L,
-                darkThemeMode = preferences[longPreferencesKey(ThemeKeys.DARK_THEME_MODE)] ?: 0L
+                darkThemeMode = preferences[longPreferencesKey(ThemeKeys.DARK_THEME_MODE)] ?: 0L,
+                onboarded = preferences[booleanPreferencesKey(Keys.ONBOARDED)] ?: false
             )
         }
 
@@ -48,6 +50,12 @@ class UserPreferencesRepositoryImpl @Inject constructor(
     override suspend fun putListOfProdutoOrdenation(ordenationId: Long) {
         dataStore.edit { preference ->
             preference[longPreferencesKey(Keys.ORDENACAO_LISTA_PRODUTO)] = ordenationId
+        }
+    }
+
+    override suspend fun putOnboarded(onboarded: Boolean) {
+        dataStore.edit { preference ->
+            preference[booleanPreferencesKey(Keys.ONBOARDED)] = onboarded
         }
     }
 }
