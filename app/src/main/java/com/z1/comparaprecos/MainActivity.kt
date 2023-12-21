@@ -21,6 +21,7 @@ import com.z1.comparaprecos.common.util.DarkThemeMode
 import com.z1.comparaprecos.common.util.ThemeOptions
 import com.z1.comparaprecos.common.util.findThemeById
 import com.z1.comparaprecos.core.navigation.NavigationGraph
+import com.z1.comparaprecos.core.navigation.navgraph.FeatureNavigationGraph
 import com.z1.comparaprecos.viewmodel.MainViewModel
 import com.z1.comparaprecos.viewmodel.MainViewModel.MainActivityUiState
 import com.z1.comparaprecos.viewmodel.MainViewModel.MainActivityUiState.Loading
@@ -59,7 +60,14 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    ComparaPrecosApp()
+                    when(uiState) {
+                        is Success -> {
+                            ComparaPrecosApp(
+                                featureNavigationGraph = (uiState as Success).featureNavigationGraph
+                            )
+                        }
+                        is Loading -> Unit
+                    }
                 }
             }
         }
@@ -68,10 +76,12 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun ComparaPrecosApp(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    featureNavigationGraph: FeatureNavigationGraph
 ) {
     NavigationGraph(
-        modifier = modifier
+        modifier = modifier,
+        featureNavigationGraph = featureNavigationGraph
     )
 }
 
