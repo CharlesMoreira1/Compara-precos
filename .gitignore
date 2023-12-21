@@ -18,6 +18,7 @@
 /core/testing/build
 /feature/listacompra/build
 /feature/listaproduto/build
+/feature/onboarding/build
 /.gradle
 /build-logic/.gradle
 /captures
