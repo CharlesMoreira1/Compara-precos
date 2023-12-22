@@ -81,11 +81,7 @@ fun ListaProdutoScreen(
                 }
             },
             floatingActionButton = {
-                if (uiState.listaProduto.isNotEmpty()) {
-                    PesquisarProdutoActionButton {
 
-                    }
-                }
             }
         ) { innerPadding ->
 

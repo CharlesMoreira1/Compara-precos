@@ -71,3 +71,33 @@ val listaProdutoDataTest2 = listOf(
         isAlterado = true
     ),
 )
+
+val listaProdutoDataTest3 = listOf(
+    Produto(
+        id = 0,
+        idListaCompra = 0,
+        nomeProduto = "Suco de uva tinto 1,5l kljdfhljkghsdlj",
+        quantidade = "1",
+        precoUnitario = BigDecimal("23.69"),
+        isMedidaPeso = false,
+        isAlterado = true
+    ),
+    Produto(
+        id = 1,
+        idListaCompra = 0,
+        nomeProduto = "Pacote de arroz 5kg",
+        quantidade = "5",
+        precoUnitario = BigDecimal("8.49"),
+        isMedidaPeso = false,
+        isAlterado = true
+    ),
+    Produto(
+        id = 2,
+        idListaCompra = 0,
+        nomeProduto = "Sabão liqúido omo 1l",
+        quantidade = "0.700",
+        precoUnitario = BigDecimal("2.09"),
+        isMedidaPeso = true,
+        isAlterado = true
+    ),
+)

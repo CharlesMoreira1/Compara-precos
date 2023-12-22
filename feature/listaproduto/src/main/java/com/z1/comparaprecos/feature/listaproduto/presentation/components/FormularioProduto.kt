@@ -1,8 +1,5 @@
-@file:OptIn(ExperimentalComposeUiApi::class)
-
 package com.z1.comparaprecos.feature.listaproduto.presentation.components
 
-import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.expandVertically
@@ -33,12 +30,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.pluralStringResource
@@ -57,8 +52,6 @@ import com.z1.comparaprecos.common.ui.components.CustomOutlinedTextInputQuantida
 import com.z1.comparaprecos.common.ui.components.mask.MascaraPeso
 import com.z1.comparaprecos.common.ui.components.mask.MascaraPreco
 import com.z1.comparaprecos.common.ui.theme.ComparaPrecosTheme
-import com.z1.comparaprecos.common.ui.theme.CoolMint
-import com.z1.comparaprecos.common.ui.theme.WhiteSmoke
 import com.z1.comparaprecos.core.common.R
 import com.z1.comparaprecos.core.model.Produto
 import java.math.BigDecimal
@@ -75,9 +68,20 @@ fun FormularioProduto(
 
     val focusManager = LocalFocusManager.current
 
-    val containerColor by animateColorAsState(
-        MaterialTheme.colorScheme.tertiary,
-        label = "backgroundcolor formulario"
+    var isProdutoConfirmado by remember {
+        mutableStateOf(true)
+    }
+
+    val topBarColor by animateColorAsState(
+        if (isProdutoConfirmado) MaterialTheme.colorScheme.secondary
+        else MaterialTheme.colorScheme.tertiary,
+        label = "topbar color formulario"
+    )
+
+    val onTopBarColor by animateColorAsState(
+        if (isProdutoConfirmado) MaterialTheme.colorScheme.onSecondary
+        else MaterialTheme.colorScheme.onTertiary,
+        label = "topbar color formulario"
     )
 
     var valueIsPeso by remember {
@@ -111,9 +115,6 @@ fun FormularioProduto(
     }
 
     val focusRequester = remember { FocusRequester() }
-    LaunchedEffect(key1 = valueIsPeso) {
-        //if (valueIsPeso) focusRequester.requestFocus()
-    }
 
     fun resetFormulario() {
         valueNomeProduto = ""
@@ -137,6 +138,7 @@ fun FormularioProduto(
             isErrorNomeProduto = false
             isErrorPreco = false
             isErrorQuantidade = false
+            isProdutoConfirmado = isAlterado
         } ?: resetFormulario()
     }
 
@@ -173,7 +175,7 @@ fun FormularioProduto(
             ) {
                 Row(
                     modifier = Modifier
-                        .background(containerColor)
+                        .background(topBarColor)
                         .padding(
                             vertical = dimensionResource(id = R.dimen.normal)
                         )
@@ -190,14 +192,16 @@ fun FormularioProduto(
                                 onCancelarEdicaoProduto()
                              },
                             iconImageVector = Icons.Rounded.Close,
-                            iconTint = MaterialTheme.colorScheme.onTertiary,
+                            iconTint = onTopBarColor,
                             iconContentDescription = "Cancelar edicao"
                         )
                         Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.normal)))
                         Text(
-                            text = stringResource(id = R.string.label_editando_produto),
+                            text = 
+                            if (isProdutoConfirmado) stringResource(id = R.string.label_editando_produto)
+                            else stringResource(id = R.string.label_confirmarcao_produto),
                             style = MaterialTheme.typography.titleMedium,
-                            color = MaterialTheme.colorScheme.onTertiary
+                            color = onTopBarColor
                         )
                     }
                     CustomIconButton(
@@ -339,8 +343,11 @@ fun FormularioProduto(
                     ),
                 containerColor = MaterialTheme.colorScheme.primary,
                 titulo =
-                if (produtoSelecionado == null) stringResource(id = R.string.label_adicionar_produto)
-                else stringResource(id = R.string.label_editar_produto),
+                when {
+                    produtoSelecionado == null -> stringResource(id = R.string.label_adicionar_produto)
+                    !isProdutoConfirmado -> stringResource(id = R.string.label_confirmar_produto)
+                    else -> stringResource(id = R.string.label_editar_produto)
+                },
                 textColor = MaterialTheme.colorScheme.onPrimary,
                 textStyle = MaterialTheme.typography.bodyLarge,
                 onClick = {

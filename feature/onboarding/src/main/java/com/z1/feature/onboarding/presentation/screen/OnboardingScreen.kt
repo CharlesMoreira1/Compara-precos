@@ -228,7 +228,7 @@ fun TitleHorizontalPager(
             ) {
                 Text(
                     text = stringResource(id = onboardingPages[page].title),
-                    style = if (page == 0) MaterialTheme.typography.headlineLarge else MaterialTheme.typography.headlineSmall,
+                    style = MaterialTheme.typography.headlineSmall,
                     textAlign = TextAlign.Center
                 )
                 Image(
