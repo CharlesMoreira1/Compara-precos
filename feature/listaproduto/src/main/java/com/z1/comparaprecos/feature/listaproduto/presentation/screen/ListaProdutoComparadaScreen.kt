@@ -5,6 +5,7 @@
 
 package com.z1.comparaprecos.feature.listaproduto.presentation.screen
 
+import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.LinearEasing
@@ -55,6 +56,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -88,6 +90,7 @@ fun ListaProdutoComparadaScreen(
     uiEvent: UiEvent,
     onEvent: (OnEvent) -> Unit
 ) {
+    val context = LocalContext.current
     val scope = rememberCoroutineScope()
 //    val appBarState = rememberTopAppBarState()
 //    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(appBarState)
@@ -146,6 +149,7 @@ fun ListaProdutoComparadaScreen(
                         1 -> uiState.listaCompraComparada.produtos.sumOf { (it.valorProduto()) }
                         else -> null
                     },
+                    pagerIndex = selectedIndex,
                     onOrdenarListaClick = {
                         onEvent(OnEvent.UpdateUiEvent(UiEvent.ShowDialogOrdenarLista))
                     }
@@ -197,16 +201,6 @@ fun ListaProdutoComparadaScreen(
                                         onEvent(OnEvent.ProdutoSelecionado(produto))
                                     }
                                 )
-
-                                if (uiState.listaProduto.isNotEmpty()) {
-                                    FloatingActionButton(
-                                        modifier = Modifier.align(Alignment.BottomEnd),
-                                        containerColor = MaterialTheme.colorScheme.secondary,
-                                        icon = Icons.Rounded.Search,
-                                        contentDescription = "Pesquisar produto",
-                                        onClick = {}
-                                    )
-                                }
                             }
                             1 -> {
                                 this@Column.AnimatedVisibility(
@@ -257,7 +251,9 @@ fun ListaProdutoComparadaScreen(
                                         modifier = Modifier.align(Alignment.BottomEnd),
                                         icon = Icons.Rounded.Share,
                                         contentDescription = stringResource(id = R.string.description_compartilhar_resumo),
-                                        onClick = {}
+                                        onClick = {
+                                            Toast.makeText(context, R.string.label_em_breve, Toast.LENGTH_SHORT).show()
+                                        }
                                     )
                                 } else {
                                     CustomLoadingScreen(

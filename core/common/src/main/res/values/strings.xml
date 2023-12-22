@@ -23,6 +23,8 @@
     <string name="label_default">Padrão</string>
     <string name="label_claro">Claro</string>
     <string name="label_escuro">Escuro</string>
+    <string name="label_confirmar">Confirmar</string>
+    <string name="label_exclusivo">Exclusivo</string>
 <!--    Label com uma palavra-->
 
 <!--    Label com duas palavras-->
@@ -50,6 +52,9 @@
     <string name="label_doce_rubi">Doce rubi</string>
     <string name="label_opera_cafe">Opera café</string>
     <string name="label_padrao_sistema">Padrão sistema</string>
+    <string name="label_confirmarcao_produto">Confirmação de produto</string>
+    <string name="label_confirmar_produto">Confirmar produto na lista</string>
+    <string name="label_em_breve">Em breve!</string>
 <!--    Label com duas palavras-->
 
 
@@ -122,7 +127,7 @@
 
     <string name="label_onboarding_0_subtitle">Que bom ver você por aqui, vamos conhecer um pouco sobre o app?.</string>
     <string name="label_onboarding_1_subtitle">Aqui você pode criar, renomear, duplicar e apagar quantas listas quiser…</string>
-    <string name="label_onboarding_2_subtitle">Você podem comparar as listas depois de adicionar alguns produtos nelas…</string>
+    <string name="label_onboarding_2_subtitle">Você poderá comparar as listas depois de adicionar alguns produtos nelas…</string>
     <string name="label_onboarding_3_subtitle">Aqui você vê o resumo da sua comparação. Bem simples né? Bora começar?</string>
 <!--    Label onboarding -->
 

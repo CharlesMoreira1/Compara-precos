@@ -1,5 +1,8 @@
 package com.z1.comparaprecos.feature.listaproduto.presentation.components
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -34,6 +37,7 @@ fun TituloListaProduto(
     modifier: Modifier = Modifier,
     titulo: String,
     valorLista: BigDecimal?,
+    pagerIndex: Int = 0,
     onOrdenarListaClick: () -> Unit
 ) {
     val currencySymbol by remember {
@@ -64,26 +68,36 @@ fun TituloListaProduto(
             horizontalArrangement = Arrangement.End,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            valorLista?.let {
+            AnimatedVisibility(
+                visible = valorLista != null,
+                enter = scaleIn(),
+                exit = scaleOut()
+            ) {
                 Row() {
                     Text(
                         text = currencySymbol,
                         textAlign = TextAlign.End,
                         style = MaterialTheme.typography.titleMedium
                     )
-
                     CustomTextPriceCounter(
-                        price = it,
+                        price = valorLista ?: BigDecimal("0.00"),
                         textStyle = MaterialTheme.typography.titleMedium
                     )
                 }
+
             }
 
-            CustomIconButton(
-                onIconButtonClick = onOrdenarListaClick,
-                iconImageVector = Icons.Rounded.FilterList,
-                iconTint = MaterialTheme.colorScheme.onBackground
-            )
+            AnimatedVisibility(
+                visible = pagerIndex != 2,
+                enter = scaleIn(),
+                exit = scaleOut()
+            ) {
+                CustomIconButton(
+                    onIconButtonClick = onOrdenarListaClick,
+                    iconImageVector = Icons.Rounded.FilterList,
+                    iconTint = MaterialTheme.colorScheme.onBackground
+                )
+            }
         }
     }
 }

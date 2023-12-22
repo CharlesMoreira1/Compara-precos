@@ -41,8 +41,7 @@ val Isabelline = Color(0xFFF6EAEE)
 //Tema opera cafe
 val EggShell = Color(0xFFE8E6D1)
 val Black = Color(0xFF000000)
-val LanguidLavender = Color(0xFFE6D1E8)
-val CoolMint = Color(0xFFb3d9d6)
+val Keppel = Color(0xFF3BC5B2)
 
 //Tema dark
 val MediumSlateBlue = Color(0xFF7474FE)
@@ -50,7 +49,6 @@ val Glacier = Color(0xFF69B2C3)
 val MacaroniAndCheese = Color(0xFFFEB374)
 val Peacoat = Color(0xFF1F2336)
 val YankeesBlue = Color(0xFF25293D)
-val Keppel = Color(0xFF3BC5B2)
 val PastelRed = Color(0xFFFF6161)
 
 //Cores texto, erro e sucesso
