@@ -10,13 +10,16 @@ import com.z1.comparaprecos.core.navigation.util.register
 @Composable
 fun NavigationGraph(
     modifier: Modifier = Modifier,
-    featureNavigationGraph: FeatureNavigationGraph
+    featureNavigationGraph: FeatureNavigationGraph,
+    onboarded: Boolean
 ) {
     val navController = rememberNavController()
 
     NavHost(
         navController = navController,
-        startDestination = featureNavigationGraph.onboarding().route()
+        startDestination =
+        if (onboarded) featureNavigationGraph.listaCompra().route()
+        else featureNavigationGraph.onboarding().route()
     ) {
         register(
             registerNavGraph = featureNavigationGraph.onboarding(),

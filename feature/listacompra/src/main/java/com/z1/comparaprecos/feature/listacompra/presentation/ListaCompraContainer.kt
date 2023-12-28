@@ -19,31 +19,21 @@ import com.z1.comparaprecos.feature.listacompra.presentation.viewmodel.ListaComp
 @Composable
 fun ListaCompraContainer(
     modifier: Modifier = Modifier,
-    goToOnboarding: () -> Unit,
     goToListaProduto: (Long, Boolean) -> Unit,
     viewModel: ListaCompraViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val uiEvent = viewModel.uiEvent.collectAsStateWithLifecycle(initialValue = UiEvent.Default)
 
-    if (!uiState.userData.onboarded) {
-        goToOnboarding()
-    } else {
 
-        AnimatedVisibility(
-            visible = uiState.isListaCompraCarregada,
-            enter = scaleIn(animationSpec = tween(300, easing = LinearEasing)) + fadeIn(),
-            exit = scaleOut(animationSpec = tween(300, easing = LinearEasing)) + fadeOut()
-        ) {
-            ListaCompraScreen(
-                modifier = modifier,
-                uiState = uiState,
-                uiEvent = uiEvent.value,
-                onEvent = { viewModel.onEvent(it) },
-                goToListaProduto = { idListaCompra, isComparar ->
-                    goToListaProduto(idListaCompra, isComparar)
-                }
-            )
-        }
-    }
+        ListaCompraScreen(
+            modifier = modifier,
+            uiState = uiState,
+            uiEvent = uiEvent.value,
+            onEvent = { viewModel.onEvent(it) },
+            goToListaProduto = { idListaCompra, isComparar ->
+                goToListaProduto(idListaCompra, isComparar)
+            }
+        )
+
 }

@@ -1,6 +1,12 @@
 package com.z1.comparaprecos
 
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
 import android.os.Bundle
+import android.view.View
+import android.view.ViewAnimationUtils
+import android.view.animation.AnticipateInterpolator
+import android.view.animation.DecelerateInterpolator
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -13,6 +19,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.core.animation.doOnEnd
+import androidx.core.splashscreen.SplashScreen
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -33,8 +42,9 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-    val mainViewModel: MainViewModel by viewModels()
+    private val mainViewModel: MainViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
+        val splashScreen = installSplashScreen()
         super.onCreate(savedInstanceState)
 
         var uiState: MainActivityUiState by mutableStateOf(Loading)
@@ -46,6 +56,13 @@ class MainActivity : ComponentActivity() {
                         uiState = it
                     }
                     .collect()
+            }
+        }
+
+        splashScreen.setKeepOnScreenCondition {
+            when(uiState) {
+                Loading -> false
+                is Success -> true
             }
         }
 
@@ -63,10 +80,11 @@ class MainActivity : ComponentActivity() {
                     when(uiState) {
                         is Success -> {
                             ComparaPrecosApp(
-                                featureNavigationGraph = (uiState as Success).featureNavigationGraph
+                                featureNavigationGraph = (uiState as Success).featureNavigationGraph,
+                                onboarded = (uiState as Success).userData.onboarded
                             )
                         }
-                        is Loading -> Unit
+                        Loading -> Unit
                     }
                 }
             }
@@ -77,11 +95,14 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun ComparaPrecosApp(
     modifier: Modifier = Modifier,
-    featureNavigationGraph: FeatureNavigationGraph
+    featureNavigationGraph: FeatureNavigationGraph,
+    onboarded: Boolean
 ) {
     NavigationGraph(
         modifier = modifier,
-        featureNavigationGraph = featureNavigationGraph
+        featureNavigationGraph = featureNavigationGraph,
+        onboarded = onboarded
+
     )
 }
 

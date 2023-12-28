@@ -5,4 +5,11 @@
         <item name="android:windowTranslucentStatus">false</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
     </style>
+
+    <style name="Theme.App.Starting" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_logo</item>
+        <item name="windowSplashScreenBackground">#5E8AC6</item>
+        <item name="postSplashScreenTheme">@style/Theme.ComparaPrecos</item>
+    </style>
+
 </resources>
