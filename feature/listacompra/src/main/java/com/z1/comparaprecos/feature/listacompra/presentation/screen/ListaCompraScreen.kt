@@ -399,7 +399,7 @@ fun ListaCompra(
             )
         }
     ) { innerPadding ->
-        if (uiState.listaCompra.isEmpty()) {
+        if (uiState.listaCompra.isEmpty() && uiState.isListaCompraCarregada) {
             ListaCompraVazia()
         } else {
             LazyColumn(

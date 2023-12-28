@@ -6,3 +6,7 @@ plugins {
 android {
     namespace = "com.z1.comparaprecos.core.common"
 }
+
+dependencies {
+    api(libs.splash.screen)
+}

@@ -20,6 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -30,7 +31,7 @@ import com.z1.comparaprecos.core.common.R
 fun CustomProgressDialog(
     modifier: Modifier = Modifier,
     onDismiss: () -> Unit,
-    @StringRes titulo: Int = R.string.label_agurade
+    @StringRes titulo: Int = R.string.label_desc_carregando_listas
 ) {
 
    Dialog(onDismissRequest = { onDismiss() }) {
@@ -56,6 +57,7 @@ fun CustomProgressDialog(
                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.medium)))
                Text(
                    text = stringResource(id = titulo),
+                   textAlign = TextAlign.Center,
                    style = MaterialTheme.typography.headlineSmall
                )
                
