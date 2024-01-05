@@ -72,10 +72,10 @@ class ProdutoRepositoryImplTest: BaseTest() {
         //Given - Dado
         val listaCompraEntity = listaCompraWithProdutosMapper.mapModelToEntity(
             listaCompraWithProductTestData[0])
-        coEvery { produtoDao.getListaCompraComparada(any()) } returns listaCompraEntity
+        coEvery { produtoDao.getListaCompraComparada(any(), any()) } returns listaCompraEntity
 
         //When - Quando
-        val result = repository.getListaCompraComparada(0)
+        val result = repository.getListaCompraComparada(0, "")
 
         //Then - Entao
         assertEquals(result.detalhes.titulo, listaCompraEntity.detalhes.titulo)

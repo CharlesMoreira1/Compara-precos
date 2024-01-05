@@ -84,12 +84,14 @@ fun ListaProduto(
         )
     } else {
         LazyColumn(
-            modifier = modifier, contentPadding = PaddingValues(
-                bottom = dimensionResource(id = R.dimen.fab_padding_bottom),
+            modifier = modifier,
+            contentPadding = PaddingValues(
+                bottom = dimensionResource(id = R.dimen.medium),
                 top = innerPadding.calculateTopPadding(),
                 start = innerPadding.calculateStartPadding(LayoutDirection.Ltr),
                 end = innerPadding.calculateEndPadding(LayoutDirection.Ltr)
-            ), state = listState
+            ),
+            state = listState
         ) {
             itemsIndexed(items = listaProduto,
                 key = { _, produto -> produto.id }) { index, produto ->
@@ -116,12 +118,7 @@ fun ListaProduto(
                     else -> RoundedCornerShape(0.dp)
                 }
 
-                CardItem(modifier = Modifier.animateItemPlacement(
-                        animationSpec = spring(
-                            dampingRatio = Spring.DampingRatioMediumBouncy,
-                            stiffness = Spring.StiffnessLow
-                        )
-                    ),
+                CardItem(
                     produto = produto,
                     index = index,
                     listaProdutoComparada = listaProdutoComparada,
@@ -203,7 +200,7 @@ fun CardItem(
                         )
                     }
 
-                    if (!produto.isAlterado && listaProdutoComparada.isNotEmpty()) {
+                    if (!produto.isAlterado) {
                         CustomTag(
                             tagContainerColor = MaterialTheme.colorScheme.tertiary,
                             tagText = R.string.label_confirmar

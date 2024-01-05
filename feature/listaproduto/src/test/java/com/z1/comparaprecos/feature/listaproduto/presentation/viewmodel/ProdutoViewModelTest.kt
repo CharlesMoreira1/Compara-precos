@@ -42,7 +42,8 @@ class ProdutoViewModelTest : BaseTest() {
             "Teste",
             "1",
             BigDecimal("1.99"),
-            false
+            false,
+            true
         )
     }
 
@@ -113,7 +114,7 @@ class ProdutoViewModelTest : BaseTest() {
     @Test
     fun `should return a listaCompraWithProdutos when user selected a listaCompra to comparar`() {
         //Given - Dado
-        coEvery { useCase.getListaCompraComparada(1) } returns listaCompraWithProductTestData[1]
+        coEvery { useCase.getListaCompraComparada(1, ListOrder.ADICIONADO_PRIMEIRO) } returns listaCompraWithProductTestData[1]
 
         //When - Quando
         viewModel.onEvent(OnEvent.GetListaCompraToComparar(1))
@@ -125,7 +126,7 @@ class ProdutoViewModelTest : BaseTest() {
     @Test
     fun `should return UiEvent_Error when not found a listaCompra to comparar`() {
         //Given - Dado
-        coEvery { useCase.getListaCompraComparada(1) } throws Exception()
+        coEvery { useCase.getListaCompraComparada(1, ListOrder.A_Z) } throws Exception()
 
         //When - Quando
         viewModel.onEvent(OnEvent.GetListaCompraToComparar(1))

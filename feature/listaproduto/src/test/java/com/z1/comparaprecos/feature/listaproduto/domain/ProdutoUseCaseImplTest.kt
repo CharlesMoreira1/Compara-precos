@@ -41,7 +41,8 @@ class ProdutoUseCaseImplTest: BaseTest() {
             nomeProduto = "Pera",
             quantidade = "0.500",
             precoUnitario = BigDecimal("6.09"),
-            isMedidaPeso = true
+            isMedidaPeso = true,
+            isAlterado = true
         )
     }
 
@@ -151,10 +152,10 @@ class ProdutoUseCaseImplTest: BaseTest() {
     fun `should return a list of Produto when user selected a list to compar`() = runTest {
         //Given - Dado
         val listaCompraComparada = listaCompraWithProductTestData[0]
-        coEvery { repository.getListaCompraComparada(0) } returns listaCompraComparada
+        coEvery { repository.getListaCompraComparada(0, "nome_produto ASC") } returns listaCompraComparada
 
         //When - Quando
-        val result = useCase.getListaCompraComparada(0)
+        val result = useCase.getListaCompraComparada(0, ListOrder.A_Z)
 
         //Then - Entao
         assertTrue(result.produtos.size == listaCompraComparada.produtos.size)

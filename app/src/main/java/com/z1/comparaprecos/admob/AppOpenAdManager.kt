@@ -93,7 +93,7 @@ class AppOpenAdManager(
         return appOpenAd != null && wasLoadTimeLessThanNHoursAgo()
     }
 
-    private fun wasLastAdShowedMoreThanNMinutesAgo(intervalAdMinutes: Long = 2): Boolean {
+    private fun wasLastAdShowedMoreThanNMinutesAgo(intervalAdMinutes: Long = 5): Boolean {
         val dateDifference: Long = Date().time - lastShowedAdTime
         val intervalInMilliseconds = TimeUnit.MINUTES.toMillis(intervalAdMinutes)
         return dateDifference > intervalInMilliseconds

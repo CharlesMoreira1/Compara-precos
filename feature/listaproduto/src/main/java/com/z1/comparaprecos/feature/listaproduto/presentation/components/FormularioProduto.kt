@@ -81,7 +81,7 @@ fun FormularioProduto(
     val onTopBarColor by animateColorAsState(
         if (isProdutoConfirmado) MaterialTheme.colorScheme.onSecondary
         else MaterialTheme.colorScheme.onTertiary,
-        label = "topbar color formulario"
+        label = "on topbar color formulario"
     )
 
     var valueIsPeso by remember {
@@ -212,7 +212,7 @@ fun FormularioProduto(
                             onCancelarEdicaoProduto()
                         },
                         iconImageVector = Icons.Rounded.DeleteOutline,
-                        iconTint = MaterialTheme.colorScheme.onTertiary
+                        iconTint = onTopBarColor
                     )
                 }
             }

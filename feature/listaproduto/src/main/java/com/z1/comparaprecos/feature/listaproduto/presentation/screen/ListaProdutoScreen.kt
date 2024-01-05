@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
@@ -89,7 +90,8 @@ fun ListaProdutoScreen(
                 innerPadding = PaddingValues(
                     top = innerPadding.calculateTopPadding(),
                     start = dimensionResource(id = R.dimen.medium),
-                    end = dimensionResource(id = R.dimen.medium)
+                    end = dimensionResource(id = R.dimen.medium),
+                    bottom = dimensionResource(id = R.dimen.medium)
                 ),
                 listaProduto = uiState.listaProduto,
                 isOnTopOfList = {

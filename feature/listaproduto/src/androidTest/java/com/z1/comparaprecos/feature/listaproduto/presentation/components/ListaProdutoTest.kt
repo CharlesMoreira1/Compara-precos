@@ -42,9 +42,9 @@ class ListaProdutoTest {
         init(listaProduto)
 
         //Then - Entao
-        composeTestRule.onNodeWithText("Arroz").assertIsDisplayed()
-        composeTestRule.onNodeWithText("Feijao").assertIsDisplayed()
-        composeTestRule.onNodeWithText("Banana").assertIsDisplayed()
+        composeTestRule.onNodeWithText("1º Arroz").assertIsDisplayed()
+        composeTestRule.onNodeWithText("2º Feijao").assertIsDisplayed()
+        composeTestRule.onNodeWithText("3º Banana").assertIsDisplayed()
     }
 
     @Test
