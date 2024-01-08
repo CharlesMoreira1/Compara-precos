@@ -43,18 +43,20 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.z1.comparaprecos.common.extensions.removeZerosFromLeft
+import com.z1.comparaprecos.common.extensions.onlyNumbers
 import com.z1.comparaprecos.common.ui.components.CustomButton
 import com.z1.comparaprecos.common.ui.components.CustomCheckBox
 import com.z1.comparaprecos.common.ui.components.CustomIconButton
 import com.z1.comparaprecos.common.ui.components.CustomOutlinedTextInput
 import com.z1.comparaprecos.common.ui.components.CustomOutlinedTextInputQuantidade
-import com.z1.comparaprecos.common.ui.components.mask.MascaraPeso
-import com.z1.comparaprecos.common.ui.components.mask.MascaraPreco
+import com.z1.comparaprecos.common.ui.components.mask.rememberPriceVisualTransformation
+import com.z1.comparaprecos.common.ui.components.mask.rememberWeightVisualTransformation
 import com.z1.comparaprecos.common.ui.theme.ComparaPrecosTheme
 import com.z1.comparaprecos.core.common.R
 import com.z1.comparaprecos.core.model.Produto
 import java.math.BigDecimal
+import java.util.Currency
+import java.util.Locale
 
 @Composable
 fun FormularioProduto(
@@ -67,6 +69,12 @@ fun FormularioProduto(
 ) {
 
     val focusManager = LocalFocusManager.current
+    val currencyVisualTransformation = rememberPriceVisualTransformation(
+        currencySymbol = Currency.getInstance(Locale.getDefault()).symbol
+    )
+    val weightVisualTransformation = rememberWeightVisualTransformation(
+        weightSymbol = "kg"
+    )
 
     var isProdutoConfirmado by remember {
         mutableStateOf(true)
@@ -132,9 +140,9 @@ fun FormularioProduto(
             valueIsPeso = isMedidaPeso
             isResetQuantidade = false
             valueQuantidade =
-                if (isMedidaPeso) quantidade.removeZerosFromLeft()
-                else quantidade.replace(".", "")
-            valuePreco = precoUnitario.removeZerosFromLeft()
+                if (isMedidaPeso) quantidade.onlyNumbers()
+                else quantidade
+            valuePreco = precoUnitario.onlyNumbers()
             isErrorNomeProduto = false
             isErrorPreco = false
             isErrorQuantidade = false
@@ -276,7 +284,7 @@ fun FormularioProduto(
                         .weight(1f)
                         .padding(end = dimensionResource(id = R.dimen.medium)),
                     label = stringResource(id = R.string.label_valor),
-                    mask = MascaraPreco(),
+                    visualTransformation = currencyVisualTransformation,
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.NumberPassword,
                         imeAction = ImeAction.Done
@@ -304,17 +312,12 @@ fun FormularioProduto(
                             imeAction = ImeAction.Done
                         ),
                         onValueChange = {
-                            when {
-                                it.length == 1 && it == "0" -> Unit
-                                it.isBlank() -> valueQuantidade = ""
-                                it.length > 6 -> Unit
-                                else -> {
-                                    valueQuantidade = it
-                                    isErrorQuantidade = false
-                                }
+                            if (it.length <= 6) {
+                                valueQuantidade = it
+                                isErrorQuantidade = false
                             }
                         },
-                        mask = MascaraPeso(),
+                        visualTransformation = weightVisualTransformation,
                         value = valueQuantidade,
                         isError = isErrorQuantidade
                     )

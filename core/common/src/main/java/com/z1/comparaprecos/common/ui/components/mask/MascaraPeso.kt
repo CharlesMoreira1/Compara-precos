@@ -1,15 +1,19 @@
 package com.z1.comparaprecos.common.ui.components.mask
 
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.input.TransformedText
 import androidx.compose.ui.text.input.VisualTransformation
+import com.z1.comparaprecos.common.ui.components.mask.offsetmapping.FixedCursorOffsetMapping
+import com.z1.comparaprecos.common.ui.components.mask.offsetmapping.MovableCursorOffsetMapping
 import java.text.DecimalFormat
-import java.util.Currency
-import java.util.Locale
 
 class MascaraPeso(
-    private val fixedCursorAtTheEnd: Boolean = true,
-    private val numberOfDecimals: Int = 3
+    private val weightSymbol: String,
+    private val fixedCursorAtTheEnd: Boolean,
+    private val numberOfDecimals: Int
 ) : VisualTransformation {
     private val symbols = DecimalFormat().decimalFormatSymbols
     override fun filter(text: AnnotatedString): TransformedText {
@@ -17,9 +21,9 @@ class MascaraPeso(
         val decimalSeparator = symbols.decimalSeparator
         val zero = symbols.zeroDigit
 
-        val inputText = text.text
+        val originalText = text.text
 
-        val intPart = inputText
+        val thousandPart = originalText
             .dropLast(numberOfDecimals)
             .reversed()
             .chunked(3)
@@ -29,17 +33,15 @@ class MascaraPeso(
                 zero.toString()
             }
 
-        val fractionPart = inputText.takeLast(numberOfDecimals).let {
+        val decimalPart = originalText.takeLast(numberOfDecimals).let {
             if (it.length != numberOfDecimals) {
-                List(numberOfDecimals - it.length) {
-                    zero
-                }.joinToString("") + it
+                List(numberOfDecimals - it.length) { zero }.joinToString("") + it
             } else {
                 it
             }
         }
 
-        val formattedNumber = intPart + decimalSeparator + fractionPart + " kg"
+        val formattedNumber = "$thousandPart$decimalSeparator$decimalPart $weightSymbol"
 
         val newText = AnnotatedString(
             text = formattedNumber,
@@ -49,8 +51,8 @@ class MascaraPeso(
 
         val offsetMapping = if (fixedCursorAtTheEnd) {
             FixedCursorOffsetMapping(
-                contentLength = inputText.length,
-                formattedContentLength = formattedNumber.length
+                contentLength = originalText.length,
+                formattedContentLength = formattedNumber.length - 3
             )
         } else {
             MovableCursorOffsetMapping(
@@ -60,5 +62,25 @@ class MascaraPeso(
             )
         }
         return TransformedText(newText, offsetMapping)
+    }
+}
+
+@Composable
+fun rememberWeightVisualTransformation(
+    weightSymbol: String = "",
+    numberOfDecimals: Int = 3,
+    fixedCursorAtTheEnd: Boolean = true
+): VisualTransformation {
+    val inspectionMode = LocalInspectionMode.current
+    return remember(weightSymbol) {
+        if (inspectionMode) {
+            VisualTransformation.None
+        } else {
+            MascaraPeso(
+                weightSymbol = weightSymbol,
+                fixedCursorAtTheEnd = fixedCursorAtTheEnd,
+                numberOfDecimals = numberOfDecimals
+            )
+        }
     }
 }

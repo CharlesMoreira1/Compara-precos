@@ -18,9 +18,7 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -33,7 +31,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import com.z1.comparaprecos.common.ui.theme.ComparaPrecosTheme
-import com.z1.comparaprecos.common.ui.theme.CoralRed
 import com.z1.comparaprecos.common.ui.theme.MediumSeaGreen
 import com.z1.comparaprecos.core.common.R
 
@@ -45,7 +42,7 @@ fun CustomOutlinedTextInput(
     onValueChange: (String) -> Unit,
     isError: Boolean,
     placeholder: String? = null,
-    mask: VisualTransformation? = null,
+    visualTransformation: VisualTransformation = VisualTransformation.None,
     keyboardOptions: KeyboardOptions
 ) {
 
@@ -68,7 +65,7 @@ fun CustomOutlinedTextInput(
             }
         },
         keyboardOptions = keyboardOptions,
-        visualTransformation = mask ?: VisualTransformation.None
+        visualTransformation = visualTransformation
     )
 }
 

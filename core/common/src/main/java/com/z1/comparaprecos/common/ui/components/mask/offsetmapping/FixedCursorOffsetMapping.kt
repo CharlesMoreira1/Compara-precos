@@ -1,4 +1,4 @@
-package com.z1.comparaprecos.common.ui.components.mask
+package com.z1.comparaprecos.common.ui.components.mask.offsetmapping
 
 import androidx.compose.ui.text.input.OffsetMapping
 
