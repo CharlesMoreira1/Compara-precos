@@ -9,7 +9,7 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="com.bolaoz1" />
+                  <option name="appId" value="com.z1.comparaprecos" />
                 </ConnectionSetting>
               </option>
               <option name="failureTypes">
