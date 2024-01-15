@@ -25,6 +25,15 @@ android {
         buildConfigField("String", "DEVICE_TEST_AD_ID", getProperties("DEVICE_TEST_AD_ID"))
     }
 
+    signingConfigs {
+        create("release") {
+            storeFile = file("../config/signing/compara-precos.jks")
+            keyAlias = System.getenv("SIGNING_KEY_ALIAS")
+            keyPassword = System.getenv("SIGNING_KEY_PASSWORD")
+            storePassword = System.getenv("SIGNING_STORE_PASSWORD")
+        }
+    }
+
     buildTypes {
         debug{
             buildConfigField("String", "ADMOB_OPEN_APP_ID", getProperties("ADMOB_OPEN_APP_TEST_ID"))
@@ -35,7 +44,8 @@ android {
             buildConfigField("String", "ADMOB_OPEN_APP_ID", getProperties("ADMOB_OPEN_APP_ID"))
             enableUnitTestCoverage = true
             enableAndroidTestCoverage = true
-            signingConfig = signingConfigs.getByName("debug")
+            proguardFiles("proguard-android.txt", "proguard-rules.pro")
+            signingConfig = signingConfigs.getByName("release")
         }
     }
 
