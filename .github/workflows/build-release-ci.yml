@@ -23,8 +23,8 @@ env:
   SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
   SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
   SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
-  ADMOB_OPEN_APP_ID: ${{ secrets.ADMOB_OPEN_APP_ID }}
-  DEVICE_TEST_AD_ID: ${{ secrets.DEVICE_TEST_AD_ID }}
+  #ADMOB_OPEN_APP_ID: ${{ secrets.ADMOB_OPEN_APP_ID }}
+  #DEVICE_TEST_AD_ID: ${{ secrets.DEVICE_TEST_AD_ID }}
 
 jobs:
   create-tag:
@@ -58,6 +58,11 @@ jobs:
 
       - name: Grant execute permissions for gradlew
         run: chmod +x ./gradlew
+
+      - name: Create local.properties file
+        run: |
+          echo 'ADMOB_OPEN_APP_ID=${{ secrets.ADMOB_OPEN_APP_ID }}' > ./local.properties
+          echo 'DEVICE_TEST_AD_ID=${{ secrets.DEVICE_TEST_AD_ID }}' > ./local.properties
 
       - name: Build the app
         run: ./gradlew clean build
