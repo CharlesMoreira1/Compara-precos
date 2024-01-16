@@ -21,8 +21,6 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
-
-        buildConfigField("String", "DEVICE_TEST_AD_ID", getProperties("DEVICE_TEST_AD_ID"))
     }
 
     signingConfigs {
@@ -37,11 +35,13 @@ android {
     buildTypes {
         debug{
             buildConfigField("String", "ADMOB_OPEN_APP_ID", getProperties("ADMOB_OPEN_APP_TEST_ID"))
+            buildConfigField("String", "DEVICE_TEST_AD_ID", getProperties("DEVICE_TEST_AD_ID"))
             enableUnitTestCoverage = true
             enableAndroidTestCoverage = true
         }
         release {
             buildConfigField("String", "ADMOB_OPEN_APP_ID", getProperties("ADMOB_OPEN_APP_ID"))
+            buildConfigField("String", "DEVICE_TEST_AD_ID", System.getenv("DEVICE_TEST_AD_ID"))
             enableUnitTestCoverage = true
             enableAndroidTestCoverage = true
             proguardFiles("proguard-android.txt", "proguard-rules.pro")
