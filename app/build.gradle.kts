@@ -81,5 +81,5 @@ fun getProperties(propertiesName: String): String {
         properties.load(FileInputStream(propsFile))
         return properties.getProperty(propertiesName)
     }
-    return "0"
+    return '0'.toString()
 }
